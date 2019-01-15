@@ -1,0 +1,21 @@
+{
+  "name": "node-barion",
+  "version": "1.0.0",
+  "description": "Node API library for Barion Smart Gateway electronic payment system.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "node",
+    "barion",
+    "api",
+    "e-payment",
+    "payment",
+    "smart",
+    "gateway",
+    "online"
+  ],
+  "author": "Kiss, Aron",
+  "license": "MIT"
+}
