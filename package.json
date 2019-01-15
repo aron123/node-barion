@@ -17,5 +17,11 @@
     "online"
   ],
   "author": "Kiss, Aron",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "^5.2.0"
+  },
+  "dependencies": {
+    "node-fetch": "^2.3.0"
+  }
 }
