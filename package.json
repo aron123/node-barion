@@ -4,7 +4,9 @@
   "description": "Node API library for Barion Smart Gateway electronic payment system.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "coverage": "nyc --reporter=text --reporter=html mocha",
+    "report-coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "keywords": [
     "node",
@@ -19,7 +21,11 @@
   "author": "Kiss, Aron",
   "license": "MIT",
   "devDependencies": {
-    "mocha": "^5.2.0"
+    "chai": "^4.2.0",
+    "coveralls": "^3.0.2",
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
+    "proxyquire": "^2.1.0"
   },
   "dependencies": {
     "node-fetch": "2.3.0"
