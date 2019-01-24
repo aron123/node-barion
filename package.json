@@ -4,9 +4,9 @@
   "description": "Node API library for Barion Smart Gateway electronic payment system.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
-    "coverage": "nyc --all  --reporter=text --reporter=html mocha",
-    "report-coverage": "nyc report --all --reporter=text-lcov | coveralls"
+    "test": "mocha test/*.test.js test/integration/*.test.js",
+    "coverage": "nyc --all  --reporter=text --reporter=html mocha test/*.test.js test/integration/*.test.js",
+    "report-coverage": "nyc report --all --reporter=text-lcov mocha test/*.test.js test/integration/*.test.js | coveralls"
   },
   "keywords": [
     "node",
