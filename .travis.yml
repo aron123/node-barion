@@ -6,6 +6,6 @@ before_install: npm i -g npm@latest
 
 install: travis_retry npm install
 
-script: npm run test
+script: npm run coverage
 
 after_success: npm run report-coverage
