@@ -1,8 +1,7 @@
 # node-barion
-... TRAVIS BADGE ...
-... COVERALLS BADGE ...
-... NPM BADGE ...
-<!--[![npm version](http://img.shields.io/npm/v/node-barion.svg?style=flat)](https://npmjs.org/package/node-barion 'View this project on npm')-->
+[![Build Status](https://travis-ci.org/aron123/node-barion.svg?branch=master)](https://travis-ci.org/aron123/node-barion)
+[![Coverage Status](https://coveralls.io/repos/github/aron123/node-barion/badge.svg?branch=master)](https://coveralls.io/github/aron123/node-barion?branch=master)
+[![npm version](http://img.shields.io/npm/v/node-barion.svg?style=flat)](https://npmjs.org/package/node-barion 'View this project on npm')
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
 Helps you to manage e-payment transactions through the [Barion Smart Gateway](https://www.barion.com/).
