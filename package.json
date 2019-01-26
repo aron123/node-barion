@@ -2,12 +2,17 @@
   "name": "node-barion",
   "version": "1.0.0",
   "description": "Node API library for Barion Smart Gateway electronic payment system.",
-  "main": "index.js",
-  "scripts": {
-    "test": "mocha test/*.test.js test/integration/*.test.js",
-    "coverage": "nyc --all  --reporter=text --reporter=html mocha test/*.test.js test/integration/*.test.js",
-    "report-coverage": "nyc report --all --reporter=text-lcov mocha test/*.test.js test/integration/*.test.js | coveralls"
+  "author": "Kiss Aron <aron123dev@gmail.com>",
+  "homepage": "https://github.com/aron123/node-barion",
+  "repository": {
+    "type": "git",
+    "url": "github:aron123/node-barion"
   },
+  "bugs": {
+    "url": "https://github.com/aron123/node-barion/issues",
+    "email": "aron123dev+barion@gmail.com"
+  },
+  "license": "MIT",
   "keywords": [
     "node",
     "barion",
@@ -16,10 +21,23 @@
     "payment",
     "smart",
     "gateway",
-    "online"
+    "online",
+    "money",
+    "transfer"
   ],
-  "author": "Kiss, Aron",
-  "license": "MIT",
+  "engines": {
+    "node": ">=4"
+  },
+  "directories":{
+    "lib": "./lib",
+    "test": "./test"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/*.test.js test/integration/*.test.js",
+    "coverage": "nyc --all  --reporter=text --reporter=html mocha test/*.test.js test/integration/*.test.js",
+    "report-coverage": "nyc report --all --reporter=text-lcov mocha test/*.test.js test/integration/*.test.js | coveralls"
+  },
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
