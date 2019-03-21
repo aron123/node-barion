@@ -6,6 +6,9 @@ let Barion = require('../../'); //index.js in root level
 let testData = require('./test-data');
 
 describe('Integration tests', function () {
+
+    this.timeout(15000); 
+
     describe('Start payment', function () {
 
         let barion;
