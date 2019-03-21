@@ -197,7 +197,7 @@ barion.startPayment(orderPayment).then(data => {
 To get the state of a payment, use ``getPaymentState`` function. [[Barion Docs](https://docs.barion.com/Payment-GetPaymentState-v2)]
 
 **Parameter**:
-- PaymentId: ID of the payment in the Barion system (string). (required)
+- ``PaymentId``: ID of the payment in the Barion system (string). (required)
 
 **Output**: [Read at Barion Docs](https://docs.barion.com/Payment-GetPaymentState-v2#Output_properties)
 
