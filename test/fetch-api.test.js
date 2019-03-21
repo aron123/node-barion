@@ -13,13 +13,15 @@ const proxyquire = require('proxyquire').noCallThru();
 const fetchMock = require('fetch-mock');
 const { fetchTest } = require('./test-data');
 
-const barionMock = fetchMock
-                    .mock('begin:http://example.com/success', fetchTest.successResponse)
-                    .mock('begin:http://example.com/error', fetchTest.errorResponse)
-                    .mock('begin:http://example.com/internal-server-error', fetchTest.internalErrorResponse)
-                    .mock('begin:http://example.com/not-valid-json', fetchTest.notJsonResponse)
-                    .mock('begin:http://example.com/network-error', fetchTest.networkErrorResponse)
-                    .sandbox();
+const barionMock = {
+    default: fetchMock
+                .mock('begin:http://example.com/success', fetchTest.successResponse)
+                .mock('begin:http://example.com/error', fetchTest.errorResponse)
+                .mock('begin:http://example.com/internal-server-error', fetchTest.internalErrorResponse)
+                .mock('begin:http://example.com/not-valid-json', fetchTest.notJsonResponse)
+                .mock('begin:http://example.com/network-error', fetchTest.networkErrorResponse)
+                .sandbox()
+};
 
 /*
  * The module to test.
