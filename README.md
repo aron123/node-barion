@@ -147,6 +147,7 @@ Example order data:
 let orderPayment = {
     OrderNumber: 'O-2019-0001',
     PaymentRequestId: 'O-2019-0001-1',
+    PaymentType: 'Immediate',
     Transactions: [
         {
             POSTransactionId: 'O-2019-0001',
