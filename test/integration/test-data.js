@@ -45,8 +45,6 @@ module.exports = {
             "Currency": "HUF"
         },
         expectedError: {
-            "Title": "Model Validation Error",
-            "Description": "The Transactions field is required.",
             "ErrorCode": "ModelValidationError",
             "AuthData": UserName
         }
@@ -69,16 +67,12 @@ module.exports = {
         errorRequestBody: {},
         expectedErrors: [
             {
-                "Title": "Model Validation Error",
-                "Description": "The value 'undefined' is not valid for PaymentId.",
                 "ErrorCode": "ModelValidationError",
                 "AuthData": UserName,
             },
             {
-            "Title": "Model Validation Error",
-            "Description": "The PaymentId field is required.",
-            "ErrorCode": "ModelValidationError",
-            "AuthData": UserName
+                "ErrorCode": "ModelValidationError",
+                "AuthData": UserName
             }
         ]
     },
@@ -124,8 +118,6 @@ module.exports = {
             }
         },
         expectedError: {
-            "Title": "Model Validation Error",
-            "Description": "Incorrect bank account format",
             "ErrorCode": "ModelValidationError",
             "AuthData": UserName,
         }
@@ -155,7 +147,6 @@ module.exports = {
         },
         expectedError: {
             "ErrorNumber": 2004,
-            "ErrorMessage": "Invalid recipient format",
             "AuthData": UserName
         }
     }
