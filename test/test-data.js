@@ -11,7 +11,7 @@ module.exports = {
         errorResponse: {
             body: {
                 Errors: [
-                    { Title: 'Authentication failed.', HappenedAt: "2019-01-19T18:46:51.0808761Z" } 
+                    { Title: 'Authentication failed.', HappenedAt: '2019-01-19T18:46:51.0808761Z' } 
                 ]
             },
             status: 400

@@ -5,7 +5,7 @@ describe('lib/errors.js', function () {
     describe('#BarionError(message, errors)', function () {
         let BarionError = errors.BarionError;
 
-        it("should set 'errors' only to array type", function () {
+        it('should set \'errors\' only to array type', function () {
             let e1 = new BarionError('aaa', null);
             let e2 = new BarionError('bbb');
 

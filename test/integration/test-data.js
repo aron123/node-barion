@@ -139,8 +139,8 @@ module.exports = {
             ErrorList: []
         },
         errorRequestBody: {
-            UserName: UserName,
-            Password: Password,
+            UserName,
+            Password,
             Currency: 'HUF',
             Amount: 1,
             Recipient: 'info#example.com'

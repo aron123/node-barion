@@ -127,7 +127,10 @@ describe('Integration tests', function () {
         describe('should respond with response body on success', function () {
             it('- Callback', function (done) {
                 barion.bankTransfer(bankTransfer.successRequestBody, (err, data) => {
-                    if (err) return done(err);
+                    if (err) {
+                        return done(err);
+                    }
+
                     expect(data).to.deep.include(bankTransfer.successResponseBody);
                     done();
                 })
@@ -151,7 +154,9 @@ describe('Integration tests', function () {
 
             it('- Promise', function () {
                 return barion.bankTransfer(bankTransfer.errorRequestBody)
-                    .then(_ => { throw Error('Promise expected to reject, but resolved') })
+                    .then(() => {
+                        throw Error('Promise expected to reject, but resolved');
+                    })
                     .catch(err => {
                         expect(err.name).to.equal('BarionError');
                         expect(err.errors).to.have.lengthOf(1);
@@ -168,7 +173,7 @@ describe('Integration tests', function () {
 
         beforeEach(function () {
             barion = new Barion(testData.initOptions);
-        })
+        });
 
         describe('should respond with response body on success', function () {
             it('- Callback', function (done) {
@@ -176,7 +181,7 @@ describe('Integration tests', function () {
                     if (err) {
                         return done(err);
                     }
-                    
+
                     expect(data).to.deep.include(barionTransfer.successResponseBody);
                     done();
                 });
@@ -200,7 +205,9 @@ describe('Integration tests', function () {
 
             it('- Promise', function () {
                 return barion.barionTransfer(barionTransfer.errorRequestBody)
-                    .then(() => { throw Error('Promise expected to reject, but resolved') })
+                    .then(() => {
+                        throw Error('Promise expected to reject, but resolved');
+                    })
                     .catch(err => {
                         expect(err.name).to.equal('BarionError');
                         expect(err.errors).to.have.lengthOf(1);
