@@ -7,7 +7,7 @@ describe('lib/errors.js', function () {
 
         it("should set 'errors' only to array type", function () {
             let e1 = new BarionError('aaa', null);
-            let e3 = new BarionError('bbb');
+            let e2 = new BarionError('bbb');
 
             expect(e1.errors).to.be.an('array');
             expect(e1.message).to.equal('aaa');
