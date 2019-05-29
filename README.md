@@ -1,7 +1,7 @@
 # node-barion
 [![Build Status](https://travis-ci.org/aron123/node-barion.svg?branch=master)](https://travis-ci.org/aron123/node-barion)
 [![Coverage Status](https://coveralls.io/repos/github/aron123/node-barion/badge.svg?branch=master)](https://coveralls.io/github/aron123/node-barion?branch=master)
-[![npm version](http://img.shields.io/npm/v/node-barion.svg?style=flat)](https://npmjs.org/package/node-barion 'View this project on npm')
+[![npm version](http://img.shields.io/npm/v/node-barion.svg?style=flat)](https://npmjs.org/package/node-barion "View this project on npm")
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
 Helps you to manage e-payment transactions through the [Barion Smart Gateway](https://www.barion.com/).
@@ -12,21 +12,13 @@ Helps you to manage e-payment transactions through the [Barion Smart Gateway](ht
   - [Usage](#usage)
 
   - [Documentation](#documentation)
-
     - [Instantiate new Barion object](#instantiate-new-barion-object---barionoptions)
-
     - [Start new payment](#start-new-payment---barionstartpaymentoptions-callback)
-
     - [Get payment state](#get-payment-state---bariongetpaymentstateoptions-callback)
-
     - [Finish pending reservation](#finish-pending-reservation---barionfinishreservationoptions-callback)
-
     - [Refund payment partially or completely](#refund-payment-partially-or-completely---barionrefundpaymentoptions-callback)
-
     - [Send money to bank account](#send-money-to-bank-account---barionbanktransferoptions-callback)
-
     - [Send money to Barion user or email address](#send-money-to-barion-user-or-email-address---barionbariontransferoptions-callback)
-
     - [Handle errors](#handle-errors)
 
   - [Future improvements](#future-improvements)
@@ -78,19 +70,17 @@ If you are not familiar with Promise and other ES6 stuff, [get closer to it](htt
 
 ## Documentation
 Node-barion provides all the functionality of Barion API:
-  - start new reservation or immediate payment,
-  - get the state of an already started payment,
-  - finish a pending reservation,
-  - refund a completed payment,
-  - send money out of Barion via international bank transfer,
-  - send money to existing Barion account or email address
+- start new reservation or immediate payment,
+- get the state of an already started payment,
+- finish a pending reservation,
+- refund a completed payment,
+- send money out of Barion via international bank transfer,
+- send money to existing Barion account or email address
 
 > **IMPORTANT**: Node-barion is fully consistent with [Barion Docs](https://docs.barion.com/Main_Page), so you can use exactly the same field names, that are specified in it. **It is highly recommended, to read the official Barion documentation** before start to use the node-barion module.
-
-
 > **IMPORTANT**: Barion uses *PascalCased* field naming, but **node-barion is case insensitive** (this means that if Barion Docs mentions a field name *PaymentId*, you can either use *PaymentId*, *paymentId*, *paymentid* or *paymentID* notation in your application).
 
-The signature for every instance method is ``(options, [callback])``, where ``options`` is an object, which contains the input parameters, and ``callback`` is a function, which processes the response.<br>
+The signature for every instance method is ``(options, \[callback\])``, where ``options`` is an object, which contains the input parameters, and ``callback`` is a function, which processes the response.<br>
 If no callback is defined, the methods return a *Promise*, which resolves with data or rejects with error.
 
 ### Instantiate new Barion object - Barion(options)
@@ -101,7 +91,7 @@ In the constructor, you can define default values, that can be overridden later 
 
   - ``Environment``: Environment to use, ``'test'`` or ``'prod'`` (string). (optional, default: ``'test'``)
 
-  > **IMPORTANT**: To use the production environment, you have to explicitly assign ``'prod'`` to this field. Otherwise, the environment is set to ``'test'`` by default.
+    > **IMPORTANT**: To use the production environment, you have to explicitly assign ``'prod'`` to this field. Otherwise, the environment is set to ``'test'`` by default.
 
   - ``FundingSources``: The allowed funding sources, ``[ 'All' ]`` or ``[ 'Balance' ]`` (string[]). (optional, default: ``[ 'All' ]``)
 
@@ -109,32 +99,20 @@ In the constructor, you can define default values, that can be overridden later 
 
   - ``Locale``: Localization of Barion GUI (string). (optional, default: ``'hu-HU'``)<br>
     Allowed values are:
-
     - ``'cs-CZ'`` (Czech)
-
     - ``'de-DE'`` (German)
-
     - ``'en-US'`` (English)
-
     - ``'es-ES'`` (Spanish)
-
     - ``'fr-FR'`` (French)
-
     - ``'hu-HU'`` (Hungarian)
-
     - ``'sk-SK'`` (Slovakian)
-
     - ``'sl-SI'`` (Slovenian)
 
   - ``Currency``: The default currency to use (string). (optional, default: ``'HUF'``)<br>
     Allowed values are:
-
     - ``'CZK'`` (Czech crown)
-
     - ``'EUR'`` (Euro)
-
     - ``'HUF'`` (Hungarian forint)
-
     - ``'USD'`` (U.S. dollar)
 
 #### Usage example
@@ -149,27 +127,27 @@ let barion = new Barion({
 });
 ```
 
-### Start new payment - barion.startPayment(options, [callback])
+### Start new payment - barion.startPayment(options, \[callback\])
 To create a new payment, call the ``startPayment`` function. [[Barion Docs](https://docs.barion.com/Payment-Start-v2)]
 
 **Parameters**:
 
-- ``PaymentType``: Type of the payment, ``'Immediate'`` (classic) or ``'Reservation'`` ([read more](https://docs.barion.com/Reservation_payment)) (string). (required) 
-- ``ReservationPeriod``: Time window that allows the shop to finalize the payment (string in 'd:hh:mm:ss' format). (required, if the payment type is reservation)
-- ``PaymentWindow``: Time window that allows the user to complete the payment (string in 'd:hh:mm:ss' format). (optional, default: 30 minutes)
-- ``GuestCheckOut``: Indicates if guest checkout is enabled (boolean). (optional, because it is assigned in the constructor)
-- ``InitiateRecurrence``: Indicates that the shop would like to initialize a [token payment](https://docs.barion.com/Token_payment) (e.g. for subscription) (boolean). (optional) 
-- ``RecurrenceId``: A string used to identify a given authorized payment ([read more](https://docs.barion.com/Token_payment#Using_the_token)) (string). (optional)
-- ``FundingSources``: Array, that contains the allowed funding sources (string[]). (optional, because it is assigned in the constructor)
-- ``PaymentRequestId``: The unique identifier for the payment generated by the shop (string). (required)
-- ``PayerHint``: Email address of the customer. Barion use this to fill e-mail field automatically (string). (optional)
-- ``RedirectUrl``: URL to redirect the user after the payment is completed (string). (optional)
-- ``CallbackUrl``: URL that Barion should call, when the payment state changes (string). (optional)
-- ``Transactions``: Array of transactions contained by the payment ([PaymentTransaction](https://docs.barion.com/PaymentTransaction)[]). (required)
-- ``OrderNumber``: Order number generated by the shop (string). (optional)
-- ``ShippingAddress``: Address of the user ([ShippingAddress](https://docs.barion.com/ShippingAddress)[]). (optional)
-- ``Locale``: Localization of Barion GUI (string). (optional, because it is assigned in the constructor)
-- ``Currency``: The currency to use (string). (optional, because it is assigned in the constructor)
+  - ``PaymentType``: Type of the payment, ``'Immediate'`` (classic) or ``'Reservation'`` ([read more](https://docs.barion.com/Reservation_payment)) (string). (required) 
+  - ``ReservationPeriod``: Time window that allows the shop to finalize the payment (string in 'd:hh:mm:ss' format). (required, if the payment type is reservation)
+  - ``PaymentWindow``: Time window that allows the user to complete the payment (string in 'd:hh:mm:ss' format). (optional, default: 30 minutes)
+  - ``GuestCheckOut``: Indicates if guest checkout is enabled (boolean). (optional, because it is assigned in the constructor)
+  - ``InitiateRecurrence``: Indicates that the shop would like to initialize a [token payment](https://docs.barion.com/Token_payment) (e.g. for subscription) (boolean). (optional) 
+  - ``RecurrenceId``: A string used to identify a given authorized payment ([read more](https://docs.barion.com/Token_payment#Using_the_token)) (string). (optional)
+  - ``FundingSources``: Array, that contains the allowed funding sources (string[]). (optional, because it is assigned in the constructor)
+  - ``PaymentRequestId``: The unique identifier for the payment generated by the shop (string). (required)
+  - ``PayerHint``: Email address of the customer. Barion use this to fill e-mail field automatically (string). (optional)
+  - ``RedirectUrl``: URL to redirect the user after the payment is completed (string). (optional)
+  - ``CallbackUrl``: URL that Barion should call, when the payment state changes (string). (optional)
+  - ``Transactions``: Array of transactions contained by the payment ([PaymentTransaction](https://docs.barion.com/PaymentTransaction)[]). (required)
+  - ``OrderNumber``: Order number generated by the shop (string). (optional)
+  - ``ShippingAddress``: Address of the user ([ShippingAddress](https://docs.barion.com/ShippingAddress)[]). (optional)
+  - ``Locale``: Localization of Barion GUI (string). (optional, because it is assigned in the constructor)
+  - ``Currency``: The currency to use (string). (optional, because it is assigned in the constructor)
 
 **Output**: [Read at Barion Docs](https://docs.barion.com/Payment-Start-v2#Output_properties)
 
@@ -224,7 +202,7 @@ barion.startPayment(orderPayment).then(data => {
 });
 ```
 
-### Get payment state - barion.getPaymentState(options, [callback])
+### Get payment state - barion.getPaymentState(options, \[callback\])
 
 To get the state of a payment, use ``getPaymentState`` function. [[Barion Docs](https://docs.barion.com/Payment-GetPaymentState-v2)]
 
@@ -253,7 +231,7 @@ barion.getPaymentState({
 });
 ```
 
-### Finish pending reservation - barion.finishReservation(options, [callback])
+### Finish pending reservation - barion.finishReservation(options, \[callback\])
 To finish a pending reservation, use the ``finishReservation`` function. [[Barion Docs](https://docs.barion.com/Payment-FinishReservation-v2)]
 
 **Parameters**:
@@ -294,7 +272,7 @@ barion.finishReservation({
 });
 ```
 
-### Refund payment partially or completely - barion.refundPayment(options, [callback])
+### Refund payment partially or completely - barion.refundPayment(options, \[callback\])
 To refund a completed payment, use the ``refundPayment`` function. [[Barion Docs](https://docs.barion.com/Payment-Refund-v2)]
 
 **Parameters**:
@@ -302,7 +280,6 @@ To refund a completed payment, use the ``refundPayment`` function. [[Barion Docs
 - ``Transactions``: Payment transactions to refund ([TransactionToRefund](https://docs.barion.com/TransactionToRefund)[]). (required)
 
 **Output**: [Read at Barion Docs](https://docs.barion.com/Payment-Refund-v2#Output_properties)
-
 
 #### Usage example
 ##### With callback
@@ -340,22 +317,28 @@ barion.refundPayment({
 });
 ```
 
-### Send money to bank account - barion.bankTransfer(options, [callback])
+### Send money to bank account - barion.bankTransfer(options, \[callback\])
 To send money to a bank account internationally, call the ``bankTransfer`` function. [[Barion Docs](https://docs.barion.com/Withdraw-BankTransfer-v2)]
 
 **Parameters**:
-- ``UserName``: Email address of the shop in the Barion system (string). (required)
-- ``Password``: Password of the shop in the Barion system (string). (required)
-- ``Currency``: The currency to use (string). (optional, because it is assigned in the constructor)<br>
+  - ``UserName``: Email address of the shop in the Barion system (string). (required)
+
+  - ``Password``: Password of the shop in the Barion system (string). (required)
+
+  - ``Currency``: The currency to use (string). (optional, because it is assigned in the constructor)<br>
     Allowed values are:
     - ``'CZK'`` (Czech crown)
     - ``'EUR'`` (Euro)
     - ``'HUF'`` (Hungarian forint)
     - ``'USD'`` (U.S. dollar)
-- ``Amount``: Amount of the money to send (number). (required)
-- ``RecipientName``: Full name of the recipient (string). (required)
-- ``BankAccount``: The recipient's bank account ([BankAccount](https://docs.barion.com/BankAccount)). (required)
-- ``Comment``: Comment of the transfer (string). (optional)
+
+  - ``Amount``: Amount of the money to send (number). (required)
+
+  - ``RecipientName``: Full name of the recipient (string). (required)
+
+  - ``BankAccount``: The recipient's bank account ([BankAccount](https://docs.barion.com/BankAccount)). (required)
+
+  - ``Comment``: Comment of the transfer (string). (optional)
 
 **Output**: [Read at Barion Docs](https://docs.barion.com/Withdraw-BankTransfer-v2#Output_properties)
 
@@ -399,21 +382,26 @@ barion.bankTransfer({
 });
 ```
 
-### Send money to Barion user or email address - barion.barionTransfer(options, [callback])
+### Send money to Barion user or email address - barion.barionTransfer(options, \[callback\])
 To send money to a Barion user or to an email address, call the ``barionTransfer`` function. [[Barion Docs](https://docs.barion.com/Transfer-Send-v1)]
 
 **Parameters**:
-- ``UserName``: Email address of the shop in the Barion system (string). (required)
-- ``Password``: Password of the shop in the Barion system (string). (required)
-- ``Currency``: The currency to use (string). (optional, because it is assigned in the constructor)<br>
+  - ``UserName``: Email address of the shop in the Barion system (string). (required)
+
+  - ``Password``: Password of the shop in the Barion system (string). (required)
+
+  - ``Currency``: The currency to use (string). (optional, because it is assigned in the constructor)<br>
     Allowed values are:
     - ``'CZK'`` (Czech crown)
     - ``'EUR'`` (Euro)
     - ``'HUF'`` (Hungarian forint)
     - ``'USD'`` (U.S. dollar)
-- ``Amount``: Amount of the money to send (number). (required)
-- ``Recipient``: Email address of the recipient (string). (required)
-- ``Comment``: Comment of the transfer (string). (optional)
+
+  - ``Amount``: Amount of the money to send (number). (required)
+
+  - ``Recipient``: Email address of the recipient (string). (required)
+
+  - ``Comment``: Comment of the transfer (string). (optional)
 
 **Output**: [Read at Barion Docs](https://docs.barion.com/Transfer-Send-v1#Output_properties)
 
@@ -449,7 +437,7 @@ barion.barionTransfer({
 
 ### Handle errors
 There are 2 main types of errors can thrown, when you use the node-barion module:
-- ``BarionError``: Thrown, when the Barion system responds with errors.
+  - ``BarionError``: Thrown, when the Barion system responds with errors.
 
     This error has a ``name`` field, set to ``'BarionError'``.
 
@@ -458,7 +446,7 @@ There are 2 main types of errors can thrown, when you use the node-barion module
     > - generic error (such as ``{'Message': 'An error has occurred.'}``),
     > - invalid JSON (such as an HTML maintenance page)
 
-- ``Other errors``: Common Javascript errors, such as ``Error`` or ``TypeError`` (thrown e.g. when network error occured).
+  - ``Other errors``: Common Javascript errors, such as ``Error`` or ``TypeError`` (thrown e.g. when network error occured).
 
 #### Usage example
 ##### With callback
@@ -495,13 +483,16 @@ barion.startPayment(someObj)
 ```
 
 ## Future improvements
-- Do more validation before send the request to Barion, including:
+  - Do more validation before send the request to Barion, including:
     - checking if required values are not ``null`` or ``undefined``,
     - validation of the given values' format (e.g. ensure that Guid, TimeSpan and DateTime values are given in [the appropriate format](https://docs.barion.com/Calling_the_API)),
     - restriction of possible values in certain fields (e.g. ``Currency`` field's value MUST BE one of the following: ``'CZK'``, ``'EUR'``, ``'HUF'``, ``'USD'``)
-- Define more error types (e.g. for network error, invalid JSON response, generic error response).
-- Make available to set optional fields as defaults (e.g. callbackUrl): if defined, send it, else, do not send. Currently, the library sends the field with ``undefined`` value. It does not affect proper functioning, but can be improved to reduce data traffic.
-- Support for automatic reservation finalization / payment refund (fill the Transactions field via ``getPaymentState``)
+
+  - Define more error types (e.g. for network error, invalid JSON response, generic error response).
+
+  - Make available to set optional fields as defaults (e.g. callbackUrl): if defined, send it, else, do not send. Currently, the library sends the field with ``undefined`` value. It does not affect proper functioning, but can be improved to reduce data traffic.
+
+  - Support for automatic reservation finalization / payment refund (fill the Transactions field via ``getPaymentState``)
 
 ## Contributions
 Contributions are welcome.
