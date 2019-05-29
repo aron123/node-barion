@@ -7,25 +7,38 @@
 Helps you to manage e-payment transactions through the [Barion Smart Gateway](https://www.barion.com/).
 
 ## Table of contents
-- [Install](#install)
-- [Usage](#usage)
-- [Documentation](#documentation)
-  * [Instantiate new Barion object](#instantiate-new-barion-object---barionoptions)
-  * [Start new payment](#start-new-payment---barionstartpaymentoptions-callback)
-  * [Get payment state](#get-payment-state---bariongetpaymentstateoptions-callback)
-  * [Finish pending reservation](#finish-pending-reservation---barionfinishreservationoptions-callback)
-  * [Refund payment partially or completely](#refund-payment-partially-or-completely---barionrefundpaymentoptions-callback)
-  * [Send money to bank account](#send-money-to-bank-account---barionbanktransferoptions-callback)
-  * [Send money to Barion user or email address](#send-money-to-barion-user-or-email-address---barionbariontransferoptions-callback)
-  * [Handle errors](#handle-errors)
-- [Future improvements](#future-improvements)
-- [Contributions](#contributions)
-- [License](#license)
+  - [Install](#install)
+
+  - [Usage](#usage)
+
+  - [Documentation](#documentation)
+
+    - [Instantiate new Barion object](#instantiate-new-barion-object---barionoptions)
+
+    - [Start new payment](#start-new-payment---barionstartpaymentoptions-callback)
+
+    - [Get payment state](#get-payment-state---bariongetpaymentstateoptions-callback)
+
+    - [Finish pending reservation](#finish-pending-reservation---barionfinishreservationoptions-callback)
+
+    - [Refund payment partially or completely](#refund-payment-partially-or-completely---barionrefundpaymentoptions-callback)
+
+    - [Send money to bank account](#send-money-to-bank-account---barionbanktransferoptions-callback)
+
+    - [Send money to Barion user or email address](#send-money-to-barion-user-or-email-address---barionbariontransferoptions-callback)
+
+    - [Handle errors](#handle-errors)
+
+  - [Future improvements](#future-improvements)
+
+  - [Contributions](#contributions)
+
+  - [License](#license)
 
 ## Install
 To add node-barion to your project, run this command inside your workspace directory:
 
-```
+```sh
 npm install node-barion --save
 ```
 
@@ -65,14 +78,15 @@ If you are not familiar with Promise and other ES6 stuff, [get closer to it](htt
 
 ## Documentation
 Node-barion provides all the functionality of Barion API:
-- start new reservation or immediate payment,
-- get the state of an already started payment,
-- finish a pending reservation,
-- refund a completed payment,
-- send money out of Barion via international bank transfer,
-- send money to existing Barion account or email address
+  - start new reservation or immediate payment,
+  - get the state of an already started payment,
+  - finish a pending reservation,
+  - refund a completed payment,
+  - send money out of Barion via international bank transfer,
+  - send money to existing Barion account or email address
 
 > **IMPORTANT**: Node-barion is fully consistent with [Barion Docs](https://docs.barion.com/Main_Page), so you can use exactly the same field names, that are specified in it. **It is highly recommended, to read the official Barion documentation** before start to use the node-barion module.
+
 
 > **IMPORTANT**: Barion uses *PascalCased* field naming, but **node-barion is case insensitive** (this means that if Barion Docs mentions a field name *PaymentId*, you can either use *PaymentId*, *paymentId*, *paymentid* or *paymentID* notation in your application).
 
@@ -83,26 +97,44 @@ If no callback is defined, the methods return a *Promise*, which resolves with d
 A Barion instance represents a merchant, that accepts e-payment through Barion.
 
 In the constructor, you can define default values, that can be overridden later in certain queries (except ``POSKey`` and ``Environment``):
-- ``POSKey``: POSKey of the merchant (string). (required)
-- ``Environment``: Environment to use, ``'test'`` or ``'prod'`` (string). (optional, default: ``'test'``)
-    > **IMPORTANT**: To use the production environment, you have to explicitly assign ``'prod'`` to this field. Otherwise, the environment is set to ``'test'`` by default.
-- ``FundingSources``: The allowed funding sources, ``[ 'All' ]`` or ``[ 'Balance' ]`` (string[]). (optional, default: ``[ 'All' ]``)
-- ``GuestCheckOut``: Indicates if guest checkout is enabled (boolean). (optional, default: ``true``)
-- ``Locale``: Localization of Barion GUI (string). (optional, default: ``'hu-HU'``)<br>
+  - ``POSKey``: POSKey of the merchant (string). (required)
+
+  - ``Environment``: Environment to use, ``'test'`` or ``'prod'`` (string). (optional, default: ``'test'``)
+
+  > **IMPORTANT**: To use the production environment, you have to explicitly assign ``'prod'`` to this field. Otherwise, the environment is set to ``'test'`` by default.
+
+  - ``FundingSources``: The allowed funding sources, ``[ 'All' ]`` or ``[ 'Balance' ]`` (string[]). (optional, default: ``[ 'All' ]``)
+
+  - ``GuestCheckOut``: Indicates if guest checkout is enabled (boolean). (optional, default: ``true``)
+
+  - ``Locale``: Localization of Barion GUI (string). (optional, default: ``'hu-HU'``)<br>
     Allowed values are:
+
     - ``'cs-CZ'`` (Czech)
+
     - ``'de-DE'`` (German)
+
     - ``'en-US'`` (English)
+
     - ``'es-ES'`` (Spanish)
+
     - ``'fr-FR'`` (French)
+
     - ``'hu-HU'`` (Hungarian)
+
     - ``'sk-SK'`` (Slovakian)
+
     - ``'sl-SI'`` (Slovenian)
-- ``Currency``: The default currency to use (string). (optional, default: ``'HUF'``)<br>
+
+  - ``Currency``: The default currency to use (string). (optional, default: ``'HUF'``)<br>
     Allowed values are:
+
     - ``'CZK'`` (Czech crown)
+
     - ``'EUR'`` (Euro)
+
     - ``'HUF'`` (Hungarian forint)
+
     - ``'USD'`` (U.S. dollar)
 
 #### Usage example
@@ -479,7 +511,7 @@ If you report a bug/issue, please provide as detailed code to reproduce as possi
 I do not merge PRs, that break the build success, to test your changes, before send a PR, you have to:
 
 0) Make sure, that you have a test Barion account, with at least 500 HUF balance.
-1) Add your credentials to Barion in ``test/integration/credentials.json`` (there are an EXAMPLE in the directory, with the required format).
+1) Add your credentials to Barion in ``test/integration/credentials.json`` (there is an EXAMPLE in the directory, with the required format).
 2) Run the tests:
     ```
     npm run test
