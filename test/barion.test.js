@@ -63,14 +63,14 @@ describe('lib/barion.js', function () {
             expect(() => new Barion({})).to.throw(/^At least POSKey is required to communicate with Barion API.$/);
         });
 
-        it(`should not set Environment property to other values than 'test' and 'prod'`, function () {
+        it("should not set Environment property to other values than 'test' and 'prod'", function () {
             expect(() => new Barion({
                 POSKey: 'aaaa',
                 Environment: 'example'
             })).to.throw(Error);
         });
 
-        it(`should set Environment property to 'test' by default`, function () {
+        it("should set Environment property to 'test' by default", function () {
             let payment = new Barion({ POSKey: 'example' });
             expect(payment.defaults.Environment).to.be.equal('test');
         })
@@ -192,7 +192,7 @@ describe('lib/barion.js', function () {
                 name: 'BarionError', 
                 message: 'Barion request errored out', 
                 errors:  [
-                    { Title: 'Authentication failed.', HappenedAt: "2019-01-19T18:46:51.0808761Z" } 
+                    { Title: 'Authentication failed.', HappenedAt: '2019-01-19T18:46:51.0808761Z' }
                 ]
             };
 
@@ -228,12 +228,12 @@ describe('lib/barion.js', function () {
             it('- Callback', async function () {
                 let callback = err => expect(err).to.match(expected);
 
-                await barion.startPayment(options, callback)
-                await barion.getPaymentState(options, callback)
-                await barion.finishReservation(options, callback)
-                await barion.refundPayment(options, callback)
-                await barion.bankTransfer(options, callback)
-                await barion.barionTransfer(options, callback)
+                await barion.startPayment(options, callback);
+                await barion.getPaymentState(options, callback);
+                await barion.finishReservation(options, callback);
+                await barion.refundPayment(options, callback);
+                await barion.bankTransfer(options, callback);
+                await barion.barionTransfer(options, callback);
             });
 
             it('- Promise', function () {

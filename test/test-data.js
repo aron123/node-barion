@@ -25,4 +25,4 @@ module.exports = {
             throws: 'Failed to fetch data'
         }
     }
-}
+};

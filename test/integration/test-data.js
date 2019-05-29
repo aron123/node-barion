@@ -8,146 +8,146 @@ let Password = process.env.BARION_PASSWORD || require('./credentials').Password;
 
 module.exports = {
     initOptions: {
-        POSKey: POSKey,
+        POSKey,
         Environment: 'test'
     },
     startPayment: {
         successRequestBody: {
-            "PaymentType": "Immediate",
-            "GuestCheckOut": true,
-            "FundingSources": [ "All" ],
-            "OrderNumber": "O-2019-0001",
-            "PaymentRequestId": "O-2019-0001-1",
-            "Transactions": [
+            PaymentType: 'Immediate',
+            GuestCheckOut: true,
+            FundingSources: [ 'All' ],
+            OrderNumber: 'O-2019-0001',
+            PaymentRequestId: 'O-2019-0001-1',
+            Transactions: [
                 {
-                    "POSTransactionId": "O-2019-0001",
-                    "Payee": UserName,
-                    "Total": 50,
-                    "Items": []
+                    POSTransactionId: 'O-2019-0001',
+                    Payee: UserName,
+                    Total: 50,
+                    Items: []
                 }
             ],
-            "Locale": "hu-HU",
-            "Currency": "HUF"
+            Locale: 'hu-HU',
+            Currency: 'HUF'
         },
         successResponseBody: {
-            "PaymentRequestId": "O-2019-0001-1",
-            "Status": "Prepared",
-            "RecurrenceResult": "None",
-            "Errors": []
+            PaymentRequestId: 'O-2019-0001-1',
+            Status: 'Prepared',
+            RecurrenceResult: 'None',
+            Errors: []
         },
         errorRequestBody: {
-            "PaymentType": "Immediate",
-            "GuestCheckOut": true,
-            "FundingSources": [ "All" ],
-            "OrderNumber": "O-2019-0001",
-            "PaymentRequestId": "O-2019-0001-1",
-            "Locale": "hu-HU",
-            "Currency": "HUF"
+            PaymentType: 'Immediate',
+            GuestCheckOut: true,
+            FundingSources: [ 'All' ],
+            OrderNumber: 'O-2019-0001',
+            PaymentRequestId: 'O-2019-0001-1',
+            Locale: 'hu-HU',
+            Currency: 'HUF'
         },
         expectedError: {
-            "ErrorCode": "ModelValidationError",
-            "AuthData": UserName
+            ErrorCode: 'ModelValidationError',
+            AuthData: UserName
         }
     },
     getPaymentState: {
         //successRequestBody: to be defined runtime, before run the test
         successResponseBody: {
-            "PaymentRequestId": "O-2019-0001-1",
-            "OrderNumber": "O-2019-0001",
-            "POSOwnerEmail": UserName,
-            "Status": "Prepared",
-            "PaymentType": "Immediate",
-            "AllowedFundingSources": ["All"],
-            "GuestCheckout": true,
-            "Total": 50,
-            "SuggestedLocale": "hu-HU",
-            "Currency": "HUF",
-            "Errors": []
+            PaymentRequestId: 'O-2019-0001-1',
+            OrderNumber: 'O-2019-0001',
+            POSOwnerEmail: UserName,
+            Status: 'Prepared',
+            PaymentType: 'Immediate',
+            AllowedFundingSources: ['All'],
+            GuestCheckout: true,
+            Total: 50,
+            SuggestedLocale: 'hu-HU',
+            Currency: 'HUF',
+            Errors: []
         },
         errorRequestBody: {},
         expectedErrors: [
             {
-                "ErrorCode": "ModelValidationError",
-                "AuthData": UserName,
+                ErrorCode: 'ModelValidationError',
+                AuthData: UserName,
             },
             {
-                "ErrorCode": "ModelValidationError",
-                "AuthData": UserName
+                ErrorCode: 'ModelValidationError',
+                AuthData: UserName
             }
         ]
     },
     bankTransfer: {
         successRequestBody: {
-            "UserName": UserName,
-            "Password": Password,
-            "Currency": "HUF",
-            "Amount": 1,
-            "RecipientName": "xxxxx",
-            "BankAccount": {
-                "Country": "HUN",
-                "Format": "Giro",
-                "AccountNumber": "10032000-01076019"
+            UserName: UserName,
+            Password: Password,
+            Currency: 'HUF',
+            Amount: 1,
+            RecipientName: 'xxxxx',
+            BankAccount: {
+                Country: 'HUN',
+                Format: 'Giro',
+                AccountNumber: '10032000-01076019'
             }
         },
         successResponseBody: {
-            "Currency": "HUF",
-            "Amount": 1,
-            "RecipientName": "xxxxx",
-            "Comment": null,
-            "BankAccount": {
-                "Country": "HUN",
-                "Format": "Giro",
-                "AccountNumber": "10032000-01076019",
-                "Address": null,
-                "BankName": null,
-                "BankAddress": null,
-                "SwiftCode": null
+            Currency: 'HUF',
+            Amount: 1,
+            RecipientName: 'xxxxx',
+            Comment: null,
+            BankAccount: {
+                Country: 'HUN',
+                Format: 'Giro',
+                AccountNumber: '10032000-01076019',
+                Address: null,
+                BankName: null,
+                BankAddress: null,
+                SwiftCode: null
             },
-            "Errors": []
+            Errors: []
         },
         errorRequestBody: {
-            "UserName": UserName,
-            "Password": Password,
-            "Currency": "HUF",
-            "Amount": 1,
-            "RecipientName": "xxxxx",
-            "BankAccount": {
-                "Country": "HUN",
-                "Format": "Giro",
-                "AccountNumber": "10032000-01070000"
+            UserName: UserName,
+            Password: Password,
+            Currency: 'HUF',
+            Amount: 1,
+            RecipientName: 'xxxxx',
+            BankAccount: {
+                Country: 'HUN',
+                Format: 'Giro',
+                AccountNumber: '10032000-01070000'
             }
         },
         expectedError: {
-            "ErrorCode": "ModelValidationError",
-            "AuthData": UserName,
+            ErrorCode: 'ModelValidationError',
+            AuthData: UserName,
         }
     },
     barionTransfer: {
         successRequestBody: {
-            "UserName": UserName,
-            "Password": Password,
-            "Currency": "HUF",
-            "Amount": 1,
-            "Recipient": "info@example.com"
+            UserName: UserName,
+            Password: Password,
+            Currency: 'HUF',
+            Amount: 1,
+            Recipient: 'info@example.com'
         },
         successResponseBody: {
-            "Amount": -1,
-            "ToName": "info@example.com",
-            "Currency": "HUF",
-            "TransactionType": 3,
-            "Direction": 0,
-            "ErrorList": []
+            Amount: -1,
+            ToName: 'info@example.com',
+            Currency: 'HUF',
+            TransactionType: 3,
+            Direction: 0,
+            ErrorList: []
         },
         errorRequestBody: {
-            "UserName": UserName,
-            "Password": Password,
-            "Currency": "HUF",
-            "Amount": 1,
-            "Recipient": "info#example.com"
+            UserName: UserName,
+            Password: Password,
+            Currency: 'HUF',
+            Amount: 1,
+            Recipient: 'info#example.com'
         },
         expectedError: {
-            "ErrorNumber": 2004,
-            "AuthData": UserName
+            ErrorNumber: 2004,
+            AuthData: UserName
         }
     }
 };

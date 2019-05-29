@@ -2,7 +2,7 @@
  * Assertion library.
  */
 const chai = require('chai');
-const chaiAsPromised = require("chai-as-promised");
+const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
@@ -50,7 +50,6 @@ describe('lib/fetch-api.js', function () {
             expect(() => getFromBarion(endpoint)).to.not.throw();
             expect(() => getFromBarion(endpoint, {})).to.not.throw();
             expect(() => getFromBarion(endpoint, null)).to.not.throw();
-            expect(() => getFromBarion(endpoint, undefined)).to.not.throw();
         });
 
         it('should reject if get response with error HTTP status', function () {
@@ -95,7 +94,6 @@ describe('lib/fetch-api.js', function () {
 
         it('should not throw error if empty request body is passed', function () {
             expect(() => postToBarion('http://example.com/success')).to.not.throw();
-            expect(() => postToBarion('http://example.com/success'), undefined).to.not.throw();
             expect(() => postToBarion('http://example.com/success'), null).to.not.throw();
             expect(() => postToBarion('http://example.com/success'), {}).to.not.throw();
         });

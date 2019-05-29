@@ -173,10 +173,13 @@ describe('Integration tests', function () {
         describe('should respond with response body on success', function () {
             it('- Callback', function (done) {
                 barion.barionTransfer(barionTransfer.successRequestBody, (err, data) => {
-                    if (err) return done(err);
+                    if (err) {
+                        return done(err);
+                    }
+                    
                     expect(data).to.deep.include(barionTransfer.successResponseBody);
                     done();
-                })
+                });
             });
 
             it('- Promise', function () {
@@ -197,7 +200,7 @@ describe('Integration tests', function () {
 
             it('- Promise', function () {
                 return barion.barionTransfer(barionTransfer.errorRequestBody)
-                    .then(_ => { throw Error('Promise expected to reject, but resolved') })
+                    .then(() => { throw Error('Promise expected to reject, but resolved') })
                     .catch(err => {
                         expect(err.name).to.equal('BarionError');
                         expect(err.errors).to.have.lengthOf(1);
