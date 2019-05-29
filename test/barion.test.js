@@ -150,7 +150,7 @@ describe('lib/barion.js', function () {
                     expect(barion.bankTransfer(customs)).to.be.rejectedWith(matcher),
                     expect(barion.barionTransfer(customs)).to.be.rejectedWith(matcher)
                 ]);
-            })
+            });
         });
 
         describe('should return the whole response body after successful HTTP request', function () {

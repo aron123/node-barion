@@ -63,7 +63,10 @@ describe('Integration tests', function () {
         beforeEach(function (done) {
             barion = new Barion(testData.initOptions);
             barion.startPayment(testData.startPayment.successRequestBody, function (err, data) {
-                if (err) return done(err);
+                if (err) {
+                    return done(err);
+                }
+
                 paymentId = data.PaymentId;
                 done();
             });
@@ -99,7 +102,9 @@ describe('Integration tests', function () {
 
             it('- Promise', function () {
                 return barion.getPaymentState(getPaymentState.errorRequestBody)
-                    .then(_ => { throw Error('Promise expected to reject, but resolved') })
+                    .then(_ => {
+                        throw Error('Promise expected to reject, but resolved');
+                    })
                     .catch(err => {
                         expect(err.name).to.equal('BarionError');
                         expect(err.errors).to.have.lengthOf(2);
@@ -149,7 +154,7 @@ describe('Integration tests', function () {
                     expect(err.errors).to.have.lengthOf(1);
                     expect(err.errors[0]).to.deep.include(bankTransfer.expectedError);
                     done();
-                })
+                });
             });
 
             it('- Promise', function () {
