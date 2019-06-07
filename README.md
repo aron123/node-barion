@@ -77,7 +77,7 @@ Node-barion provides all the functionality of Barion API:
 - send money out of Barion via international bank transfer,
 - send money to existing Barion account or email address
 
-> **IMPORTANT**: Node-barion is fully consistent with [Barion Docs](https://docs.barion.com/Main_Page), so you can use exactly the same field names, that are specified in it. **It is highly recommended, to read the official Barion documentation** before start to use the node-barion module.
+> **IMPORTANT**: Node-barion is fully consistent with [Barion Docs](https://docs.barion.com/Main_Page), so you can use exactly the same field names, that are specified in it. **It is highly recommended, to read the official Barion documentation** before start to use the node-barion module.<br>
 > **IMPORTANT**: Barion uses *PascalCased* field naming, but **node-barion is case insensitive** (this means that if Barion Docs mentions a field name *PaymentId*, you can either use *PaymentId*, *paymentId*, *paymentid* or *paymentID* notation in your application).
 
 The signature for every instance method is ``(options, [callback])``, where ``options`` is an object, which contains the input parameters, and ``callback`` is a function, which processes the response.<br>
