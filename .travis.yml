@@ -6,6 +6,13 @@ before_install: npm i -g npm@latest
 
 install: travis_retry npm install
 
-script: npm run coverage
+script:
+  - if [ $TRAVIS_EVENT_TYPE == 'cron' ];
+    then npm run integration-test;
+    else npm run coverage;
+    fi;
 
-after_success: npm run report-coverage
+after_success: 
+  - if [ $TRAVIS_EVENT_TYPE != 'cron' ];
+    then npm run report-coverage; 
+    fi;
