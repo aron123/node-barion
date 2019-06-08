@@ -48,7 +48,7 @@
     "proxyquire": "^2.1.0"
   },
   "dependencies": {
-    "@hapi/joi": "^15.0.3",
+    "@hapi/joi": "15.0.3",
     "node-fetch": "2.3.0"
   },
   "nyc": {
