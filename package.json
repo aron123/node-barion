@@ -55,7 +55,8 @@
     "exclude": [
       "coverage/**",
       "test/**",
-      "lib/constants.js"
+      "lib/constants.js",
+      "lib/domain/**"
     ]
   }
 }
