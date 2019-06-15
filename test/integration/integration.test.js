@@ -120,6 +120,11 @@ describe('Integration tests', function () {
         // because typing bank card info on Barion GUI is required after the payment is started
     });
 
+    describe.skip('Refund payment', function () {
+        // can't be tested automatically, I think,
+        // because typing bank card info on Barion GUI is required after the payment is started
+    });
+
     describe('Bank transfer', function () {
 
         let barion;
