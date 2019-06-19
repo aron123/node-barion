@@ -8,7 +8,11 @@ const validationSchema = Joi.object({
     name: Joi.string().required(),
     gender: Joi.string().required(),
     age: Joi.number().optional()
-});
+})
+    .rename(/^id$/i, 'id', { override: true })
+    .rename(/^name$/i, 'name', { override: true })
+    .rename(/^gender$/i, 'gender', { override: true })
+    .rename(/^age$/i, 'age', { override: true });
 
 describe('lib/validate.js', function () {
     describe('#sanitizeThenValidate(schema, object)', function () {
@@ -91,6 +95,24 @@ describe('lib/validate.js', function () {
                 age: 13,
                 hair: 'brown',
                 drink: 'beer'
+            });
+        });
+
+        it('should sanitize casing of fields', function () {
+            const object = {
+                Id: 'def32g',
+                NaMe: 'bela',
+                gender: 'male',
+                AGE: 13
+            };
+            
+            const result = validation.sanitizeThenValidate(validationSchema, object);
+            
+            expect(result).to.deep.equal({
+                id: 'def32g',
+                name: 'bela',
+                gender: 'male',
+                age: 13
             });
         });
     });
