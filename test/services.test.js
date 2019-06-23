@@ -1,4 +1,4 @@
-const proxyquire = require('proxyquire');
+const proxyquire = require('proxyquire').noCallThru().noPreserveCache();
 const chai = require('chai');
 const { expect } = chai;
 const chaiAsPromised = require('chai-as-promised');
@@ -17,7 +17,7 @@ let serviceMocks = {
      * Request succeeded.
      */
     okService: proxyquire('../lib/services', {
-        './fetch-api': {
+        '../lib/fetch-api': {
             postToBarion: () => Promise.resolve({ success: true, answer: 'example' }),
             getFromBarion: () => Promise.resolve({ success: true, answer: 'example' })
         }
@@ -26,7 +26,7 @@ let serviceMocks = {
      * Request ended in error.
      */
     errorService: proxyquire('../lib/services', {
-        './fetch-api': {
+        '../lib/fetch-api': {
             postToBarion: () => Promise.reject(new BarionError('Barion request errored out', [
                 { Title: 'Authentication failed.', HappenedAt: '2019-01-19T18:46:51.0808761Z' } 
             ])),
@@ -39,7 +39,7 @@ let serviceMocks = {
      * Error occured between client and server.
      */
     networkErrorService: proxyquire('../lib/services', {
-        './fetch-api': {
+        '../lib/fetch-api': {
             postToBarion: () => Promise.reject(new Error('Failed to fetch data')),
             getFromBarion: () => Promise.reject(new Error('Failed to fetch data'))
         }
