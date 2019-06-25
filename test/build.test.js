@@ -2,22 +2,29 @@ const Joi = require('@hapi/joi');
 const proxyquire = require('proxyquire');
 const { expect } = require('chai');
 
-proxyquire('../lib/constants', {
-    immutableFields: [ 'POSKey' ]
+const constantsMock = {
+    immutableFields: [ 'ImmutableField' ]
+};
+
+const validateMock = proxyquire('../lib/validate', {
+    '../lib/constants': constantsMock
 });
 
-const builder = require('../lib/build');
+const builder = proxyquire('../lib/build', {
+    '../lib/constants': constantsMock,
+    '../lib/validate': validateMock
+});
 
 const schema = Joi.object({
-    POSKey: Joi.string().required().guid(),
+    ImmutableField: Joi.string().required().guid(),
     Email: Joi.string().required().email(),
     Priority: Joi.number().required(),
-    OptionalInfo: Joi.string().optional()
+    OptionalInfo: Joi.string().optional().default('asd')
 });
 
 const defaults = {
     Environment: 'test',
-    POSKey: '75cd64eb-f337-4786-acc6-b93a64abdcf6'
+    ImmutableField: '75cd64eb-f337-4786-acc6-b93a64abdcf6'
 };
 
 describe('lib/build.js', function () {
@@ -32,7 +39,7 @@ describe('lib/build.js', function () {
             const result = builder.buildRequestWithoutValidation(schema, defaults, customs);
 
             expect(result).to.deep.equal({
-                POSKey: '75cd64eb-f337-4786-acc6-b93a64abdcf6',
+                ImmutableField: '75cd64eb-f337-4786-acc6-b93a64abdcf6',
                 Email: 'abc@def.hu',
                 Priority: 6,
                 OptionalInfo: 'def'
@@ -41,7 +48,7 @@ describe('lib/build.js', function () {
 
         it('should not allow to override immutable fields', function () {
             expect(() => builder.buildRequestWithoutValidation(schema, defaults, {
-                POSKey: '66cd64ebf3374786acc6b93a64abdcf7',
+                ImmutableField: '66cd64ebf3374786acc6b93a64abdcf7',
                 Email: 'abc@def.hu',
                 Priority: 6,
                 OptionalInfo: 'def'
@@ -56,7 +63,7 @@ describe('lib/build.js', function () {
             };
 
             expect(builder.buildRequestWithoutValidation(schema, defaults, customs)).to.deep.equal({
-                POSKey: '75cd64eb-f337-4786-acc6-b93a64abdcf6',
+                ImmutableField: '75cd64eb-f337-4786-acc6-b93a64abdcf6',
                 Email: 'info@example.com',
                 pRiOrItY: 2,
                 OPTIONALINFO: 'comment'
@@ -67,7 +74,7 @@ describe('lib/build.js', function () {
             const customs = {};
 
             expect(builder.buildRequestWithoutValidation(schema, defaults, customs)).to.deep.equal({
-                POSKey: '75cd64eb-f337-4786-acc6-b93a64abdcf6',
+                ImmutableField: '75cd64eb-f337-4786-acc6-b93a64abdcf6',
                 Email: undefined,
                 Priority: undefined,
                 OptionalInfo: undefined
@@ -84,7 +91,7 @@ describe('lib/build.js', function () {
             };
 
             expect(builder.buildRequestWithoutValidation(schema, defaults, customs)).to.deep.equals({
-                POSKey: '75cd64eb-f337-4786-acc6-b93a64abdcf6',
+                ImmutableField: '75cd64eb-f337-4786-acc6-b93a64abdcf6',
                 Email: 'info@example.com',
                 Priority: 2,
                 OptionalInfo: 'comment',
@@ -105,7 +112,7 @@ describe('lib/build.js', function () {
             const result = builder.buildRequest(schema, defaults, customs);
 
             expect(result).to.deep.equal({
-                POSKey: '75cd64eb-f337-4786-acc6-b93a64abdcf6',
+                ImmutableField: '75cd64eb-f337-4786-acc6-b93a64abdcf6',
                 Email: 'abc@def.hu',
                 Priority: 6,
                 OptionalInfo: 'def'
@@ -114,7 +121,7 @@ describe('lib/build.js', function () {
 
         it('should not allow to override immutable fields', function () {
             expect(() => builder.buildRequest(schema, defaults, {
-                POSKey: '66cd64ebf3374786acc6b93a64abdcf7',
+                ImmutableField: '66cd64ebf3374786acc6b93a64abdcf7',
                 Email: 'abc@def.hu',
                 Priority: 6,
                 OptionalInfo: 'def'
@@ -139,7 +146,7 @@ describe('lib/build.js', function () {
             };
 
             expect(builder.buildRequest(schema, defaults, customs)).to.deep.equals({
-                POSKey: '75cd64eb-f337-4786-acc6-b93a64abdcf6',
+                ImmutableField: '75cd64eb-f337-4786-acc6-b93a64abdcf6',
                 Email: 'info@example.com',
                 Priority: 2,
                 OptionalInfo: 'comment'
