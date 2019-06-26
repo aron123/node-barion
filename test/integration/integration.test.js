@@ -40,7 +40,7 @@ describe('Integration tests', function () {
                 expect(err).to.be.null;
                 expect(res).to.deep.include(testData.startPayment.successResponseBody);
                 done();
-            })
+            });
         });
 
         it('should answer with BarionError when request object is not proper and validation is turned off', function (done) {

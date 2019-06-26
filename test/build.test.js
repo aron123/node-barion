@@ -73,11 +73,8 @@ describe('lib/build.js', function () {
         it('should not validate request object based on the given schema', function () {
             const customs = {};
 
-            expect(builder.buildRequestWithoutValidation(schema, defaults, customs)).to.deep.equal({
-                ImmutableField: '75cd64eb-f337-4786-acc6-b93a64abdcf6',
-                Email: undefined,
-                Priority: undefined,
-                OptionalInfo: undefined
+            expect(builder.buildRequestWithoutValidation(schema, defaults, customs)).to.deep.include({
+                ImmutableField: '75cd64eb-f337-4786-acc6-b93a64abdcf6'
             });
         });
 

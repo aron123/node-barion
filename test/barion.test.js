@@ -27,10 +27,10 @@ const validationErrorObject = new BarionModelError('Invalid object given.', [
     '"something" is required',
     'dnt frget to feed yr cat evrydai'
 ]);
-const throwValidationError = () => { throw validationErrorObject };
+const throwValidationError = () => { throw validationErrorObject; };
 
 const sanitizationErrorObject = new Error('Goulash is so delicious.');
-const throwSanitizationError = () => { throw sanitizationErrorObject };
+const throwSanitizationError = () => { throw sanitizationErrorObject; };
 
 /**
  * Mock injections.

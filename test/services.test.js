@@ -124,13 +124,13 @@ describe('lib/services.js', function () {
         it('should return a Promise on success', function (done) {
             const services = serviceMocks.okService;
             services.barionTransfer('test', {})
-                .then(data => done())
+                .then(() => done());
         });
 
         it('should return a Promise on failure', function (done) {
             const services = serviceMocks.errorService;
             services.barionTransfer('test', {})
-                .catch(err => done())
+                .catch(() => done());
         });
     });
 

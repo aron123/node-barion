@@ -86,8 +86,8 @@ module.exports = {
     },
     bankTransfer: {
         successRequestBody: {
-            UserName: UserName,
-            Password: Password,
+            UserName,
+            Password,
             Currency: 'HUF',
             Amount: 1,
             RecipientName: 'xxxxx',
@@ -115,7 +115,7 @@ module.exports = {
         },
         errorRequestBody: {
             UserName,
-            Password: Password,
+            Password,
             Currency: 'HUF',
             RecipientName: 'xxxxx',
             BankAccount: {
@@ -132,8 +132,8 @@ module.exports = {
     },
     barionTransfer: {
         successRequestBody: {
-            UserName: UserName,
-            Password: Password,
+            UserName,
+            Password,
             Currency: 'HUF',
             Amount: 1,
             Recipient: 'info@example.com'
