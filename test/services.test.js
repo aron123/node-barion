@@ -6,6 +6,8 @@ const spies = require('chai-spies');
 chai.use(chaiAsPromised);
 chai.use(spies);
 
+const { URL } = require('url');
+
 const { BarionError } = require('../lib/errors');
 const { baseUrls } = require('../lib/constants');
 
