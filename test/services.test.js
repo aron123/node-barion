@@ -54,13 +54,13 @@ describe('lib/services.js', function () {
         it('should return a Promise on success', function (done) {
             const services = serviceMocks.okService;
             services.startPayment('test', {})
-                .then(data => done())
+                .then(data => done());
         });
 
         it('should return a Promise on failure', function (done) {
             const services = serviceMocks.errorService;
             services.startPayment('test', {})
-                .catch(err => done())
+                .catch(err => done());
         });
     });
 
@@ -68,13 +68,13 @@ describe('lib/services.js', function () {
         it('should return a Promise on success', function (done) {
             const services = serviceMocks.okService;
             services.getPaymentState('test', {})
-                .then(data => done())
+                .then(data => done());
         });
 
         it('should return a Promise on failure', function (done) {
             const services = serviceMocks.errorService;
             services.getPaymentState('test', {})
-                .catch(err => done())
+                .catch(err => done());
         });
     });
 
@@ -82,13 +82,13 @@ describe('lib/services.js', function () {
         it('should return a Promise on success', function (done) {
             const services = serviceMocks.okService;
             services.finishReservation('test', {})
-                .then(data => done())
+                .then(data => done());
         });
 
         it('should return a Promise on failure', function (done) {
             const services = serviceMocks.errorService;
             services.finishReservation('test', {})
-                .catch(err => done())
+                .catch(err => done());
         });
     });
 
@@ -96,13 +96,13 @@ describe('lib/services.js', function () {
         it('should return a Promise on success', function (done) {
             const services = serviceMocks.okService;
             services.refundPayment('test', {})
-                .then(data => done())
+                .then(data => done());
         });
 
         it('should return a Promise on failure', function (done) {
             const services = serviceMocks.errorService;
             services.refundPayment('test', {})
-                .catch(err => done())
+                .catch(err => done());
         });
     });
 
@@ -110,13 +110,13 @@ describe('lib/services.js', function () {
         it('should return a Promise on success', function (done) {
             const services = serviceMocks.okService;
             services.bankTransfer('test', {})
-                .then(data => done())
+                .then(data => done());
         });
 
         it('should return a Promise on failure', function (done) {
             const services = serviceMocks.errorService;
             services.bankTransfer('test', {})
-                .catch(err => done())
+                .catch(err => done());
         });
     });
 

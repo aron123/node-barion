@@ -100,7 +100,7 @@ describe('lib/barion.js', function () {
         it('should set Environment property to \'test\' by default', function () {
             let barion = new Barion({ POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1' });
             expect(barion.defaults.Environment).to.be.equal('test');
-        })
+        });
 
         it('should merge custom options with defaults successfully', function () {
             let barion = new Barion({
