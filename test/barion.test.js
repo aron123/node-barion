@@ -1,249 +1,585 @@
-/*
- * Assertion library.
- */
-const chai = require('chai');
-chai.use(require('chai-as-promised'));
-const expect = chai.expect;
-
-/*
- * Mocking-related dependencies.
- */
 const proxyquire = require('proxyquire');
-const { BarionError } = require('../lib/errors');
+const chai = require('chai');
+const { expect } = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised);
 
-/*
+const Barion = require('../lib/barion');
+const { BarionError, BarionModelError } = require('../lib/errors');
+
+/**
  * Mocks.
  */
-let barionMocks = {
-    /*
-     * Request succeeded.
-     */
-    okBarion: proxyquire('../lib/barion', {
-        './fetch-api': {
-            postToBarion: () => Promise.resolve({ success: true, answer: 'example' }),
-            getFromBarion: () => Promise.resolve({ success: true, answer: 'example' })
+const successObject = {
+    success: true,
+    paymentId: 'abcdefg',
+    transactions: [ { a: 'b' }, { a: 'c' } ]
+};
+const returnSuccess = () => Promise.resolve(successObject);
+
+const errorObject = new BarionError('Request errored out.', [
+    'something went wrong',
+    'but others are not'
+]);
+const returnError = () => Promise.reject(errorObject);
+
+const validationErrorObject = new BarionModelError('Invalid object given.', [
+    '"something" is required',
+    'dnt frget to feed yr cat evrydai'
+]);
+const throwValidationError = () => { throw validationErrorObject; };
+
+const sanitizationErrorObject = new Error('Goulash is so delicious.');
+const throwSanitizationError = () => { throw sanitizationErrorObject; };
+
+/**
+ * Mock injections.
+ */
+const Barions = {
+    OkBarion: proxyquire('../lib/barion', {
+        './services': {
+            startPayment: returnSuccess,
+            getPaymentState: returnSuccess,
+            finishReservation: returnSuccess,
+            refundPayment: returnSuccess,
+            bankTransfer: returnSuccess,
+            barionTransfer:returnSuccess
         }
     }),
-    /*
-     * Request ended in error.
-     */
-    errorBarion: proxyquire('../lib/barion', {
-        './fetch-api': {
-            postToBarion: () => Promise.reject(new BarionError('Barion request errored out', [
-                { Title: 'Authentication failed.', HappenedAt: '2019-01-19T18:46:51.0808761Z' } 
-            ])),
-            getFromBarion: () => Promise.reject(new BarionError('Barion request errored out', [
-                { Title: 'Authentication failed.', HappenedAt: '2019-01-19T18:46:51.0808761Z' } 
-            ]))
+    ServiceErrorBarion: proxyquire('../lib/barion', {
+        './services': {
+            startPayment: returnError,
+            getPaymentState: returnError,
+            finishReservation: returnError,
+            refundPayment: returnError,
+            bankTransfer: returnError,
+            barionTransfer: returnError
         }
     }),
-    /*
-     * Error occured between client and server.
-     */
-    networkErrorBarion: proxyquire('../lib/barion', {
-        './fetch-api': {
-            postToBarion: () => Promise.reject(new Error('Failed to fetch data')),
-            getFromBarion: () => Promise.reject(new Error('Failed to fetch data'))
+    ValidationErrorBarion: proxyquire('../lib/barion', {
+        './services': {
+            startPayment: returnSuccess,
+            getPaymentState: returnSuccess,
+            finishReservation: returnSuccess,
+            refundPayment: returnSuccess,
+            bankTransfer: returnSuccess,
+            barionTransfer: returnSuccess
+        },
+        './build': {
+            buildRequest: throwValidationError
+        }
+    }),
+    SanitizationErrorBarion: proxyquire('../lib/barion', {
+        './services': {
+            startPayment: returnSuccess,
+            getPaymentState: returnSuccess,
+            finishReservation: returnSuccess,
+            refundPayment: returnSuccess,
+            bankTransfer: returnSuccess,
+            barionTransfer:returnSuccess
+        },
+        './build': {
+            buildRequestWithoutValidation: throwSanitizationError
         }
     })
 };
 
-
-/*
- * Tests.
- */
 describe('lib/barion.js', function () {
-
     describe('#Barion(options)', function () {
-        let Barion = barionMocks.okBarion;
-
         it('should throw error if POSKey property is not defined', function () {
-            expect(() => new Barion({})).to.throw(/^At least POSKey is required to communicate with Barion API.$/);
+            expect(() => new Barion({})).to.throw();
         });
 
         it('should not set Environment property to other values than \'test\' and \'prod\'', function () {
             expect(() => new Barion({
-                POSKey: 'aaaa',
+                POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1',
                 Environment: 'example'
-            })).to.throw(Error);
+            })).to.throw();
         });
 
         it('should set Environment property to \'test\' by default', function () {
-            let payment = new Barion({ POSKey: 'example' });
-            expect(payment.defaults.Environment).to.be.equal('test');
-        })
+            let barion = new Barion({ POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1' });
+            expect(barion.defaults.Environment).to.be.equal('test');
+        });
 
         it('should merge custom options with defaults successfully', function () {
-            let payment = new Barion({
-                POSKey: 'aaaaaa',
-                Environment: 'test',
-                GuestCheckOut: false,
-                Locale: 'en-US'
+            let barion = new Barion({
+                POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1',
+                Environment: 'test'
             });
 
-            expect(payment.defaults).to.deep.equals({
-                POSKey: 'aaaaaa',
+            expect(barion.defaults).to.deep.include({
+                POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1',
                 Environment: 'test',
                 FundingSources: [ 'All' ],
-                GuestCheckOut: false,
-                Locale: 'en-US',
+                GuestCheckOut: true,
+                Locale: 'hu-HU',
                 Currency: 'HUF'
             });
         });
     });
 
-    describe('#startPayment, getPaymentState, finishReservation, refundPayment, ' + 
-                    'bankTransfer, barionTransfer (options, [callback])', function () {
+    const okBarion = new Barions.OkBarion({ POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1' });
+    const okBarionWithoutValidation = new Barions.OkBarion({ POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1', ValidateModels: false });
+    const ServiceErrorBarion = new Barions.ServiceErrorBarion({ POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1' });
+    const validationErrorBarion = new Barions.ValidationErrorBarion({ POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1' });
+    const sanitizationErrorBarion = new Barions.SanitizationErrorBarion({ POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1', ValidateModels: false });
 
-        describe('should respond with error if trying to override POSKey', function () {
-            let Barion = barionMocks.okBarion;
-            let barion = new Barion({ POSKey: 'aaaa' });
-            let customs = { POSKey: 'bbbb' };
-            let matcher = 'POSKey can not overridden.';
-            
-            it('- Callback', async function () {
-                let callback = err => expect(err.message).to.equals(matcher);
-
-                await barion.startPayment(customs, callback);
-                await barion.getPaymentState(customs, callback);
-                await barion.finishReservation(customs, callback);
-                await barion.refundPayment(customs, callback);
-                await barion.bankTransfer(customs, callback);
-                await barion.barionTransfer(customs, callback);
-            });
-
-            it('- Promise', function () {
-                return Promise.all([
-                    expect(barion.startPayment(customs)).to.be.rejectedWith(matcher),
-                    expect(barion.getPaymentState(customs)).to.be.rejectedWith(matcher),
-                    expect(barion.finishReservation(customs)).to.be.rejectedWith(matcher),
-                    expect(barion.refundPayment(customs)).to.be.rejectedWith(matcher),
-                    expect(barion.bankTransfer(customs)).to.be.rejectedWith(matcher),
-                    expect(barion.barionTransfer(customs)).to.be.rejectedWith(matcher)
-                ]);
-            })
-        });
-
-        describe('should respond with error if trying to override Environment', function () {
-            let Barion = barionMocks.okBarion;
-            let barion = new Barion({ POSKey: 'aaaa' });
-            let customs = { Environment: 'prod' };
-            let matcher = 'Environment can not overridden.';
-
-            it('- Callback', async function () {
-                let callback = err => expect(err.message).to.equals(matcher);
-
-                await barion.startPayment(customs, callback);
-                await barion.getPaymentState(customs, callback);
-                await barion.finishReservation(customs, callback);
-                await barion.refundPayment(customs, callback);
-                await barion.bankTransfer(customs, callback);
-                await barion.barionTransfer(customs, callback);
-            });
-
-            it('- Promise', function () {
-                return Promise.all([
-                    expect(barion.startPayment(customs)).to.be.rejectedWith(matcher),
-                    expect(barion.getPaymentState(customs)).to.be.rejectedWith(matcher),
-                    expect(barion.finishReservation(customs)).to.be.rejectedWith(matcher),
-                    expect(barion.refundPayment(customs)).to.be.rejectedWith(matcher),
-                    expect(barion.bankTransfer(customs)).to.be.rejectedWith(matcher),
-                    expect(barion.barionTransfer(customs)).to.be.rejectedWith(matcher)
-                ]);
+    describe('#startPayment(options, [callback])', function () {
+        const request = {
+            PaymentRequestId: 'ORDER#6409-1',
+            PaymentType: 'Immediate',
+            Transactions: [
+                {
+                    POSTransactionId: 'ORDER#6409',
+                    Payee: 'info@example.com',
+                    Total: 256
+                }
+            ]
+        };
+        
+        it('should answer with callback on success', function (done) {
+            okBarion.startPayment(request, (err, res) => {
+                expect(res).to.deep.equal(successObject);
+                done();
             });
         });
 
-        describe('should return the whole response body after successful HTTP request', function () {
-            let Barion = barionMocks.okBarion;
-            let barion = new Barion({ POSKey: 'aaaa' });
-            let options = { a: 'b' };
-            let expectedValue = { success: true, answer: 'example' };
-
-            it('- Callback', async function () {
-                let callback = (err, data) => expect(data).to.deep.equal(expectedValue);
-
-                await barion.startPayment(options, callback);
-                await barion.getPaymentState(options, callback);
-                await barion.finishReservation(options, callback);
-                await barion.refundPayment(options, callback);
-                await barion.bankTransfer(options, callback);
-                await barion.barionTransfer(options, callback);
-            });
-
-            it('- Promise', function () {
-                return Promise.all([
-                    expect(barion.startPayment(options)).to.eventually.deep.equals(expectedValue),
-                    expect(barion.getPaymentState(options)).to.eventually.deep.equals(expectedValue),
-                    expect(barion.finishReservation(options)).to.eventually.deep.equals(expectedValue),
-                    expect(barion.refundPayment(options)).to.eventually.deep.equals(expectedValue),
-                    expect(barion.bankTransfer(options)).to.eventually.deep.equals(expectedValue),
-                    expect(barion.barionTransfer(options)).to.eventually.deep.equals(expectedValue)
-                ]);
+        it('should answer with callback on success when validation is turned off', function (done) {
+            okBarionWithoutValidation.startPayment(request, (err, res) => {
+                expect(res).to.deep.equal(successObject);
+                done();
             });
         });
 
-        describe('should return BarionError after not-ok HTTP response', function () {
-            let Barion = barionMocks.errorBarion;
-            let barion = new Barion({ POSKey: 'aaaa' });
-            let options = { a: 'b' };
-            let expectedError = { 
-                name: 'BarionError', 
-                message: 'Barion request errored out', 
-                errors:  [
-                    { Title: 'Authentication failed.', HappenedAt: '2019-01-19T18:46:51.0808761Z' }
-                ]
-            };
-
-            it('- Callback', async function () {
-                let callback = err => expect(err).to.deep.include(expectedError);
-
-                await barion.startPayment(options, callback);
-                await barion.getPaymentState(options, callback);
-                await barion.finishReservation(options, callback);
-                await barion.refundPayment(options, callback);
-                await barion.bankTransfer(options, callback);
-                await barion.barionTransfer(options, callback);
-            });
-
-            it('- Promise', function () {
-                return Promise.all([
-                    expect(barion.startPayment(options)).to.be.rejected.and.eventually.deep.include(expectedError),
-                    expect(barion.getPaymentState(options)).to.be.rejected.and.eventually.deep.include(expectedError),
-                    expect(barion.finishReservation(options)).to.be.rejected.and.eventually.deep.include(expectedError),
-                    expect(barion.refundPayment(options)).to.be.rejected.and.eventually.deep.include(expectedError),
-                    expect(barion.bankTransfer(options)).to.be.rejected.and.eventually.deep.include(expectedError),
-                    expect(barion.barionTransfer(options)).to.be.rejected.and.eventually.deep.include(expectedError),
-                ]);
+        it('should answer with callback on error', function (done) {
+            ServiceErrorBarion.startPayment(request, (err, res) => {
+                expect(err).to.deep.equal(errorObject);
+                expect(res).to.be.null;
+                done();
             });
         });
 
-        describe('should return error if network error occured', function () {
-            let Barion = barionMocks.networkErrorBarion;
-            let barion = new Barion({ POSKey: 'aaaa' });
-            let options = { a: 'b' };
-            let expected = /Failed to fetch data/;
-
-            it('- Callback', async function () {
-                let callback = err => expect(err).to.match(expected);
-
-                await barion.startPayment(options, callback);
-                await barion.getPaymentState(options, callback);
-                await barion.finishReservation(options, callback);
-                await barion.refundPayment(options, callback);
-                await barion.bankTransfer(options, callback);
-                await barion.barionTransfer(options, callback);
+        it('should answer with callback on validation error', function (done) {
+            validationErrorBarion.startPayment(request, (err, res) => {
+                expect(err).to.deep.equal(validationErrorObject);
+                expect(res).to.be.null;
+                done();
             });
+        });
 
-            it('- Promise', function () {
-                return Promise.all([
-                    expect(barion.startPayment(options)).to.be.rejectedWith(expected),
-                    expect(barion.getPaymentState(options)).to.be.rejectedWith(expected),
-                    expect(barion.finishReservation(options)).to.be.rejectedWith(expected),
-                    expect(barion.refundPayment(options)).to.be.rejectedWith(expected),
-                    expect(barion.bankTransfer(options)).to.be.rejectedWith(expected),
-                    expect(barion.barionTransfer(options)).to.be.rejectedWith(expected),
-                ]);
+        it('should answer with callback on sanitization error when validation is turned off', function (done) {
+            sanitizationErrorBarion.startPayment(request, (err, res) => {
+                expect(err).to.deep.equal(sanitizationErrorObject);
+                expect(res).to.be.null;
+                done();
             });
+        });
+
+        it('should answer with Promise on success', function (done) {
+            let promise = okBarion.startPayment(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on success when validation is turned off', function (done) {
+            let promise = okBarionWithoutValidation.startPayment(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on error', function (done) {
+            let promise = ServiceErrorBarion.startPayment(request);
+            expect(promise).to.eventually.rejectedWith(errorObject).notify(done);
+        });
+
+        it('should answer with Promise on validation error', function (done) {
+            let promise = validationErrorBarion.startPayment(request);
+            expect(promise).to.eventually.rejectedWith(validationErrorObject).notify(done);
+        });
+
+        it('should answer with Promise on sanitization error when validation is turned off', function (done) {
+            let promise = sanitizationErrorBarion.startPayment(request);
+            expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
+        });
+    });
+
+    describe('#getPaymentState(options, [callback])', function () {
+        const request = {
+            PaymentId: '277a6ae1-12b0-4192-8e6c-bc7d0612afa2'
+        };
+        
+        it('should answer with callback on success', function (done) {
+            okBarion.getPaymentState(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on success when validation is turned off', function (done) {
+            okBarionWithoutValidation.getPaymentState(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on error', function (done) {
+            ServiceErrorBarion.getPaymentState(request, (err, res) => {
+                expect(err).to.deep.equal(errorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on validation error', function (done) {
+            validationErrorBarion.getPaymentState(request, (err, res) => {
+                expect(err).to.deep.equal(validationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on sanitization error when validation is turned off', function (done) {
+            sanitizationErrorBarion.getPaymentState(request, (err, res) => {
+                expect(err).to.deep.equal(sanitizationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with Promise on success', function (done) {
+            let promise = okBarion.getPaymentState(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on success when validation is turned off', function (done) {
+            let promise = okBarionWithoutValidation.getPaymentState(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on error', function (done) {
+            let promise = ServiceErrorBarion.getPaymentState(request);
+            expect(promise).to.eventually.rejectedWith(errorObject).notify(done);
+        });
+
+        it('should answer with Promise on validation error', function (done) {
+            let promise = validationErrorBarion.getPaymentState(request);
+            expect(promise).to.eventually.rejectedWith(validationErrorObject).notify(done);
+        });
+
+        it('should answer with Promise on sanitization error when validation is turned off', function (done) {
+            let promise = sanitizationErrorBarion.getPaymentState(request);
+            expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
+        });
+    });
+
+    describe('#finishReservation(options, [callback])', function () {
+        const request = {
+            PaymentId: '277a6ae1-12b0-4192-8e6c-bc7d0612afa2',
+            Transactions: [
+                {
+                    TransactionId: '277a6ae1-12b0-4192-8e6c-bc7d0612afa3',
+                    Total: 256
+                }
+            ]
+        };
+        
+        it('should answer with callback on success', function (done) {
+            okBarion.finishReservation(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on success when validation is turned off', function (done) {
+            okBarionWithoutValidation.finishReservation(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on error', function (done) {
+            ServiceErrorBarion.finishReservation(request, (err, res) => {
+                expect(err).to.deep.equal(errorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on validation error', function (done) {
+            validationErrorBarion.finishReservation(request, (err, res) => {
+                expect(err).to.deep.equal(validationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on sanitization error when validation is turned off', function (done) {
+            sanitizationErrorBarion.finishReservation(request, (err, res) => {
+                expect(err).to.deep.equal(sanitizationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with Promise on success', function (done) {
+            let promise = okBarion.finishReservation(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on success when validation is turned off', function (done) {
+            let promise = okBarionWithoutValidation.finishReservation(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on error', function (done) {
+            let promise = ServiceErrorBarion.finishReservation(request);
+            expect(promise).to.eventually.rejectedWith(errorObject).notify(done);
+        });
+
+        it('should answer with Promise on validation error', function (done) {
+            let promise = validationErrorBarion.finishReservation(request);
+            expect(promise).to.eventually.rejectedWith(validationErrorObject).notify(done);
+        });
+
+        it('should answer with Promise on sanitization error when validation is turned off', function (done) {
+            let promise = sanitizationErrorBarion.finishReservation(request);
+            expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
+        });
+    });
+
+    describe('#refundPayment(options, [callback])', function () {
+        const request = {
+            PaymentId: '277a6ae1-12b0-4192-8e6c-bc7d0612afa2',
+            TransactionsToRefund: [
+                {
+                    TransactionId: '277a6ae1-12b0-4192-8e6c-bc7d0612afa3',
+                    POSTransactionId: 'ORDER#6409',
+                    AmountToRefund: 256
+                }
+            ]
+        };
+        
+        it('should answer with callback on success', function (done) {
+            okBarion.refundPayment(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on success when validation is turned off', function (done) {
+            okBarionWithoutValidation.refundPayment(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on error', function (done) {
+            ServiceErrorBarion.refundPayment(request, (err, res) => {
+                expect(err).to.deep.equal(errorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on validation error', function (done) {
+            validationErrorBarion.refundPayment(request, (err, res) => {
+                expect(err).to.deep.equal(validationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on sanitization error when validation is turned off', function (done) {
+            sanitizationErrorBarion.refundPayment(request, (err, res) => {
+                expect(err).to.deep.equal(sanitizationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with Promise on success', function (done) {
+            let promise = okBarion.refundPayment(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on success when validation is turned off', function (done) {
+            let promise = okBarionWithoutValidation.refundPayment(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on error', function (done) {
+            let promise = ServiceErrorBarion.refundPayment(request);
+            expect(promise).to.eventually.rejectedWith(errorObject).notify(done);
+        });
+
+        it('should answer with Promise on validation error', function (done) {
+            let promise = validationErrorBarion.refundPayment(request);
+            expect(promise).to.eventually.rejectedWith(validationErrorObject).notify(done);
+        });
+
+        it('should answer with Promise on sanitization error when validation is turned off', function (done) {
+            let promise = sanitizationErrorBarion.refundPayment(request);
+            expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
+        });
+    });
+
+    describe('#bankTransfer(options, [callback])', function () {
+        const request = {
+            UserName: 'info@example.com',
+            Password: 'admin1234',
+            Currency: 'HUF',
+            Amount: 1500,
+            RecipientName: 'Jacob Gypsum',
+            BankAccount: {
+                Country: 'HUN',
+                Format: 'Giro',
+                AccountNumber: '12345678-12345678'
+            }
+        };
+        
+        it('should answer with callback on success', function (done) {
+            okBarion.bankTransfer(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on success when validation is turned off', function (done) {
+            okBarionWithoutValidation.bankTransfer(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on error', function (done) {
+            ServiceErrorBarion.bankTransfer(request, (err, res) => {
+                expect(err).to.deep.equal(errorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on validation error', function (done) {
+            validationErrorBarion.bankTransfer(request, (err, res) => {
+                expect(err).to.deep.equal(validationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on sanitization error when validation is turned off', function (done) {
+            sanitizationErrorBarion.bankTransfer(request, (err, res) => {
+                expect(err).to.deep.equal(sanitizationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with Promise on success', function (done) {
+            let promise = okBarion.bankTransfer(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on success when validation is turned off', function (done) {
+            let promise = okBarionWithoutValidation.bankTransfer(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on error', function (done) {
+            let promise = ServiceErrorBarion.bankTransfer(request);
+            expect(promise).to.eventually.rejectedWith(errorObject).notify(done);
+        });
+
+        it('should answer with Promise on validation error', function (done) {
+            let promise = validationErrorBarion.bankTransfer(request);
+            expect(promise).to.eventually.rejectedWith(validationErrorObject).notify(done);
+        });
+
+        it('should answer with Promise on sanitization error when validation is turned off', function (done) {
+            let promise = sanitizationErrorBarion.bankTransfer(request);
+            expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
+        });
+    });
+
+    describe('#barionTransfer(options, [callback])', function () {
+        const request = {
+            UserName: 'info@example.com',
+            Password: 'admin1234',
+            Currency: 'HUF',
+            Amount: 1500,
+            Recipient: 'admin@example.com'
+        };
+        
+        it('should answer with callback on success', function (done) {
+            okBarion.barionTransfer(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on success when validation is turned off', function (done) {
+            okBarionWithoutValidation.barionTransfer(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on error', function (done) {
+            ServiceErrorBarion.barionTransfer(request, (err, res) => {
+                expect(err).to.deep.equal(errorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on validation error', function (done) {
+            validationErrorBarion.barionTransfer(request, (err, res) => {
+                expect(err).to.deep.equal(validationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on sanitization error when validation is turned off', function (done) {
+            sanitizationErrorBarion.barionTransfer(request, (err, res) => {
+                expect(err).to.deep.equal(sanitizationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with Promise on success', function (done) {
+            let promise = okBarion.barionTransfer(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on success when validation is turned off', function (done) {
+            let promise = okBarionWithoutValidation.barionTransfer(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on error', function (done) {
+            let promise = ServiceErrorBarion.barionTransfer(request);
+            expect(promise).to.eventually.rejectedWith(errorObject).notify(done);
+        });
+
+        it('should answer with Promise on validation error', function (done) {
+            let promise = validationErrorBarion.barionTransfer(request);
+            expect(promise).to.eventually.rejectedWith(validationErrorObject).notify(done);
+        });
+
+        it('should answer with Promise on sanitization error when validation is turned off', function (done) {
+            let promise = sanitizationErrorBarion.barionTransfer(request);
+            expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
         });
     });
 });

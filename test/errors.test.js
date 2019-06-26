@@ -5,19 +5,6 @@ describe('lib/errors.js', function () {
     describe('#BarionError(message, errors)', function () {
         let BarionError = errors.BarionError;
 
-        it('should set \'errors\' only to array type', function () {
-            let e1 = new BarionError('aaa', null);
-            let e2 = new BarionError('bbb');
-
-            expect(e1.errors).to.be.an('array');
-            expect(e1.message).to.equal('aaa');
-            expect(e1.errors).to.be.empty;
-
-            expect(e2.errors).to.be.an('array');
-            expect(e2.message).to.equal('bbb');
-            expect(e2.errors).to.be.empty;
-        });
-
         it('should initialize successfully', function () {
             let problem = {
                 Title: 'Model Validation Error',
@@ -36,6 +23,44 @@ describe('lib/errors.js', function () {
             expect(error.errors).to.be.an('array');
             expect(error.errors).to.have.lengthOf(1);
             expect(error.errors[0]).to.include(problem);
+        });
+
+        it('should set \'errors\' only to array type', function () {
+            let e1 = new BarionError('aaa', null);
+            let e2 = new BarionError('bbb');
+
+            expect(e1.errors).to.be.an('array');
+            expect(e1.message).to.equal('aaa');
+            expect(e1.errors).to.be.empty;
+
+            expect(e2.errors).to.be.an('array');
+            expect(e2.message).to.equal('bbb');
+            expect(e2.errors).to.be.empty;
+        });
+    });
+
+    describe('#BarionError(message, errors)', function () {
+        let BarionModelError = errors.BarionModelError;
+
+        it('should initialize successfully', function () {
+            let error = new BarionModelError('some good message', [ 'error1', 'error2' ]);
+
+            expect(error instanceof Error).to.be.true;
+            expect(error.name).to.equal('BarionModelError');
+            expect(error.errors).to.be.an('array').and.deep.equals([ 'error1', 'error2' ]);
+        });
+
+        it('should set \'errors\' only to array type', function () {
+            let e1 = new BarionModelError('aaa', null);
+            let e2 = new BarionModelError('bbb');
+
+            expect(e1.errors).to.be.an('array');
+            expect(e1.message).to.equal('aaa');
+            expect(e1.errors).to.be.empty;
+
+            expect(e2.errors).to.be.an('array');
+            expect(e2.message).to.equal('bbb');
+            expect(e2.errors).to.be.empty;
         });
     });
 });

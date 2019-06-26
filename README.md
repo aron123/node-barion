@@ -93,6 +93,8 @@ In the constructor, you can define default values, that can be overridden later 
 
     > **IMPORTANT**: To use the production environment, you have to explicitly assign ``'prod'`` to this field. Otherwise, the environment is set to ``'test'`` by default.
 
+  - ``ValidateModels``: Indicates if `node-barion` have to validate `options` object of method calls before sending the request to the Barion API, when it is set to ``true``, the module is prevalidates the request (boolean). (optional, default: ``true``)
+
   - ``FundingSources``: The allowed funding sources, ``[ 'All' ]`` or ``[ 'Balance' ]`` (string[]). (optional, default: ``[ 'All' ]``)
 
   - ``GuestCheckOut``: Indicates if guest checkout is enabled (boolean). (optional, default: ``true``)
@@ -436,7 +438,7 @@ barion.barionTransfer({
 ```
 
 ### Handle errors
-There are 2 main types of errors can thrown, when you use the node-barion module:
+There are 3 main types of errors can thrown, when you use the node-barion module:
   - ``BarionError``: Thrown, when the Barion system responds with errors.
 
     This error has a ``name`` field, set to ``'BarionError'``.
@@ -446,14 +448,26 @@ There are 2 main types of errors can thrown, when you use the node-barion module
     > - generic error (such as ``{'Message': 'An error has occurred.'}``),
     > - invalid JSON (such as an HTML maintenance page)
 
+  - ``BarionModelError``: Thrown, when the prevalidation of the request is failed. ``node-barion`` can throw this type of error only if ``ValidateModels`` option is set to ``true`` on [instantiation](#instantiate-new-barion-object---barionoptions).
+    > **NOTE**: ``ValidateModels`` option is set to true by default on instantiation.
+
+    This error has a ``name`` field, set to ``'BarionModelError'``.
+
+    This error has an ``errors`` array, which contains the returned errors as strings.
+
   - ``Other errors``: Common Javascript errors, such as ``Error`` or ``TypeError`` (thrown e.g. when network error occured).
 
 #### Usage example
+You can distinguish types of errors based on their names, but it is not a must, you can simply log them to the database or to the console without any condition checking.
+
 ##### With callback
 ```js
 barion.startPayment(someObj, function (err, data) {
     if (err) {
-        if (err.name == 'BarionError') {
+        if (err.name === 'BarionModelError') {
+            //prevalidation of request object found errors
+            return console.log(err.errors);
+        } else if (err.name === 'BarionError') {
             //Barion API responded with error
             return console.log(err.errors);
         } else {
@@ -472,7 +486,10 @@ barion.startPayment(someObj)
         //process data
     })
     .catch(err => {
-        if (err.name == 'BarionError') {
+        if (err.name === 'BarionModelError') {
+            //prevalidation of request object found errors
+            console.log(err.errors);
+        } else if (err.name === 'BarionError') {
             //Barion API responded with error
             console.log(err.errors);
         } else {
@@ -483,16 +500,9 @@ barion.startPayment(someObj)
 ```
 
 ## Future improvements
-  - Do more validation before send the request to Barion, including:
-    - checking if required values are not ``null`` or ``undefined``,
-    - validation of the given values' format (e.g. ensure that Guid, TimeSpan and DateTime values are given in [the appropriate format](https://docs.barion.com/Calling_the_API)),
-    - restriction of possible values in certain fields (e.g. ``Currency`` field's value MUST BE one of the following: ``'CZK'``, ``'EUR'``, ``'HUF'``, ``'USD'``)
-
-  - Define more error types (e.g. for network error, invalid JSON response, generic error response).
-
-  - Make available to set optional fields as defaults (e.g. callbackUrl): if defined, send it, else, do not send. Currently, the library sends the field with ``undefined`` value. It does not affect proper functioning, but can be improved to reduce data traffic.
-
+  - Make available to set optional fields as defaults (e.g. callbackUrl).
   - Support for automatic reservation finalization / payment refund (fill the Transactions field via ``getPaymentState``)
+  
 
 ## Contributions
 Contributions are welcome.
@@ -501,7 +511,7 @@ If you report a bug/issue, please provide as detailed code to reproduce as possi
 
 I do not merge PRs, that break the build success, to test your changes, before send a PR, you have to:
 
-0) Make sure, that you have a test Barion account, with at least 500 HUF balance.
+0) Make sure, that you have a test Barion account, with at least 1000 HUF balance.
 1) Add your credentials to Barion in ``test/integration/credentials.json`` (there is an EXAMPLE in the directory, with the required format).
 2) Run the tests:
     ```
@@ -510,6 +520,10 @@ I do not merge PRs, that break the build success, to test your changes, before s
 3) To check coverage, run:
     ```
     npm run coverage
+    ```
+4) Run integration tests:
+    ```
+    npm run integration-test
     ```
 
 ## License

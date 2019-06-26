@@ -1,117 +1,205 @@
-let chai = require('chai');
-chai.use(require('chai-as-promised'));
-let expect = chai.expect;
+const { expect } = require('chai');
 
-let Barion = require('../../'); //index.js in root level
-let testData = require('./test-data');
+const Barion = require('../../'); //index.js in root level
+
+const testData = require('./test-data');
 
 describe('Integration tests', function () {
 
     this.timeout(15000); 
 
-    describe('Start payment', function () {
+    let validatedBarion;
+    let notValidatedBarion;
 
-        let barion;
-        let startPayment = testData.startPayment;
-        
-        beforeEach(function () {
-            barion = new Barion(testData.initOptions);
-        });
+    beforeEach(function () {
+        validatedBarion = new Barion(testData.initOptions.withValidation);
+        notValidatedBarion = new Barion(testData.initOptions.withoutValidation);
+    });
 
-        describe('should respond with response body on success', function () {
-            it('- Callback', function (done) {
-                barion.startPayment(startPayment.successRequestBody, (err, data) => {
-                    expect(data).to.deep.include(startPayment.successResponseBody);
-                    done();
-                });
-            });
-
-            it('- Promise', function () {
-                return expect(barion.startPayment(startPayment.successRequestBody))
-                    .to.eventually.deep.include(startPayment.successResponseBody);
+    describe('Start payment (callback)', function () {
+        it('should initialize payment when validation is turned on', function (done) {
+            validatedBarion.startPayment(testData.startPayment.successRequestBody, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.include(testData.startPayment.successResponseBody);
+                done();
             });
         });
 
-        describe('should respond with BarionError on wrong request body', function () {
-            it('- Callback', function (done) {
-                barion.startPayment(startPayment.errorRequestBody, (err) => {
-                    expect(err.name).to.equal('BarionError');
-                    expect(err.errors).to.have.lengthOf(1);
-                    expect(err.errors[0]).to.deep.include(startPayment.expectedError);
-                    done();
-                });
+        it('should answer with BarionModelError when request object is not proper and validation is turned on', 
+            function (done) {
+            validatedBarion.startPayment(testData.startPayment.errorRequestBody, (err, res) => {
+                expect(res).to.be.null;
+                expect(err.name).to.equal('BarionModelError');
+                expect(err.errors).to.be.an('array').and.have.length.greaterThan(0);
+                done();
             });
+        });
 
-            it('- Promise', function () {
-                return barion.startPayment(startPayment.errorRequestBody)
-                    .then(_ => { throw Error('Promise expected to reject, but resolved') })
-                    .catch(err => {
-                        expect(err.name).to.equal('BarionError');
-                        expect(err.errors).to.have.lengthOf(1);
-                        expect(err.errors[0]).to.deep.include(startPayment.expectedError);
-                    });
+        it('should initialize payment when validation is turned off', function (done) {
+            notValidatedBarion.startPayment(testData.startPayment.successRequestBody, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.include(testData.startPayment.successResponseBody);
+                done();
+            });
+        });
+
+        it('should answer with BarionError when request object is not proper and validation is turned off', function (done) {
+            notValidatedBarion.startPayment(testData.startPayment.errorRequestBody, (err, res) => {
+                expect(res).to.be.null;
+                expect(err.name).to.equal('BarionError');
+                expect(err.errors).to.be.an('array');
+                expect(err.errors[0]).to.deep.include(testData.startPayment.expectedError);
+                done();
             });
         });
     });
 
-    describe('Get payment state', function () {
+    describe('Start payment (Promise)', function () {
+        it('should initialize payment when validation is turned on', function (done) {
+            validatedBarion.startPayment(testData.startPayment.successRequestBody)
+                .then(res => {
+                    expect(res).to.deep.include(testData.startPayment.successResponseBody);
+                    done();
+                });
+        });
 
-        let barion;
-        let getPaymentState = testData.getPaymentState;
-        let paymentId;
+        it('should answer with BarionModelError when request object is not proper and validation is turned on', function (done) {
+            validatedBarion.startPayment(testData.startPayment.errorRequestBody)
+                .catch(err => {
+                    expect(err.name).to.equal('BarionModelError');
+                    expect(err.errors).to.be.an('array').and.have.length.greaterThan(0);
+                    done();
+                });
+        });
+
+        it('should initialize payment when validation is turned off', function (done) {
+            notValidatedBarion.startPayment(testData.startPayment.successRequestBody)
+                .then(res => {
+                    expect(res).to.deep.include(testData.startPayment.successResponseBody);
+                    done();
+                });
+        });
+
+        it('should answer with BarionError when request object is not proper and validation is turned off', function (done) {
+            notValidatedBarion.startPayment(testData.startPayment.errorRequestBody)
+                .catch(err => {
+                    expect(err.name).to.equal('BarionError');
+                    expect(err.errors).to.be.an('array');
+                    expect(err.errors[0]).to.deep.include(testData.startPayment.expectedError);
+                    done();
+                });
+        });
+    });
+
+    describe('Get payment state (callback)', function () {
+
+        let successRequestBody = {};
 
         beforeEach(function (done) {
-            barion = new Barion(testData.initOptions);
-            barion.startPayment(testData.startPayment.successRequestBody, function (err, data) {
+            notValidatedBarion.startPayment(testData.startPayment.successRequestBody, function (err, data) {
                 if (err) {
                     return done(err);
                 }
 
-                paymentId = data.PaymentId;
+                successRequestBody = { PaymentId: data.PaymentId };
                 done();
             });
         });
 
         afterEach(function () { 
-            paymentId = null;
+            successRequestBody = null;
         });
 
-        describe('should respond with response body on success', function () {
-            it('- Callback', function (done) {
-                barion.getPaymentState({ paymentId }, function (err, data) {
-                    expect(data).to.deep.include(getPaymentState.successResponseBody);
-                    done();
-                });
-            });
-
-            it('- Promise', function () {
-                return expect(barion.getPaymentState({ paymentId }))
-                    .to.eventually.deep.include(getPaymentState.successResponseBody);
+        it('should get payment state when validation is turned on', function (done) {
+            validatedBarion.getPaymentState(successRequestBody, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.include(testData.getPaymentState.successResponseBody);
+                done();
             });
         });
 
-        describe('should respond with BarionError on wrong request body', function () {
-            it('- Callback', function (done) {
-                barion.getPaymentState(getPaymentState.errorRequestBody, function (err, data) {
-                    expect(err.errors).to.have.lengthOf(2);
-                    expect(err.errors[0]).to.deep.include(getPaymentState.expectedErrors[0]);
-                    expect(err.errors[1]).to.deep.include(getPaymentState.expectedErrors[1]);
+        it('should answer with BarionModelError when request object is not proper and validation is turned on', function (done) {
+            validatedBarion.getPaymentState(testData.getPaymentState.errorRequestBody, (err, res) => {
+                expect(res).to.be.null;
+                expect(err.name).to.equal('BarionModelError');
+                expect(err.errors).to.be.an('array').and.have.length.greaterThan(0);
+                done();
+            });
+        });
+
+        it('should get payment state when validation is turned off', function (done) {
+            notValidatedBarion.getPaymentState(successRequestBody, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.include(testData.getPaymentState.successResponseBody);
+                done();
+            });
+        });
+
+        it('should answer with BarionError when request object is not proper and validation is turned off', function (done) {
+            notValidatedBarion.getPaymentState(testData.getPaymentState.errorRequestBody, (err, res) => {
+                expect(res).to.be.null;
+                expect(err.name).to.equal('BarionError');
+                expect(err.errors).to.be.an('array');
+                expect(err.errors[0]).to.deep.include(testData.getPaymentState.expectedErrors[0]);
+                expect(err.errors[1]).to.deep.include(testData.getPaymentState.expectedErrors[1]);
+                done();
+            });
+        });
+    });
+
+    describe('Get payment state (Promise)', function () {
+
+        let successRequestBody = {};
+
+        beforeEach(function (done) {
+            notValidatedBarion.startPayment(testData.startPayment.successRequestBody, function (err, data) {
+                if (err) {
+                    return done(err);
+                }
+
+                successRequestBody = { PaymentId: data.PaymentId };
+                done();
+            });
+        });
+
+        afterEach(function () { 
+            successRequestBody = null;
+        });
+
+        it('should get payment state when validation is turned on', function (done) {
+            validatedBarion.getPaymentState(successRequestBody)
+                .then(res => {
+                    expect(res).to.deep.include(testData.getPaymentState.successResponseBody);
                     done();
                 });
-            });
+        });
 
-            it('- Promise', function () {
-                return barion.getPaymentState(getPaymentState.errorRequestBody)
-                    .then(_ => {
-                        throw Error('Promise expected to reject, but resolved');
-                    })
-                    .catch(err => {
-                        expect(err.name).to.equal('BarionError');
-                        expect(err.errors).to.have.lengthOf(2);
-                        expect(err.errors[0]).to.deep.include(getPaymentState.expectedErrors[0]);
-                        expect(err.errors[1]).to.deep.include(getPaymentState.expectedErrors[1]);
-                    });
-            });
+        it('should answer with BarionModelError when request object is not proper and validation is turned on', function (done) {
+            validatedBarion.getPaymentState(testData.getPaymentState.errorRequestBody)
+                .catch(err => {
+                    expect(err.name).to.equal('BarionModelError');
+                    expect(err.errors).to.be.an('array').and.have.length.greaterThan(0);
+                    done();
+                });
+        });
+
+        it('should get payment state when validation is turned off', function (done) {
+            notValidatedBarion.getPaymentState(successRequestBody)
+                .then(res => {
+                    expect(res).to.deep.include(testData.getPaymentState.successResponseBody);
+                    done();
+                });
+        });
+
+        it('should answer with BarionError when request object is not proper and validation is turned off', function (done) {
+            notValidatedBarion.getPaymentState(testData.getPaymentState.errorRequestBody)
+                .catch(err => {
+                    expect(err.name).to.equal('BarionError');
+                    expect(err.errors).to.be.an('array');
+                    expect(err.errors[0]).to.deep.include(testData.getPaymentState.expectedErrors[0]);
+                    expect(err.errors[1]).to.deep.include(testData.getPaymentState.expectedErrors[1]);
+                    done();
+                });
         });
     });
 
@@ -120,105 +208,156 @@ describe('Integration tests', function () {
         // because typing bank card info on Barion GUI is required after the payment is started
     });
 
-    describe('Bank transfer', function () {
+    describe.skip('Refund payment', function () {
+        // can't be tested automatically, I think,
+        // because typing bank card info on Barion GUI is required after the payment is started
+    });
 
-        let barion;
-        let bankTransfer = testData.bankTransfer;
-
-        beforeEach(function () {
-            barion = new Barion(testData.initOptions);
-        });
-
-        describe('should respond with response body on success', function () {
-            it('- Callback', function (done) {
-                barion.bankTransfer(bankTransfer.successRequestBody, (err, data) => {
-                    if (err) {
-                        return done(err);
-                    }
-
-                    expect(data).to.deep.include(bankTransfer.successResponseBody);
-                    done();
-                })
-            });
-
-            it('- Promise', function () {
-                return expect(barion.bankTransfer(bankTransfer.successRequestBody))
-                        .to.eventually.deep.include(bankTransfer.successResponseBody);
+    describe('Bank transfer (callback)', function () {
+        it('should start bank transfer when validation is turned on', function (done) {
+            validatedBarion.bankTransfer(testData.bankTransfer.successRequestBody, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.include(testData.bankTransfer.successResponseBody);
+                done();
             });
         });
 
-        describe('should respond with BarionError on wrong request body', function () {
-            it('- Callback', function (done) {
-                barion.bankTransfer(bankTransfer.errorRequestBody, (err, data) => {
-                    expect(err.name).to.equal('BarionError');
-                    expect(err.errors).to.have.lengthOf(1);
-                    expect(err.errors[0]).to.deep.include(bankTransfer.expectedError);
-                    done();
-                });
+        it('should answer with BarionModelError when request object is not proper and validation is turned on', function (done) {
+            validatedBarion.bankTransfer(testData.bankTransfer.errorRequestBody, (err, res) => {
+                expect(res).to.be.null;
+                expect(err.name).to.equal('BarionModelError');
+                expect(err.errors).to.be.an('array').and.have.length.greaterThan(0);
+                done();
             });
+        });
 
-            it('- Promise', function () {
-                return barion.bankTransfer(bankTransfer.errorRequestBody)
-                    .then(() => {
-                        throw Error('Promise expected to reject, but resolved');
-                    })
-                    .catch(err => {
-                        expect(err.name).to.equal('BarionError');
-                        expect(err.errors).to.have.lengthOf(1);
-                        expect(err.errors[0]).to.deep.include(bankTransfer.expectedError);
-                    });
+        it('should start bank transfer when validation is turned off', function (done) {
+            notValidatedBarion.bankTransfer(testData.bankTransfer.successRequestBody, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.include(testData.bankTransfer.successResponseBody);
+                done();
+            });
+        });
+
+        it('should answer with BarionError when request object is not proper and validation is turned off', function (done) {
+            notValidatedBarion.bankTransfer(testData.bankTransfer.errorRequestBody, (err, res) => {
+                expect(res).to.be.null;
+                expect(err.name).to.equal('BarionError');
+                expect(err.errors).to.be.an('array');
+                expect(err.errors[0]).to.deep.include(testData.bankTransfer.expectedError);
+                done();
             });
         });
     });
 
-    describe('Barion transfer', function () {
-
-        let barion;
-        let barionTransfer = testData.barionTransfer;
-
-        beforeEach(function () {
-            barion = new Barion(testData.initOptions);
-        });
-
-        describe('should respond with response body on success', function () {
-            it('- Callback', function (done) {
-                barion.barionTransfer(barionTransfer.successRequestBody, (err, data) => {
-                    if (err) {
-                        return done(err);
-                    }
-
-                    expect(data).to.deep.include(barionTransfer.successResponseBody);
+    describe('Bank transfer (Promise)', function () {
+        it('should start bank transfer when validation is turned on', function (done) {
+            validatedBarion.bankTransfer(testData.bankTransfer.successRequestBody)
+                .then(res => {
+                    expect(res).to.deep.include(testData.bankTransfer.successResponseBody);
                     done();
                 });
-            });
-
-            it('- Promise', function () {
-                return expect(barion.barionTransfer(barionTransfer.successRequestBody))
-                    .to.eventually.deep.include(barionTransfer.successResponseBody);
-            });
         });
 
-        describe('should respond with BarionError on wrong request body', function () {
-            it('- Callback', function (done) {
-                barion.barionTransfer(barionTransfer.errorRequestBody, (err, data) => {
+        it('should answer with BarionModelError when request object is not proper and validation is turned on', function (done) {
+            validatedBarion.bankTransfer(testData.bankTransfer.errorRequestBody)
+                .catch(err => {
+                    expect(err.name).to.equal('BarionModelError');
+                    expect(err.errors).to.be.an('array').and.have.length.greaterThan(0);
+                    done();
+                });
+        });
+
+        it('should start bank transfer when validation is turned off', function (done) {
+            notValidatedBarion.bankTransfer(testData.bankTransfer.successRequestBody)
+                .then(res => {
+                    expect(res).to.deep.include(testData.bankTransfer.successResponseBody);
+                    done();
+                });
+        });
+
+        it('should answer with BarionError when request object is not proper and validation is turned off', function (done) {
+            notValidatedBarion.bankTransfer(testData.bankTransfer.errorRequestBody)
+                .catch(err => {
                     expect(err.name).to.equal('BarionError');
-                    expect(err.errors).to.have.lengthOf(1);
-                    expect(err.errors[0]).to.deep.include(barionTransfer.expectedError);
+                    expect(err.errors).to.be.an('array');
+                    expect(err.errors[0]).to.deep.include(testData.bankTransfer.expectedError);
                     done();
                 });
-            });
+        });
+    });
 
-            it('- Promise', function () {
-                return barion.barionTransfer(barionTransfer.errorRequestBody)
-                    .then(() => {
-                        throw Error('Promise expected to reject, but resolved');
-                    })
-                    .catch(err => {
-                        expect(err.name).to.equal('BarionError');
-                        expect(err.errors).to.have.lengthOf(1);
-                        expect(err.errors[0]).to.deep.include(barionTransfer.expectedError);
-                    });
+    describe('Barion transfer (callback)', function () {
+        it('should start Barion transfer when validation is turned on', function (done) {
+            validatedBarion.barionTransfer(testData.barionTransfer.successRequestBody, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.include(testData.barionTransfer.successResponseBody);
+                done();
             });
+        });
+
+        it('should answer with BarionModelError when request object is not proper and validation is turned on', function (done) {
+            validatedBarion.barionTransfer(testData.barionTransfer.errorRequestBody, (err, res) => {
+                expect(res).to.be.null;
+                expect(err.name).to.equal('BarionModelError');
+                expect(err.errors).to.be.an('array').and.have.length.greaterThan(0);
+                done();
+            });
+        });
+
+        it('should start Barion transfer when validation is turned off', function (done) {
+            notValidatedBarion.barionTransfer(testData.barionTransfer.successRequestBody, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.include(testData.barionTransfer.successResponseBody);
+                done();
+            });
+        });
+
+        it('should answer with BarionError when request object is not proper and validation is turned off', function (done) {
+            notValidatedBarion.barionTransfer(testData.barionTransfer.errorRequestBody, (err, res) => {
+                expect(res).to.be.null;
+                expect(err.name).to.equal('BarionError');
+                expect(err.errors).to.be.an('array');
+                expect(err.errors[0]).to.deep.include(testData.barionTransfer.expectedError);
+                done();
+            });
+        });
+    });
+
+    describe('Barion transfer (Promise)', function () {
+        it('should start Barion transfer when validation is turned on', function (done) {
+            validatedBarion.barionTransfer(testData.barionTransfer.successRequestBody)
+                .then(res => {
+                    expect(res).to.deep.include(testData.barionTransfer.successResponseBody);
+                    done();
+                });
+        });
+
+        it('should answer with BarionModelError when request object is not proper and validation is turned on', function (done) {
+            validatedBarion.barionTransfer(testData.barionTransfer.errorRequestBody)
+                .catch(err => {
+                    expect(err.name).to.equal('BarionModelError');
+                    expect(err.errors).to.be.an('array').and.have.length.greaterThan(0);
+                    done();
+                });
+        });
+
+        it('should start Barion transfer when validation is turned off', function (done) {
+            notValidatedBarion.barionTransfer(testData.barionTransfer.successRequestBody)
+                .then(res => {
+                    expect(res).to.deep.include(testData.barionTransfer.successResponseBody);
+                    done();
+                });
+        });
+
+        it('should answer with BarionError when request object is not proper and validation is turned off', function (done) {
+            notValidatedBarion.barionTransfer(testData.barionTransfer.errorRequestBody)
+                .catch(err => {
+                    expect(err.name).to.equal('BarionError');
+                    expect(err.errors).to.be.an('array');
+                    expect(err.errors[0]).to.deep.include(testData.barionTransfer.expectedError);
+                    done();
+                });
         });
     });
 });

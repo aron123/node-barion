@@ -2,14 +2,22 @@
  * On CI system use environment variables,
  * locally use a json file. 
  */
-let POSKey = process.env.BARION_POS_KEY || require('./credentials.json').POSKey;
-let UserName = process.env.BARION_USER_NAME || require('./credentials.json').UserName;
-let Password = process.env.BARION_PASSWORD || require('./credentials').Password;
+const POSKey = process.env.BARION_POS_KEY || require('./credentials.json').POSKey;
+const UserName = process.env.BARION_USER_NAME || require('./credentials.json').UserName;
+const Password = process.env.BARION_PASSWORD || require('./credentials').Password;
 
 module.exports = {
     initOptions: {
-        POSKey,
-        Environment: 'test'
+        withValidation: {
+            POSKey,
+            Environment: 'test',
+            ValidateModels: true
+        },
+        withoutValidation: {
+            POSKey,
+            Environment: 'test',
+            ValidateModels: false
+        }
     },
     startPayment: {
         successRequestBody: {
@@ -78,8 +86,8 @@ module.exports = {
     },
     bankTransfer: {
         successRequestBody: {
-            UserName: UserName,
-            Password: Password,
+            UserName,
+            Password,
             Currency: 'HUF',
             Amount: 1,
             RecipientName: 'xxxxx',
@@ -106,26 +114,26 @@ module.exports = {
             Errors: []
         },
         errorRequestBody: {
-            UserName: UserName,
-            Password: Password,
+            UserName,
+            Password,
             Currency: 'HUF',
-            Amount: 1,
             RecipientName: 'xxxxx',
             BankAccount: {
                 Country: 'HUN',
                 Format: 'Giro',
-                AccountNumber: '10032000-01070000'
+                AccountNumber: '10032000-00285135'
             }
         },
         expectedError: {
             ErrorCode: 'ModelValidationError',
-            AuthData: UserName,
+            // TODO: Potential bug in Barion API (sets AuthData to empty string)
+            // AuthData: UserName
         }
     },
     barionTransfer: {
         successRequestBody: {
-            UserName: UserName,
-            Password: Password,
+            UserName,
+            Password,
             Currency: 'HUF',
             Amount: 1,
             Recipient: 'info@example.com'
