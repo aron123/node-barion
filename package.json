@@ -34,9 +34,10 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/*.test.js test/integration/*.test.js",
-    "coverage": "nyc --all  --reporter=text --reporter=html mocha test/*.test.js test/integration/*.test.js",
-    "report-coverage": "nyc report --all --reporter=text-lcov mocha test/*.test.js test/integration/*.test.js | coveralls"
+    "test": "mocha test/*.test.js",
+    "integration-test": "mocha test/*.test.js test/integration/*.test.js",
+    "coverage": "nyc --all  --reporter=text --reporter=html mocha test/*.test.js",
+    "report-coverage": "nyc report --all --reporter=text-lcov mocha test/*.test.js | coveralls"
   },
   "devDependencies": {
     "chai": "^4.2.0",
@@ -45,7 +46,7 @@
     "coveralls": "^3.0.2",
     "fetch-mock": "^7.3.0",
     "mocha": "^5.2.0",
-    "nyc": "^13.1.0",
+    "nyc": "^14.1.1",
     "proxyquire": "^2.1.0"
   },
   "dependencies": {
