@@ -530,4 +530,4 @@ I do not merge PRs, that break the build success, to test your changes, before s
 
 Copyright (c) 2019-present, Kiss Aron &lt;aron123dev@gmail.com&gt;
 
-Unless otherwise stated in sources, the terms specified in LICENSE file is applicable.
+Unless otherwise stated in sources, the terms specified in LICENSE file are applicable.
