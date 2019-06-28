@@ -27,13 +27,14 @@ describe('Integration tests', function () {
 
         it('should answer with BarionModelError when request object is not proper and validation is turned on', 
             function (done) {
-            validatedBarion.startPayment(testData.startPayment.errorRequestBody, (err, res) => {
-                expect(res).to.be.null;
-                expect(err.name).to.equal('BarionModelError');
-                expect(err.errors).to.be.an('array').and.have.length.greaterThan(0);
-                done();
-            });
-        });
+                validatedBarion.startPayment(testData.startPayment.errorRequestBody, (err, res) => {
+                    expect(res).to.be.null;
+                    expect(err.name).to.equal('BarionModelError');
+                    expect(err.errors).to.be.an('array').and.have.length.greaterThan(0);
+                    done();
+                });
+            }
+        );
 
         it('should initialize payment when validation is turned off', function (done) {
             notValidatedBarion.startPayment(testData.startPayment.successRequestBody, (err, res) => {

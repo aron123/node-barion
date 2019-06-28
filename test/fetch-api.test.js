@@ -15,12 +15,12 @@ const { fetchTest } = require('./test-data');
 
 const barionMock = {
     default: fetchMock
-                .mock('begin:http://example.com/success', fetchTest.successResponse)
-                .mock('begin:http://example.com/error', fetchTest.errorResponse)
-                .mock('begin:http://example.com/internal-server-error', fetchTest.internalErrorResponse)
-                .mock('begin:http://example.com/not-valid-json', fetchTest.notJsonResponse)
-                .mock('begin:http://example.com/network-error', fetchTest.networkErrorResponse)
-                .sandbox()
+        .mock('begin:http://example.com/success', fetchTest.successResponse)
+        .mock('begin:http://example.com/error', fetchTest.errorResponse)
+        .mock('begin:http://example.com/internal-server-error', fetchTest.internalErrorResponse)
+        .mock('begin:http://example.com/not-valid-json', fetchTest.notJsonResponse)
+        .mock('begin:http://example.com/network-error', fetchTest.networkErrorResponse)
+        .sandbox()
 };
 
 /*
@@ -79,7 +79,7 @@ describe('lib/fetch-api.js', function () {
 
         it('should resolve with data after successful response', function () {
             return expect(getFromBarion('http://example.com/success', { a: 'b', c: 5}))
-                    .to.eventually.deep.include(fetchTest.successResponse);
+                .to.eventually.deep.include(fetchTest.successResponse);
         });
 
     });
@@ -125,7 +125,7 @@ describe('lib/fetch-api.js', function () {
 
         it('should resolve data after successful response', function () {
             return expect(postToBarion('http://example.com/success', { a: 'b', c: 5}))
-                    .to.eventually.deep.include(fetchTest.successResponse);
+                .to.eventually.deep.include(fetchTest.successResponse);
         });
     });
 });
