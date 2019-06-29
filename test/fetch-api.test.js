@@ -17,6 +17,8 @@ const barionMock = {
     default: fetchMock
         .mock('begin:http://example.com/success', fetchTest.successResponse)
         .mock('begin:http://example.com/error', fetchTest.errorResponse)
+        .mock('begin:http://example.com/v1-success', fetchTest.v1SuccessResponse)
+        .mock('begin:http://example.com/v1-error', fetchTest.v1ErrorResponse)
         .mock('begin:http://example.com/internal-server-error', fetchTest.internalErrorResponse)
         .mock('begin:http://example.com/not-valid-json', fetchTest.notJsonResponse)
         .mock('begin:http://example.com/network-error', fetchTest.networkErrorResponse)
@@ -55,6 +57,7 @@ describe('lib/fetch-api.js', function () {
         it('should reject if get response with error HTTP status', function () {
             return Promise.all([
                 expect(getFromBarion('http://example.com/error')).to.be.rejectedWith(barionErrorMessageMatcher),
+                expect(getFromBarion('http://example.com/v1-error')).to.be.rejectedWith(barionErrorMessageMatcher),
                 expect(getFromBarion('http://example.com/internal-server-error'))
                     .to.be.rejectedWith(barionErrorMessageMatcher)
             ]);
@@ -83,6 +86,10 @@ describe('lib/fetch-api.js', function () {
                 .to.eventually.deep.include(fetchTest.successResponse);
         });
 
+        it('should resolve with data after successful response in v1 API', function () {
+            return expect(getFromBarion('http://example.com/v1-success', { a: 'b', c: 5}))
+                .to.eventually.deep.include(fetchTest.v1SuccessResponse);
+        });
     });
 
     describe('#postToBarion()', function () {
@@ -102,6 +109,7 @@ describe('lib/fetch-api.js', function () {
         it('should reject if get HTTP error response', function () {
             return Promise.all([
                 expect(postToBarion('http://example.com/error')).to.be.rejectedWith(barionErrorMessageMatcher),
+                expect(postToBarion('http://example.com/v1-error')).to.be.rejectedWith(barionErrorMessageMatcher),
                 expect(postToBarion('http://example.com/internal-server-error'))
                     .to.be.rejectedWith(barionErrorMessageMatcher)
             ]);
@@ -128,6 +136,11 @@ describe('lib/fetch-api.js', function () {
         it('should resolve data after successful response', function () {
             return expect(postToBarion('http://example.com/success', { a: 'b', c: 5}))
                 .to.eventually.deep.include(fetchTest.successResponse);
+        });
+
+        it('should resolve with data after successful response in v1 API', function () {
+            return expect(postToBarion('http://example.com/v1-success', { a: 'b', c: 5}))
+                .to.eventually.deep.include(fetchTest.v1SuccessResponse);
         });
     });
 });

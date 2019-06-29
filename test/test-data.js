@@ -16,6 +16,19 @@ module.exports = {
             },
             status: 400
         },
+        v1SuccessResponse: {
+            ErrorList: [],
+            success: true,
+            stringVal: 'ok'
+        },
+        v1ErrorResponse: {
+            body: {
+                ErrorList: [
+                    { Title: 'ModelValidation failed.', HappenedAt: '2019-01-20T15:55:40.0808761Z' }
+                ]
+            },
+            status: 500
+        },
         internalErrorResponse: {
             body: { Message: 'An error has occurred.' },
             status: 500
