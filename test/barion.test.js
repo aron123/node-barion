@@ -27,10 +27,14 @@ const validationErrorObject = new BarionModelError('Invalid object given.', [
     '"something" is required',
     'dnt frget to feed yr cat evrydai'
 ]);
-const throwValidationError = () => { throw validationErrorObject; };
+const throwValidationError = () => {
+    throw validationErrorObject;
+};
 
 const sanitizationErrorObject = new Error('Goulash is so delicious.');
-const throwSanitizationError = () => { throw sanitizationErrorObject; };
+const throwSanitizationError = () => {
+    throw sanitizationErrorObject;
+};
 
 /**
  * Mock injections.
@@ -43,7 +47,7 @@ const Barions = {
             finishReservation: returnSuccess,
             refundPayment: returnSuccess,
             bankTransfer: returnSuccess,
-            barionTransfer:returnSuccess
+            barionTransfer: returnSuccess
         }
     }),
     ServiceErrorBarion: proxyquire('../lib/barion', {
@@ -76,7 +80,7 @@ const Barions = {
             finishReservation: returnSuccess,
             refundPayment: returnSuccess,
             bankTransfer: returnSuccess,
-            barionTransfer:returnSuccess
+            barionTransfer: returnSuccess
         },
         './build': {
             buildRequestWithoutValidation: throwSanitizationError
@@ -98,12 +102,12 @@ describe('lib/barion.js', function () {
         });
 
         it('should set Environment property to \'test\' by default', function () {
-            let barion = new Barion({ POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1' });
+            const barion = new Barion({ POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1' });
             expect(barion.defaults.Environment).to.be.equal('test');
         });
 
         it('should merge custom options with defaults successfully', function () {
-            let barion = new Barion({
+            const barion = new Barion({
                 POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1',
                 Environment: 'test'
             });
@@ -119,11 +123,27 @@ describe('lib/barion.js', function () {
         });
     });
 
-    const okBarion = new Barions.OkBarion({ POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1' });
-    const okBarionWithoutValidation = new Barions.OkBarion({ POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1', ValidateModels: false });
-    const ServiceErrorBarion = new Barions.ServiceErrorBarion({ POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1' });
-    const validationErrorBarion = new Barions.ValidationErrorBarion({ POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1' });
-    const sanitizationErrorBarion = new Barions.SanitizationErrorBarion({ POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1', ValidateModels: false });
+    const okBarion = new Barions.OkBarion({
+        POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1'
+    });
+
+    const okBarionWithoutValidation = new Barions.OkBarion({
+        POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1',
+        ValidateModels: false
+    });
+
+    const ServiceErrorBarion = new Barions.ServiceErrorBarion({
+        POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1'
+    });
+
+    const validationErrorBarion = new Barions.ValidationErrorBarion({
+        POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1'
+    });
+
+    const sanitizationErrorBarion = new Barions.SanitizationErrorBarion({
+        POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1',
+        ValidateModels: false
+    });
 
     describe('#startPayment(options, [callback])', function () {
         const request = {
@@ -137,7 +157,7 @@ describe('lib/barion.js', function () {
                 }
             ]
         };
-        
+
         it('should answer with callback on success', function (done) {
             okBarion.startPayment(request, (err, res) => {
                 expect(res).to.deep.equal(successObject);
@@ -177,27 +197,27 @@ describe('lib/barion.js', function () {
         });
 
         it('should answer with Promise on success', function (done) {
-            let promise = okBarion.startPayment(request);
+            const promise = okBarion.startPayment(request);
             expect(promise).to.eventually.deep.equal(successObject).notify(done);
         });
 
         it('should answer with Promise on success when validation is turned off', function (done) {
-            let promise = okBarionWithoutValidation.startPayment(request);
+            const promise = okBarionWithoutValidation.startPayment(request);
             expect(promise).to.eventually.deep.equal(successObject).notify(done);
         });
 
         it('should answer with Promise on error', function (done) {
-            let promise = ServiceErrorBarion.startPayment(request);
+            const promise = ServiceErrorBarion.startPayment(request);
             expect(promise).to.eventually.rejectedWith(errorObject).notify(done);
         });
 
         it('should answer with Promise on validation error', function (done) {
-            let promise = validationErrorBarion.startPayment(request);
+            const promise = validationErrorBarion.startPayment(request);
             expect(promise).to.eventually.rejectedWith(validationErrorObject).notify(done);
         });
 
         it('should answer with Promise on sanitization error when validation is turned off', function (done) {
-            let promise = sanitizationErrorBarion.startPayment(request);
+            const promise = sanitizationErrorBarion.startPayment(request);
             expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
         });
     });
@@ -206,7 +226,7 @@ describe('lib/barion.js', function () {
         const request = {
             PaymentId: '277a6ae1-12b0-4192-8e6c-bc7d0612afa2'
         };
-        
+
         it('should answer with callback on success', function (done) {
             okBarion.getPaymentState(request, (err, res) => {
                 expect(err).to.be.null;
@@ -248,27 +268,27 @@ describe('lib/barion.js', function () {
         });
 
         it('should answer with Promise on success', function (done) {
-            let promise = okBarion.getPaymentState(request);
+            const promise = okBarion.getPaymentState(request);
             expect(promise).to.eventually.deep.equal(successObject).notify(done);
         });
 
         it('should answer with Promise on success when validation is turned off', function (done) {
-            let promise = okBarionWithoutValidation.getPaymentState(request);
+            const promise = okBarionWithoutValidation.getPaymentState(request);
             expect(promise).to.eventually.deep.equal(successObject).notify(done);
         });
 
         it('should answer with Promise on error', function (done) {
-            let promise = ServiceErrorBarion.getPaymentState(request);
+            const promise = ServiceErrorBarion.getPaymentState(request);
             expect(promise).to.eventually.rejectedWith(errorObject).notify(done);
         });
 
         it('should answer with Promise on validation error', function (done) {
-            let promise = validationErrorBarion.getPaymentState(request);
+            const promise = validationErrorBarion.getPaymentState(request);
             expect(promise).to.eventually.rejectedWith(validationErrorObject).notify(done);
         });
 
         it('should answer with Promise on sanitization error when validation is turned off', function (done) {
-            let promise = sanitizationErrorBarion.getPaymentState(request);
+            const promise = sanitizationErrorBarion.getPaymentState(request);
             expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
         });
     });
@@ -283,7 +303,7 @@ describe('lib/barion.js', function () {
                 }
             ]
         };
-        
+
         it('should answer with callback on success', function (done) {
             okBarion.finishReservation(request, (err, res) => {
                 expect(err).to.be.null;
@@ -325,27 +345,27 @@ describe('lib/barion.js', function () {
         });
 
         it('should answer with Promise on success', function (done) {
-            let promise = okBarion.finishReservation(request);
+            const promise = okBarion.finishReservation(request);
             expect(promise).to.eventually.deep.equal(successObject).notify(done);
         });
 
         it('should answer with Promise on success when validation is turned off', function (done) {
-            let promise = okBarionWithoutValidation.finishReservation(request);
+            const promise = okBarionWithoutValidation.finishReservation(request);
             expect(promise).to.eventually.deep.equal(successObject).notify(done);
         });
 
         it('should answer with Promise on error', function (done) {
-            let promise = ServiceErrorBarion.finishReservation(request);
+            const promise = ServiceErrorBarion.finishReservation(request);
             expect(promise).to.eventually.rejectedWith(errorObject).notify(done);
         });
 
         it('should answer with Promise on validation error', function (done) {
-            let promise = validationErrorBarion.finishReservation(request);
+            const promise = validationErrorBarion.finishReservation(request);
             expect(promise).to.eventually.rejectedWith(validationErrorObject).notify(done);
         });
 
         it('should answer with Promise on sanitization error when validation is turned off', function (done) {
-            let promise = sanitizationErrorBarion.finishReservation(request);
+            const promise = sanitizationErrorBarion.finishReservation(request);
             expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
         });
     });
@@ -361,7 +381,7 @@ describe('lib/barion.js', function () {
                 }
             ]
         };
-        
+
         it('should answer with callback on success', function (done) {
             okBarion.refundPayment(request, (err, res) => {
                 expect(err).to.be.null;
@@ -403,27 +423,27 @@ describe('lib/barion.js', function () {
         });
 
         it('should answer with Promise on success', function (done) {
-            let promise = okBarion.refundPayment(request);
+            const promise = okBarion.refundPayment(request);
             expect(promise).to.eventually.deep.equal(successObject).notify(done);
         });
 
         it('should answer with Promise on success when validation is turned off', function (done) {
-            let promise = okBarionWithoutValidation.refundPayment(request);
+            const promise = okBarionWithoutValidation.refundPayment(request);
             expect(promise).to.eventually.deep.equal(successObject).notify(done);
         });
 
         it('should answer with Promise on error', function (done) {
-            let promise = ServiceErrorBarion.refundPayment(request);
+            const promise = ServiceErrorBarion.refundPayment(request);
             expect(promise).to.eventually.rejectedWith(errorObject).notify(done);
         });
 
         it('should answer with Promise on validation error', function (done) {
-            let promise = validationErrorBarion.refundPayment(request);
+            const promise = validationErrorBarion.refundPayment(request);
             expect(promise).to.eventually.rejectedWith(validationErrorObject).notify(done);
         });
 
         it('should answer with Promise on sanitization error when validation is turned off', function (done) {
-            let promise = sanitizationErrorBarion.refundPayment(request);
+            const promise = sanitizationErrorBarion.refundPayment(request);
             expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
         });
     });
@@ -441,7 +461,7 @@ describe('lib/barion.js', function () {
                 AccountNumber: '12345678-12345678'
             }
         };
-        
+
         it('should answer with callback on success', function (done) {
             okBarion.bankTransfer(request, (err, res) => {
                 expect(err).to.be.null;
@@ -483,27 +503,27 @@ describe('lib/barion.js', function () {
         });
 
         it('should answer with Promise on success', function (done) {
-            let promise = okBarion.bankTransfer(request);
+            const promise = okBarion.bankTransfer(request);
             expect(promise).to.eventually.deep.equal(successObject).notify(done);
         });
 
         it('should answer with Promise on success when validation is turned off', function (done) {
-            let promise = okBarionWithoutValidation.bankTransfer(request);
+            const promise = okBarionWithoutValidation.bankTransfer(request);
             expect(promise).to.eventually.deep.equal(successObject).notify(done);
         });
 
         it('should answer with Promise on error', function (done) {
-            let promise = ServiceErrorBarion.bankTransfer(request);
+            const promise = ServiceErrorBarion.bankTransfer(request);
             expect(promise).to.eventually.rejectedWith(errorObject).notify(done);
         });
 
         it('should answer with Promise on validation error', function (done) {
-            let promise = validationErrorBarion.bankTransfer(request);
+            const promise = validationErrorBarion.bankTransfer(request);
             expect(promise).to.eventually.rejectedWith(validationErrorObject).notify(done);
         });
 
         it('should answer with Promise on sanitization error when validation is turned off', function (done) {
-            let promise = sanitizationErrorBarion.bankTransfer(request);
+            const promise = sanitizationErrorBarion.bankTransfer(request);
             expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
         });
     });
@@ -516,7 +536,7 @@ describe('lib/barion.js', function () {
             Amount: 1500,
             Recipient: 'admin@example.com'
         };
-        
+
         it('should answer with callback on success', function (done) {
             okBarion.barionTransfer(request, (err, res) => {
                 expect(err).to.be.null;
@@ -558,27 +578,27 @@ describe('lib/barion.js', function () {
         });
 
         it('should answer with Promise on success', function (done) {
-            let promise = okBarion.barionTransfer(request);
+            const promise = okBarion.barionTransfer(request);
             expect(promise).to.eventually.deep.equal(successObject).notify(done);
         });
 
         it('should answer with Promise on success when validation is turned off', function (done) {
-            let promise = okBarionWithoutValidation.barionTransfer(request);
+            const promise = okBarionWithoutValidation.barionTransfer(request);
             expect(promise).to.eventually.deep.equal(successObject).notify(done);
         });
 
         it('should answer with Promise on error', function (done) {
-            let promise = ServiceErrorBarion.barionTransfer(request);
+            const promise = ServiceErrorBarion.barionTransfer(request);
             expect(promise).to.eventually.rejectedWith(errorObject).notify(done);
         });
 
         it('should answer with Promise on validation error', function (done) {
-            let promise = validationErrorBarion.barionTransfer(request);
+            const promise = validationErrorBarion.barionTransfer(request);
             expect(promise).to.eventually.rejectedWith(validationErrorObject).notify(done);
         });
 
         it('should answer with Promise on sanitization error when validation is turned off', function (done) {
-            let promise = sanitizationErrorBarion.barionTransfer(request);
+            const promise = sanitizationErrorBarion.barionTransfer(request);
             expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
         });
     });

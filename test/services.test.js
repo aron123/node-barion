@@ -14,7 +14,7 @@ const { baseUrls } = require('../lib/constants');
 /*
  * Mocks.
  */
-let serviceMocks = {
+const serviceMocks = {
     /*
      * Request succeeded.
      */
@@ -30,10 +30,10 @@ let serviceMocks = {
     errorService: proxyquire('../lib/services', {
         '../lib/fetch-api': {
             postToBarion: () => Promise.reject(new BarionError('Barion request errored out', [
-                { Title: 'Authentication failed.', HappenedAt: '2019-01-19T18:46:51.0808761Z' } 
+                { Title: 'Authentication failed.', HappenedAt: '2019-01-19T18:46:51.0808761Z' }
             ])),
             getFromBarion: () => Promise.reject(new BarionError('Barion request errored out', [
-                { Title: 'Authentication failed.', HappenedAt: '2019-01-19T18:46:51.0808761Z' } 
+                { Title: 'Authentication failed.', HappenedAt: '2019-01-19T18:46:51.0808761Z' }
             ]))
         }
     }),
@@ -54,13 +54,13 @@ describe('lib/services.js', function () {
         it('should return a Promise on success', function (done) {
             const services = serviceMocks.okService;
             services.startPayment('test', {})
-                .then(data => done());
+                .then(() => done());
         });
 
         it('should return a Promise on failure', function (done) {
             const services = serviceMocks.errorService;
             services.startPayment('test', {})
-                .catch(err => done());
+                .catch(() => done());
         });
     });
 
@@ -68,13 +68,13 @@ describe('lib/services.js', function () {
         it('should return a Promise on success', function (done) {
             const services = serviceMocks.okService;
             services.getPaymentState('test', {})
-                .then(data => done());
+                .then(() => done());
         });
 
         it('should return a Promise on failure', function (done) {
             const services = serviceMocks.errorService;
             services.getPaymentState('test', {})
-                .catch(err => done());
+                .catch(() => done());
         });
     });
 
@@ -82,13 +82,13 @@ describe('lib/services.js', function () {
         it('should return a Promise on success', function (done) {
             const services = serviceMocks.okService;
             services.finishReservation('test', {})
-                .then(data => done());
+                .then(() => done());
         });
 
         it('should return a Promise on failure', function (done) {
             const services = serviceMocks.errorService;
             services.finishReservation('test', {})
-                .catch(err => done());
+                .catch(() => done());
         });
     });
 
@@ -96,13 +96,13 @@ describe('lib/services.js', function () {
         it('should return a Promise on success', function (done) {
             const services = serviceMocks.okService;
             services.refundPayment('test', {})
-                .then(data => done());
+                .then(() => done());
         });
 
         it('should return a Promise on failure', function (done) {
             const services = serviceMocks.errorService;
             services.refundPayment('test', {})
-                .catch(err => done());
+                .catch(() => done());
         });
     });
 
@@ -110,13 +110,13 @@ describe('lib/services.js', function () {
         it('should return a Promise on success', function (done) {
             const services = serviceMocks.okService;
             services.bankTransfer('test', {})
-                .then(data => done());
+                .then(() => done());
         });
 
         it('should return a Promise on failure', function (done) {
             const services = serviceMocks.errorService;
             services.bankTransfer('test', {})
-                .catch(err => done());
+                .catch(() => done());
         });
     });
 
@@ -159,8 +159,8 @@ describe('lib/services.js', function () {
 
         const sandbox = chai.spy.sandbox();
         const fetchAPI = require('../lib/fetch-api');
-        const getFromBarion = sandbox.on(fetchAPI, 'getFromBarion', returns => Promise.resolve({ success: true }));
-        const postToBarion = sandbox.on(fetchAPI, 'postToBarion', returns => Promise.resolve({ success: true }));
+        const getFromBarion = sandbox.on(fetchAPI, 'getFromBarion', () => Promise.resolve({ success: true }));
+        const postToBarion = sandbox.on(fetchAPI, 'postToBarion', () => Promise.resolve({ success: true }));
         const services = require('../lib/services');
 
         it('should create proper URL', function () {
@@ -177,7 +177,13 @@ describe('lib/services.js', function () {
         });
 
         it('should throw error on not supported HTTP method', function () {
-            let doRequest = () => services._private.doRequest('test', { method: 'BAZINGA', path: '/api/dumb' }, { some: 'value' });
+            const doRequest = () => services._private.doRequest('test', {
+                method: 'BAZINGA',
+                path: '/api/dumb'
+            }, {
+                some: 'value'
+            });
+
             expect(doRequest).to.throw(/HTTP method/);
         });
     });
