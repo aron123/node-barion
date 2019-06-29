@@ -3,10 +3,10 @@ const expect = require('chai').expect;
 
 describe('lib/errors.js', function () {
     describe('#BarionError(message, errors)', function () {
-        let BarionError = errors.BarionError;
+        const BarionError = errors.BarionError;
 
         it('should initialize successfully', function () {
-            let problem = {
+            const problem = {
                 Title: 'Model Validation Error',
                 Description: 'The FundingSources field is required.',
                 ErrorCode: 'ModelValidationError',
@@ -15,9 +15,9 @@ describe('lib/errors.js', function () {
                 EndPoint: 'https://api.test.barion.com/v2/Payment/Start'
             };
 
-            let error = new BarionError('Some reasonable error occured.', [ problem ]);
+            const error = new BarionError('Some reasonable error occured.', [ problem ]);
 
-            expect(error instanceof Error).to.be.true; 
+            expect(error instanceof Error).to.be.true;
             expect(error.name).to.equal('BarionError');
             expect(error.message).to.equal('Some reasonable error occured.');
             expect(error.errors).to.be.an('array');
@@ -26,8 +26,8 @@ describe('lib/errors.js', function () {
         });
 
         it('should set \'errors\' only to array type', function () {
-            let e1 = new BarionError('aaa', null);
-            let e2 = new BarionError('bbb');
+            const e1 = new BarionError('aaa', null);
+            const e2 = new BarionError('bbb');
 
             expect(e1.errors).to.be.an('array');
             expect(e1.message).to.equal('aaa');
@@ -40,10 +40,10 @@ describe('lib/errors.js', function () {
     });
 
     describe('#BarionError(message, errors)', function () {
-        let BarionModelError = errors.BarionModelError;
+        const BarionModelError = errors.BarionModelError;
 
         it('should initialize successfully', function () {
-            let error = new BarionModelError('some good message', [ 'error1', 'error2' ]);
+            const error = new BarionModelError('some good message', [ 'error1', 'error2' ]);
 
             expect(error instanceof Error).to.be.true;
             expect(error.name).to.equal('BarionModelError');
@@ -51,8 +51,8 @@ describe('lib/errors.js', function () {
         });
 
         it('should set \'errors\' only to array type', function () {
-            let e1 = new BarionModelError('aaa', null);
-            let e2 = new BarionModelError('bbb');
+            const e1 = new BarionModelError('aaa', null);
+            const e2 = new BarionModelError('bbb');
 
             expect(e1.errors).to.be.an('array');
             expect(e1.message).to.equal('aaa');

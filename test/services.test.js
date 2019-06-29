@@ -14,7 +14,7 @@ const { baseUrls } = require('../lib/constants');
 /*
  * Mocks.
  */
-let serviceMocks = {
+const serviceMocks = {
     /*
      * Request succeeded.
      */
@@ -30,10 +30,10 @@ let serviceMocks = {
     errorService: proxyquire('../lib/services', {
         '../lib/fetch-api': {
             postToBarion: () => Promise.reject(new BarionError('Barion request errored out', [
-                { Title: 'Authentication failed.', HappenedAt: '2019-01-19T18:46:51.0808761Z' } 
+                { Title: 'Authentication failed.', HappenedAt: '2019-01-19T18:46:51.0808761Z' }
             ])),
             getFromBarion: () => Promise.reject(new BarionError('Barion request errored out', [
-                { Title: 'Authentication failed.', HappenedAt: '2019-01-19T18:46:51.0808761Z' } 
+                { Title: 'Authentication failed.', HappenedAt: '2019-01-19T18:46:51.0808761Z' }
             ]))
         }
     }),
@@ -177,7 +177,13 @@ describe('lib/services.js', function () {
         });
 
         it('should throw error on not supported HTTP method', function () {
-            let doRequest = () => services._private.doRequest('test', { method: 'BAZINGA', path: '/api/dumb' }, { some: 'value' });
+            const doRequest = () => services._private.doRequest('test', {
+                method: 'BAZINGA',
+                path: '/api/dumb'
+            }, {
+                some: 'value'
+            });
+
             expect(doRequest).to.throw(/HTTP method/);
         });
     });

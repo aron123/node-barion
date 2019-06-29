@@ -1,6 +1,6 @@
-/* 
+/*
  * On CI system use environment variables,
- * locally use a json file. 
+ * locally use a json file.
  */
 const POSKey = process.env.BARION_POS_KEY || require('./credentials.json').POSKey;
 const UserName = process.env.BARION_USER_NAME || require('./credentials.json').UserName;
@@ -58,14 +58,14 @@ module.exports = {
         }
     },
     getPaymentState: {
-        //successRequestBody: to be defined runtime, before run the test
+        // successRequestBody: to be defined runtime, before run the test
         successResponseBody: {
             PaymentRequestId: 'O-2019-0001-1',
             OrderNumber: 'O-2019-0001',
             POSOwnerEmail: UserName,
             Status: 'Prepared',
             PaymentType: 'Immediate',
-            AllowedFundingSources: ['All'],
+            AllowedFundingSources: [ 'All' ],
             GuestCheckout: true,
             Total: 50,
             SuggestedLocale: 'hu-HU',

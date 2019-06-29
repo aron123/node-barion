@@ -44,7 +44,7 @@ describe('lib/validate.js', function () {
                 done();
             }
         });
-        
+
         it('should report all failures of validation', function (done) {
             const object = {
                 id: '789',
@@ -59,7 +59,7 @@ describe('lib/validate.js', function () {
                 done();
             }
         });
-        
+
         it('should report validation failures in string array', function (done) {
             const object = {
                 id: '789',
@@ -74,7 +74,7 @@ describe('lib/validate.js', function () {
                 done();
             }
         });
-        
+
         it('should not mutate the input object', function () {
             const object = {
                 id: 'def32g',
@@ -105,9 +105,9 @@ describe('lib/validate.js', function () {
                 gender: 'male',
                 AGE: 13
             };
-            
+
             const result = validation.sanitizeThenValidate(validationSchema, object);
-            
+
             expect(result).to.deep.equal({
                 id: 'def32g',
                 name: 'bela',

@@ -28,24 +28,24 @@ const barionMock = {
  */
 const fetchBarion = proxyquire('../lib/fetch-api', {
     'node-fetch': barionMock,
-    'url': require('url'),
+    url: require('url'),
     './errors': require('../lib/errors')
 });
 
 describe('lib/fetch-api.js', function () {
 
-    let barionErrorMessageMatcher = /^Barion request errored out$/;
+    const barionErrorMessageMatcher = /^Barion request errored out$/;
 
     describe('#getFromBarion(url, params)', function () {
 
-        let getFromBarion = fetchBarion.getFromBarion;
+        const getFromBarion = fetchBarion.getFromBarion;
 
         it('should throw error if invalid URL is passed', function () {
             expect(() => getFromBarion('example')).to.throw();
         });
 
         it('should not throw error if no parameters are passed', function () {
-            let endpoint = 'http://example.com/success';
+            const endpoint = 'http://example.com/success';
 
             expect(() => getFromBarion(endpoint)).to.not.throw();
             expect(() => getFromBarion(endpoint, {})).to.not.throw();
@@ -55,7 +55,8 @@ describe('lib/fetch-api.js', function () {
         it('should reject if get response with error HTTP status', function () {
             return Promise.all([
                 expect(getFromBarion('http://example.com/error')).to.be.rejectedWith(barionErrorMessageMatcher),
-                expect(getFromBarion('http://example.com/internal-server-error')).to.be.rejectedWith(barionErrorMessageMatcher)
+                expect(getFromBarion('http://example.com/internal-server-error'))
+                    .to.be.rejectedWith(barionErrorMessageMatcher)
             ]);
         });
 
@@ -86,7 +87,7 @@ describe('lib/fetch-api.js', function () {
 
     describe('#postToBarion()', function () {
 
-        let postToBarion = fetchBarion.postToBarion;
+        const postToBarion = fetchBarion.postToBarion;
 
         it('should throw error if invalid URL is passed', function () {
             expect(() => postToBarion('example')).to.throw();
@@ -101,7 +102,8 @@ describe('lib/fetch-api.js', function () {
         it('should reject if get HTTP error response', function () {
             return Promise.all([
                 expect(postToBarion('http://example.com/error')).to.be.rejectedWith(barionErrorMessageMatcher),
-                expect(postToBarion('http://example.com/internal-server-error')).to.be.rejectedWith(barionErrorMessageMatcher)
+                expect(postToBarion('http://example.com/internal-server-error'))
+                    .to.be.rejectedWith(barionErrorMessageMatcher)
             ]);
         });
 
