@@ -53,7 +53,7 @@
     "proxyquire": "^2.1.0"
   },
   "dependencies": {
-    "@hapi/joi": "16.0.0-rc1",
+    "@hapi/joi": "16.0.0-preview",
     "node-fetch": "2.3.0"
   },
   "husky": {
