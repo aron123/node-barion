@@ -1,5 +1,4 @@
 const { expect } = require('chai');
-const Joi = require('@hapi/joi');
 const StartPayment = require('../lib/domain/StartPayment');
 
 const Transactions = [
@@ -45,15 +44,15 @@ describe('lib/domain/StartPayment.js', function () {
 
 
     it('should not strip ReservationPeriod field on reservation payment initialization', function () {
-        const { error, value } = Joi.validate(reservationPayment, StartPayment);
+        const { error, value } = StartPayment.validate(reservationPayment);
 
-        expect(error).to.be.null;
+        expect(error).to.be.undefined;
         expect(value).to.deep.equal(reservationStandard);
     });
 
     it('should require ReservationPeriod field on reservation payment initialization', function () {
         delete reservationPayment.ReservationPeriod;
-        const { error } = Joi.validate(reservationPayment, StartPayment);
+        const { error } = StartPayment.validate(reservationPayment);
 
         expect(error.details).to.be.an('array').and.have.lengthOf(1);
         expect(error.details[0]).to.deep.include({ message: '"ReservationPeriod" is required' });
@@ -61,16 +60,16 @@ describe('lib/domain/StartPayment.js', function () {
 
     it('should forbid ReservationPeriod field on immediate payment initialization', function () {
         immediatePayment.ReservationPeriod = '00:00:01:00';
-        const { error } = Joi.validate(immediatePayment, StartPayment);
+        const { error } = StartPayment.validate(immediatePayment);
 
         expect(error.details).to.be.an('array').and.have.lengthOf(1);
         expect(error.details[0]).to.deep.include({ message: '"ReservationPeriod" is not allowed' });
     });
 
     it('should validate correct immediate payment initialization', function () {
-        const { error, value } = Joi.validate(immediatePayment, StartPayment);
+        const { error, value } = StartPayment.validate(immediatePayment);
 
-        expect(error).to.be.null;
+        expect(error).to.be.undefined;
         expect(value).to.deep.equal(immediateStandard);
     });
 });
