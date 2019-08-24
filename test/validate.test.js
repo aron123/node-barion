@@ -1,18 +1,17 @@
 const { expect } = require('chai');
 const Joi = require('@hapi/joi');
+const { CaseInsensitiveSchema } = require('../lib/schema');
 
 const validation = require('../lib/validate');
 
-const validationSchema = Joi.object({
-    id: Joi.string().optional(),
-    name: Joi.string().required(),
-    gender: Joi.string().required(),
-    age: Joi.number().optional()
-})
-    .rename(/^id$/i, 'id', { override: true })
-    .rename(/^name$/i, 'name', { override: true })
-    .rename(/^gender$/i, 'gender', { override: true })
-    .rename(/^age$/i, 'age', { override: true });
+const validationSchema = new CaseInsensitiveSchema(
+    Joi.object({
+        id: Joi.string().optional(),
+        name: Joi.string().required(),
+        gender: Joi.string().required(),
+        age: Joi.number().optional()
+    })
+);
 
 describe('lib/validate.js', function () {
     describe('#sanitizeThenValidate(schema, object)', function () {
