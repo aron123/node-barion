@@ -48,6 +48,7 @@
     "eslint": "^6.0.1",
     "fetch-mock": "^7.3.0",
     "husky": "^2.7.0",
+    "lint-staged": "^9.2.3",
     "mocha": "^6.1.4",
     "nyc": "^14.1.1",
     "proxyquire": "^2.1.0"
@@ -56,9 +57,12 @@
     "@hapi/joi": "16.0.0-preview",
     "node-fetch": "2.3.0"
   },
+  "lint-staged": {
+    "*.js": "eslint --fix"
+  },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint"
+      "pre-commit": "lint-staged"
     }
   },
   "nyc": {
