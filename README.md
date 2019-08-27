@@ -81,10 +81,10 @@ If you are not familiar with Promise and other ES6 stuff, [get closer to it](htt
 > **IMPORTANT**: Barion uses *PascalCased* field naming, but **node-barion is case insensitive** (this means that if Barion Docs mentions a field name *PaymentId*, you can either use *PaymentId*, *paymentId*, *paymentid* or *paymentID* notation in your application, ``node-barion`` converts these to the standard *PaymentId* name).
 
 The signature for every instance method is ``(options, [callback])``, where ``options`` is an object, which contains the input parameters, and ``callback`` is a function, which processes the response.<br>
-If no callback is defined, the methods return a *Promise*, which resolves with data or rejects with error.
+If no callback is defined, the methods return a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises), which resolves with data or rejects with error.
 
 ### Instantiate new Barion object - Barion(options)
-A Barion instance represents a merchant, that accepts e-payment through Barion.
+A Barion instance represents a merchant, that accepts e-payment transactions through Barion.
 
 In the constructor, you can define default values, that can be overridden later in certain queries (except ``POSKey`` and ``Environment``):
   - ``POSKey``: POSKey of the merchant (string). (required)
@@ -95,7 +95,7 @@ In the constructor, you can define default values, that can be overridden later 
 
   - ``ValidateModels``: Indicates if ``node-barion`` have to validate ``options`` object of method calls before sending the request to the Barion API, when it is set to ``true``, the module is prevalidates the request (boolean). (optional, default: ``true``)
 
-  - ``FundingSources``: The allowed funding sources, ``[ 'All' ]`` or ``[ 'Balance' ]`` (string[]). (optional, default: ``[ 'All' ]``)
+  - ``FundingSources``: Array with the allowed funding sources, ``['All']`` or ``['Balance']`` (string[]). (optional, default: ``['All']``)
 
   - ``GuestCheckOut``: Indicates if guest checkout is enabled (boolean). (optional, default: ``true``)
 
@@ -451,7 +451,7 @@ barion.barionTransfer({
 
 ### Handle errors
 There are 3 main types of errors can thrown, when you use the ``node-barion`` module:
-  - ``BarionError``: Thrown, when the Barion system responds with error(s).
+  - ``BarionError``: Thrown, when the Barion system responds with errors.
 
     This error has a ``name`` field, set to ``'BarionError'``.
 
@@ -460,14 +460,14 @@ There are 3 main types of errors can thrown, when you use the ``node-barion`` mo
     > - generic error (such as ``{'Message': 'An error has occurred.'}``),
     > - invalid JSON (such as an HTML maintenance page)
 
-  - ``BarionModelError``: Thrown, when the prevalidation of the request is failed. ``node-barion`` can throw this type of error only if ``ValidateModels`` option is set to ``true`` (read more about [instantiation](#instantiate-new-barion-object---barionoptions)).
+  - ``BarionModelError``: Thrown, when the prevalidation of the request is failed. ``node-barion`` can throw this type of error only if ``ValidateModels`` option is set to ``true`` on [instantiation](#instantiate-new-barion-object---barionoptions).
     > **NOTE**: ``ValidateModels`` option is set to ``true`` by default.
 
     This error has a ``name`` field, set to ``'BarionModelError'``.
 
     This error has an ``errors`` array, which contains the returned errors as strings.
 
-  - ``Other errors``: Common Javascript errors, such as ``Error`` or ``TypeError`` (thrown e.g. when network error is occured).
+  - ``Other errors``: Common Javascript errors, such as ``Error`` or ``TypeError`` (thrown e.g. when network error occured).
 
 #### Usage example
 You can distinguish types of errors based on their names, but it is not a must. Instead, you can simply log them to somewhere without any condition checking.
@@ -535,3 +535,7 @@ I do not merge any PRs that break the build success. To test your changes, befor
 Copyright (c) 2019-present, Kiss Aron &lt;aron123dev@gmail.com&gt;
 
 Unless otherwise stated in sources, the terms specified in LICENSE file are applicable.
+
+
+
+[3DS]: https://img.shields.io/badge/-3DS-yellow "Required for 3DS"
