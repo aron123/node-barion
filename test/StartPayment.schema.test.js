@@ -32,14 +32,29 @@ const immediateStandard = {
     Transactions
 };
 
+const recurringStandard = {
+    POSKey: '4ab71f10-5ba2-4c9b-b2b0-f365b6bdfee2',
+    PaymentType: 'Immediate',
+    Locale: 'hu-HU',
+    Currency: 'HUF',
+    RecurrenceId: '4ab71f10-5ba2-4c9b',
+    RecurrenceType: 'MerchantInitiatedPayment',
+    GuestCheckOut: true,
+    FundingSources: [ 'All' ],
+    PaymentRequestId: '2019-001',
+    Transactions
+};
+
 describe('lib/domain/StartPayment.js', function () {
 
     let reservationPayment;
     let immediatePayment;
+    let recurringPayment;
 
     beforeEach(() => {
         reservationPayment = Object.assign({}, reservationStandard);
         immediatePayment = Object.assign({}, immediateStandard);
+        recurringPayment = Object.assign({}, recurringStandard);
     });
 
 
@@ -71,5 +86,31 @@ describe('lib/domain/StartPayment.js', function () {
 
         expect(error).to.be.undefined;
         expect(value).to.deep.equal(immediateStandard);
+    });
+
+    it('should successfully validate 3DS-compliant recurring payment', function () {
+        const { error, value } = StartPayment.validate(recurringPayment);
+
+        expect(error).to.be.undefined;
+        expect(value).to.deep.equal(recurringStandard);
+    });
+
+    it('should successfully validate not 3DS-compliant recurring payment', function () {
+        delete recurringPayment.RecurrenceType;
+        const { error, value } = StartPayment.validate(recurringPayment);
+
+        const expectedValue = Object.assign({}, recurringStandard);
+        delete expectedValue.RecurrenceType;
+
+        expect(error).to.be.undefined;
+        expect(value).to.deep.equal(expectedValue);
+    });
+
+    it('should fail validation when RecurrenceType is defined for a not recurrent payment', function () {
+        delete recurringPayment.RecurrenceId; // make it not recurring
+        const { error } = StartPayment.validate(recurringPayment);
+
+        expect(error.details).to.be.an('array').and.have.lengthOf(1);
+        expect(error.details[0]).to.deep.include({ message: '"RecurrenceType" is not allowed' });
     });
 });
