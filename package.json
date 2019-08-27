@@ -23,7 +23,9 @@
     "gateway",
     "online",
     "money",
-    "transfer"
+    "transfer",
+    "3d",
+    "secure"
   ],
   "engines": {
     "node": ">=4"
