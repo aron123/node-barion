@@ -134,8 +134,6 @@ To create a new payment, call the ``startPayment`` function. [[Barion Docs](http
 
 **Parameters**:
 
-[3DS]: https://img.shields.io/badge/-3DS-yellow "Required for 3DS"
-
 ![][3DS] - Properties marked with this badge must be provided to comply with 3D Secure authentication. Provide as much attributes as you can to avoid 3DS challenge flow for your customers.
 
   - ``PaymentType``: Type of the payment, ``'Immediate'`` (classic) or ``'Reservation'`` ([read more](https://docs.barion.com/Reservation_payment)) (string). (required) 
@@ -536,6 +534,5 @@ Copyright (c) 2019-present, Kiss Aron &lt;aron123dev@gmail.com&gt;
 
 Unless otherwise stated in sources, the terms specified in LICENSE file are applicable.
 
-
-
+<!-- References -->
 [3DS]: https://img.shields.io/badge/-3DS-yellow "Required for 3DS"
