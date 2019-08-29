@@ -70,9 +70,10 @@ If you are not familiar with Promise and other ES6 stuff, [get closer to it](htt
 
 ## Documentation
 ``node-barion`` provides all the functionality of Barion API:
-- start new payment or reservation
+- start new payment, reservation or delayed capture
 - get the state of an already started payment
 - finish a pending reservation
+- capture or cancel a previously authorized payment
 - refund a completed payment
 - send money out of Barion via international bank transfer
 - send money to existing Barion account or email address
