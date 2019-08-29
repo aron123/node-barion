@@ -45,16 +45,30 @@ const recurringStandard = {
     Transactions
 };
 
+const delayedCaptureStandard = {
+    POSKey: '4ab71f10-5ba2-4c9b-b2b0-f365b6bdfee2',
+    PaymentType: 'DelayedCapture',
+    DelayedCapturePeriod: '00:00:50:00',
+    Locale: 'hu-HU',
+    Currency: 'HUF',
+    GuestCheckOut: true,
+    FundingSources: [ 'All' ],
+    PaymentRequestId: '2019-001',
+    Transactions
+};
+
 describe('lib/domain/StartPayment.js', function () {
 
     let reservationPayment;
     let immediatePayment;
     let recurringPayment;
+    let delayedCapturePayment;
 
     beforeEach(() => {
         reservationPayment = Object.assign({}, reservationStandard);
         immediatePayment = Object.assign({}, immediateStandard);
         recurringPayment = Object.assign({}, recurringStandard);
+        delayedCapturePayment = Object.assign({}, delayedCaptureStandard);
     });
 
 
@@ -112,5 +126,28 @@ describe('lib/domain/StartPayment.js', function () {
 
         expect(error.details).to.be.an('array').and.have.lengthOf(1);
         expect(error.details[0]).to.deep.include({ message: '"RecurrenceType" is not allowed' });
+    });
+
+    it('should successfully validate Delayed Capture Payment with DelayedCapturePeriod given', function () {
+        const { error, value } = StartPayment.validate(delayedCapturePayment);
+
+        expect(error).to.be.undefined;
+        expect(value).to.deep.equal(delayedCaptureStandard);
+    });
+
+    it('should fail validation when DelayedCapturePeriod is not given for a Delayed Capture Payment', function () {
+        delete delayedCapturePayment.DelayedCapturePeriod;
+        const { error } = StartPayment.validate(delayedCapturePayment);
+
+        expect(error.details).to.be.an('array').and.have.lengthOf(1);
+        expect(error.details[0]).to.deep.include({ message: '"DelayedCapturePeriod" is required' });
+    });
+
+    it('should fail validation when DelayedCapturePeriod is given for a Non-delayed capture payment', function () {
+        delayedCapturePayment.PaymentType = 'Immediate';
+        const { error } = StartPayment.validate(delayedCapturePayment);
+
+        expect(error.details).to.be.an('array').and.have.lengthOf(1);
+        expect(error.details[0]).to.deep.include({ message: '"DelayedCapturePeriod" is not allowed' });
     });
 });
