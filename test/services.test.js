@@ -92,6 +92,34 @@ describe('lib/services.js', function () {
         });
     });
 
+    describe('#captureAuthorizedPayment(environment, options)', function () {
+        it('should return a Promise on success', function (done) {
+            const services = serviceMocks.okService;
+            services.captureAuthorizedPayment('test', {})
+                .then(() => done());
+        });
+
+        it('should return a Promise on failure', function (done) {
+            const services = serviceMocks.errorService;
+            services.captureAuthorizedPayment('test', {})
+                .catch(() => done());
+        });
+    });
+
+    describe('#cancelAuthorizedPayment(environment, options)', function () {
+        it('should return a Promise on success', function (done) {
+            const services = serviceMocks.okService;
+            services.cancelAuthorizedPayment('test', {})
+                .then(() => done());
+        });
+
+        it('should return a Promise on failure', function (done) {
+            const services = serviceMocks.errorService;
+            services.cancelAuthorizedPayment('test', {})
+                .catch(() => done());
+        });
+    });
+
     describe('#refundPayment(environment, options)', function () {
         it('should return a Promise on success', function (done) {
             const services = serviceMocks.okService;
