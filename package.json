@@ -25,7 +25,8 @@
     "money",
     "transfer",
     "3d",
-    "secure"
+    "secure",
+    "3ds"
   ],
   "engines": {
     "node": ">=4"

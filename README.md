@@ -17,6 +17,8 @@ Helps you to manage e-payment transactions through the [Barion Smart Gateway](ht
     - [Get payment state](#get-payment-state---bariongetpaymentstateoptions-callback)
     - [Finish pending reservation](#finish-pending-reservation---barionfinishreservationoptions-callback)
     - [Refund payment partially or completely](#refund-payment-partially-or-completely---barionrefundpaymentoptions-callback)
+    - ![][TEST-ONLY] [Capture a previously authorized payment](#capture-a-previously-authorized-payment---barioncaptureauthorizedpaymentoptions-callback)
+    - ![][TEST-ONLY] [Cancel a previously authorized payment](#cancel-a-previously-authorized-payment---barioncancelauthorizedpaymentoptions-callback)
     - [Send money to bank account](#send-money-to-bank-account---barionbanktransferoptions-callback)
     - [Send money to Barion user or email address](#send-money-to-barion-user-or-email-address---barionbariontransferoptions-callback)
     - [Handle errors](#handle-errors)
@@ -122,7 +124,7 @@ In the constructor, you can define default values, that can be overridden later 
 ```js
 const Barion = require('node-barion');
 
-let barion = new Barion({
+const barion = new Barion({
     POSKey: '21ec20203aea4069a2dd08002b30',
     Environment: 'test',
     FundingSources: [ 'Balance' ],
@@ -137,8 +139,11 @@ To create a new payment, call the ``startPayment`` function. [[Barion Docs](http
 
 ![][3DS] - Properties marked with this badge must be provided to comply with 3D Secure authentication. Provide as much attributes as you can to avoid 3DS challenge flow for your customers.
 
-  - ``PaymentType``: Type of the payment, ``'Immediate'`` (classic) or ``'Reservation'`` ([read more](https://docs.barion.com/Reservation_payment)) (string). (required) 
+  - ``PaymentType``: Type of the payment, ``'Immediate'`` (classic),  ``'Reservation'`` or ``DelayedCapture`` ([read more](https://docs.barion.com/Reservation_payment)) (string). (required) 
+  > **IMPORTANT**: ![][TEST-ONLY] Delayed Capture is currently not available in Barion's production API, only in the TEST server.
   - ``ReservationPeriod``: Time window allowed by the shop to finalize the payment (string in 'd:hh:mm:ss' format). (required, if the payment type is reservation)
+  - ``DelayedCapturePeriod``: Time window allowed by the shop to capture or cancel the payment (string in 'd:hh:mm:ss' format). (required, if the payment type is delayed capture)
+  > **IMPORTANT**: ![][TEST-ONLY] Delayed Capture is currently not available in Barion's production API, only in the TEST server.
   - ``PaymentWindow``: Time window allowed for the customer to complete the payment (string in 'd:hh:mm:ss' format). (optional, default: 30 minutes)
   - ``GuestCheckOut``: Indicates if guest checkout is enabled (boolean). (optional, because it is assigned in the constructor)
   - ``InitiateRecurrence``: Indicates that the shop would like to initialize a [token payment](https://docs.barion.com/Token_payment) (e.g. for subscription) (boolean). (optional) 
@@ -278,6 +283,79 @@ barion.finishReservation({
             Total: 50
         }
     ]
+}).then(data => {
+    //process data
+}).catch(err => {
+    //handle error
+});
+```
+
+### Capture a previously authorized payment - barion.captureAuthorizedPayment(options, \[callback\])
+> **IMPORTANT**: ![][TEST-ONLY] This feature is currently not available in Barion's production API, only in the TEST server.
+ 
+To capture (finish) a previously authorized payment, use the ``captureAuthorizedPayment`` function. [[Barion Docs](https://docs.barion.com/Payment-Capture-v2)]
+
+**Parameters**:
+- ``PaymentId``: ID of the payment in the Barion system (string). (required)
+- ``Transactions``: Payment transactions to capture ([TransactionToFinish](https://docs.barion.com/TransactionToFinish)[]). (required)
+
+**Output**: [Read at Barion Docs](https://docs.barion.com/Payment-Capture-v2#Output_properties)
+
+#### Usage example
+##### With callback
+```js
+barion.captureAuthorizedPayment({
+    PaymentId: '15c1071df3ea4289996ead6ae17',
+    Transactions: [
+        {
+            TransactionId: 'c9daac12c9154ce3a0c6a1a3',
+            Total: 50
+        }
+    ]
+}, function (err, data) {
+    //handle error / process data
+});
+```
+##### With promise
+```js
+barion.captureAuthorizedPayment({
+    PaymentId: '15c1071df3ea4289996ead6ae17',
+    Transactions: [
+        {
+            TransactionId: 'c9daac12c9154ce3a0c6a1a3',
+            Total: 50
+        }
+    ]
+}).then(data => {
+    //process data
+}).catch(err => {
+    //handle error
+});
+```
+
+### Cancel a previously authorized payment - barion.cancelAuthorizedPayment(options, \[callback\])
+> **IMPORTANT**: ![][TEST-ONLY] This feature is currently not available in Barion's production API, only in the TEST server.
+ 
+To cancel a previously authorized payment, use the ``cancelAuthorizedPayment`` function. [[Barion Docs](https://docs.barion.com/Payment-CancelAuthorization-v2)]
+
+**Parameters**:
+- ``PaymentId``: ID of the payment in the Barion system (string). (required)
+
+**Output**: [Read at Barion Docs](https://docs.barion.com/Payment-CancelAuthorization-v2#Output_properties)
+
+#### Usage example
+##### With callback
+```js
+barion.cancelAuthorizedPayment({
+    PaymentId: '15c1071df3ea4289996ead6ae17'
+}, function (err, data) {
+    //handle error / process data
+});
+```
+##### With promise
+```js
+barion.cancelAuthorizedPayment({
+    PaymentId: '15c1071df3ea4289996ead6ae17'
 }).then(data => {
     //process data
 }).catch(err => {
@@ -537,3 +615,4 @@ Unless otherwise stated in sources, the terms specified in LICENSE file are appl
 
 <!-- References -->
 [3DS]: https://img.shields.io/badge/-3DS-yellow "Required for 3DS"
+[TEST-ONLY]: https://img.shields.io/badge/-TEST%20ONLY-red "Feature is currently only available on the sandox server"

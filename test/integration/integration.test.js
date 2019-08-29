@@ -219,12 +219,22 @@ describe('Integration tests', function () {
     });
 
     describe.skip('Finish reservation', function () {
-        // can't be tested automatically, I think,
+        // not trivial how to test automatically,
+        // because typing bank card info on Barion GUI is required after the payment is started
+    });
+
+    describe.skip('Capture authorized payment', function () {
+        // not trivial how to test automatically,
+        // because typing bank card info on Barion GUI is required after the payment is started
+    });
+
+    describe.skip('Cancel authorized payment', function () {
+        // not trivial how to test automatically,
         // because typing bank card info on Barion GUI is required after the payment is started
     });
 
     describe.skip('Refund payment', function () {
-        // can't be tested automatically, I think,
+        // not trivial how to test automatically,
         // because typing bank card info on Barion GUI is required after the payment is started
     });
 
