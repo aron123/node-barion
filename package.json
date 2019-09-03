@@ -29,7 +29,7 @@
     "3ds"
   ],
   "engines": {
-    "node": ">=4"
+    "node": ">=6"
   },
   "directories": {
     "lib": "./lib",
