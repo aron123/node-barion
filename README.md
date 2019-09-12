@@ -138,7 +138,7 @@ To create a new payment, call the ``startPayment`` function. [[Barion Docs](http
 
 **Parameters**:
 
-![][3DS] - Properties marked with this badge must be provided to comply with 3D Secure authentication. Provide as much attributes as you can to avoid 3DS challenge flow for your customers.
+![][3DS] - Properties marked with this badge must be provided to comply with 3D Secure authentication. Provide as much attributes as you can to avoid 3DS challenge flow for your customers. If the merchant does not provide 3DS-related properties, it doesn't mean that the payment will fail. It means that the payer will have a higher chance of getting a challenge during payment.
 
   - ``PaymentType``: Type of the payment, ``'Immediate'`` (classic),  ``'Reservation'`` or ``DelayedCapture`` ([read more](https://docs.barion.com/Reservation_payment)) (string). (required)
     
