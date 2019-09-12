@@ -58,7 +58,7 @@
   },
   "dependencies": {
     "@hapi/joi": "16.0.0",
-    "node-fetch": "2.3.0"
+    "node-fetch": "2.6.0"
   },
   "lint-staged": {
     "*.js": "eslint --fix"
