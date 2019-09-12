@@ -5,13 +5,14 @@ const expect = require('chai').expect;
 describe('lib/schema.js', function () {
 
     let schema;
-    const { setFieldsOptional, setFieldsForbidden, CaseInsensitiveSchema } = schemaUtils;
+    const { setFieldsOptional, setFieldsForbidden, getRequiredFields, CaseInsensitiveSchema } = schemaUtils;
 
     beforeEach(() => {
         schema = Joi.object({
             id: Joi.number().required(),
             name: Joi.string().required(),
-            age: Joi.number().required()
+            age: Joi.number().required(),
+            hairColor: Joi.string().optional()
         });
     });
 
@@ -73,6 +74,32 @@ describe('lib/schema.js', function () {
 
             const { error } = validationSchema.validate(object);
             expect(error).to.be.undefined;
+        });
+    });
+
+    describe('#getRequiredFields(schema, optionalFields)', function () {
+        it('should return empty array when not-object schema is given', function () {
+            const stringSchema = Joi.string().required();
+            const result = getRequiredFields(stringSchema);
+            expect(result).to.be.an('array').and.have.lengthOf(0);
+        });
+
+        it('should return empty array when no required key is defined', function () {
+            const optionalSchema = Joi.object({
+                id: Joi.number().optional(),
+                name: Joi.string().optional()
+            });
+
+            const result = getRequiredFields(optionalSchema);
+            expect(result).to.be.an('array').and.have.lengthOf(0);
+        });
+
+        it('should collect all required key', function () {
+            const result = getRequiredFields(schema);
+            expect(result).to.be.an('array').and.have.lengthOf(3);
+            expect(result).to.contain('id');
+            expect(result).to.contain('name');
+            expect(result).to.contain('age');
         });
     });
 
