@@ -17,8 +17,8 @@ Helps you to manage e-payment transactions through the [Barion Smart Gateway](ht
     - [Get payment state](#get-payment-state---bariongetpaymentstateoptions-callback)
     - [Finish pending reservation](#finish-pending-reservation---barionfinishreservationoptions-callback)
     - [Refund payment partially or completely](#refund-payment-partially-or-completely---barionrefundpaymentoptions-callback)
-    - ![][TEST-ONLY] [Capture a previously authorized payment](#capture-a-previously-authorized-payment---barioncaptureauthorizedpaymentoptions-callback)
-    - ![][TEST-ONLY] [Cancel a previously authorized payment](#cancel-a-previously-authorized-payment---barioncancelauthorizedpaymentoptions-callback)
+    - [Capture a previously authorized payment](#capture-a-previously-authorized-payment---barioncaptureauthorizedpaymentoptions-callback)
+    - [Cancel a previously authorized payment](#cancel-a-previously-authorized-payment---barioncancelauthorizedpaymentoptions-callback)
     - [Send money to bank account](#send-money-to-bank-account---barionbanktransferoptions-callback)
     - [Send money to Barion user or email address](#send-money-to-barion-user-or-email-address---barionbariontransferoptions-callback)
     - [Handle errors](#handle-errors)
@@ -139,12 +139,11 @@ To create a new payment, call the ``startPayment`` function. [[Barion Docs](http
 
 ![][3DS] - Properties marked with this badge must be provided to comply with 3D Secure authentication. Provide as much attributes as you can to avoid 3DS challenge flow for your customers.
 
-  - ``PaymentType``: Type of the payment, ``'Immediate'`` (classic),  ``'Reservation'`` or ``DelayedCapture`` ([read more](https://docs.barion.com/Reservation_payment)) (string). (required) 
-    > **IMPORTANT**: ![][TEST-ONLY] Delayed Capture is currently not available in Barion's production API, only in the TEST server.
+  - ``PaymentType``: Type of the payment, ``'Immediate'`` (classic),  ``'Reservation'`` or ``DelayedCapture`` ([read more](https://docs.barion.com/Reservation_payment)) (string). (required)
     
   - ``ReservationPeriod``: Time window allowed by the shop to finalize the payment (string in 'd:hh:mm:ss' format). (required, if the payment type is reservation)
+
   - ``DelayedCapturePeriod``: Time window allowed by the shop to capture or cancel the payment (string in 'd:hh:mm:ss' format). (required, if the payment type is delayed capture)
-    > **IMPORTANT**: ![][TEST-ONLY] Delayed Capture is currently not available in Barion's production API, only in the TEST server.
     
   - ``PaymentWindow``: Time window allowed for the customer to complete the payment (string in 'd:hh:mm:ss' format). (optional, default: 30 minutes)
   
@@ -315,7 +314,6 @@ barion.finishReservation({
 ```
 
 ### Capture a previously authorized payment - barion.captureAuthorizedPayment(options, \[callback\])
-> **IMPORTANT**: ![][TEST-ONLY] This feature is currently not available in Barion's production API, only in the TEST server.
  
 To capture (finish) a previously authorized payment, use the ``captureAuthorizedPayment`` function. [[Barion Docs](https://docs.barion.com/Payment-Capture-v2)]
 
@@ -358,7 +356,6 @@ barion.captureAuthorizedPayment({
 ```
 
 ### Cancel a previously authorized payment - barion.cancelAuthorizedPayment(options, \[callback\])
-> **IMPORTANT**: ![][TEST-ONLY] This feature is currently not available in Barion's production API, only in the TEST server.
  
 To cancel a previously authorized payment, use the ``cancelAuthorizedPayment`` function. [[Barion Docs](https://docs.barion.com/Payment-CancelAuthorization-v2)]
 
