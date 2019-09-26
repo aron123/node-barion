@@ -621,7 +621,7 @@ If you report a bug/issue, please provide the simplest example code where the er
 
 If you found a security issue, please contact me in [email](mailto:aron123dev@gmail.com), and I will get back to you as soon as possible.
 
-I do not merge any PRs that break the build success. To test your changes, before send a PR, you should follow the instructions below:
+I do not merge any PRs that break the build success. To test your changes, before sending a PR, you should follow the instructions below:
 
 0) Make sure you have a test Barion account, with at least 300 HUF balance.
 1) Add your credentials to Barion in ``test/integration/credentials.json`` (there is an EXAMPLE in the directory, with the required JSON structure).
