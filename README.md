@@ -549,7 +549,7 @@ barion.barionTransfer({
 ```
 
 ### Handle errors
-There are 3 main types of errors can thrown, when you use the ``node-barion`` module:
+There are 3 main types of errors that can be thrown, when you use the ``node-barion`` module:
   - ``BarionError``: Thrown, when the Barion system responds with errors.
 
     This error has a ``name`` field, set to ``'BarionError'``.
