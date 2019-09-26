@@ -566,7 +566,7 @@ There are 3 main types of errors that can be thrown, when you use the ``node-bar
 
     This error has an ``errors`` array, which contains the returned errors as strings.
 
-  - ``Other errors``: Common Javascript errors, such as ``Error`` or ``TypeError`` (thrown e.g. when network error occured).
+  - ``Other errors``: Common Javascript errors, such as ``Error`` or ``TypeError`` (thrown e.g. when network error occurred).
 
 #### Usage example
 You can distinguish types of errors based on their names, but it is not a must. Instead, you can simply log them to somewhere without any condition checking.
