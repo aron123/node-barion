@@ -4,7 +4,7 @@
 [![npm version](http://img.shields.io/npm/v/node-barion.svg?style=flat)](https://npmjs.org/package/node-barion "View this project on npm")
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
-Helps you to manage e-payment transactions through the [Barion Smart Gateway](https://www.barion.com/).
+Helps manage e-payment transactions through the [Barion Smart Gateway](https://www.barion.com/).
 
 ## Table of contents
   - [Install](#install)
@@ -19,9 +19,9 @@ Helps you to manage e-payment transactions through the [Barion Smart Gateway](ht
     - [Refund payment partially or completely](#refund-payment-partially-or-completely---barionrefundpaymentoptions-callback)
     - [Capture a previously authorized payment](#capture-a-previously-authorized-payment---barioncaptureauthorizedpaymentoptions-callback)
     - [Cancel a previously authorized payment](#cancel-a-previously-authorized-payment---barioncancelauthorizedpaymentoptions-callback)
-    - [Send money to bank account](#send-money-to-bank-account---barionbanktransferoptions-callback)
-    - [Send money to Barion user or email address](#send-money-to-barion-user-or-email-address---barionbariontransferoptions-callback)
-    - [Handle errors](#handle-errors)
+    - [Send money to a bank account](#send-money-to-a-bank-account---barionbanktransferoptions-callback)
+    - [Send money to a Barion user or email address](#send-money-to-a-barion-user-or-email-address---barionbariontransferoptions-callback)
+    - [Handling errors](#handling-errors)
 
   - [Future improvements](#future-improvements)
 
@@ -37,7 +37,7 @@ npm install node-barion --save
 ```
 
 ## Usage
-This simple example shows, how to use ``node-barion``:
+This simple example shows how to use ``node-barion``:
 
 ```js
 // 1) Import the 'node-barion' module
@@ -80,23 +80,23 @@ If you are not familiar with Promise and other ES6 stuff, [get closer to it](htt
 - send money out of Barion via international bank transfer
 - send money to existing Barion account or email address
 
-> **IMPORTANT**: ``node-barion`` is completely consistent with [Barion Docs](https://docs.barion.com/Main_Page), so you can use exactly the same field names, that are specified in it. **It is highly recommended, to read the official Barion documentation** before start to use the ``node-barion`` module.<br>
-> **IMPORTANT**: Barion uses *PascalCased* field naming, but **node-barion is case insensitive** (this means that if Barion Docs mentions a field name *PaymentId*, you can either use *PaymentId*, *paymentId*, *paymentid* or *paymentID* notation in your application, ``node-barion`` converts these to the standard *PaymentId* name).
+> **IMPORTANT**: ``node-barion`` is completely consistent with [Barion Docs](https://docs.barion.com/Main_Page), so you can use exactly the same field names, that are specified in it. **Reading the official Barion documentation is highly reccomended** before starting to use ``node-barion`` module.<br>
+> **IMPORTANT**: Barion uses *PascalCased* field naming, but **node-barion is case insensitive** (this means that if Barion Docs mention a field name *PaymentId*, you can either use *PaymentId*, *paymentId*, *paymentid* or *paymentID* notation in your application, as ``node-barion`` converts these to the standard *PaymentId* name).
 
-The signature for every instance method is ``(options, [callback])``, where ``options`` is an object, which contains the input parameters, and ``callback`` is a function, which processes the response.<br>
+The signature for every instance method is ``(options, [callback])``, where ``options`` is an object which contains the input parameters and ``callback`` is a function which processes the response.<br>
 If no callback is defined, the methods return a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises), which resolves with data or rejects with error.
 
 ### Instantiate new Barion object - Barion(options)
-A Barion instance represents a merchant, that accepts e-payment transactions through Barion.
+A Barion instance represents a merchant that accepts e-payment transactions through Barion.
 
-In the constructor, you can define default values, that can be overridden later in certain queries (except ``POSKey`` and ``Environment``):
+In the constructor, you can define default values that can be overridden later in certain queries (except ``POSKey`` and ``Environment``):
   - ``POSKey``: POSKey of the merchant (string). (required)
 
   - ``Environment``: Environment to use, ``'test'`` or ``'prod'`` (string). (optional, default: ``'test'``)
 
     > **IMPORTANT**: To use the production environment, you have to explicitly assign ``'prod'`` to this field. Otherwise, the environment is set to ``'test'`` by default.
 
-  - ``ValidateModels``: Indicates if ``node-barion`` have to validate ``options`` object of method calls before sending the request to the Barion API, when it is set to ``true``, the module is prevalidates the request (boolean). (optional, default: ``true``)
+  - ``ValidateModels``: Indicates if ``node-barion`` have to validate ``options`` object of method calls before sending the request to the Barion API. When it is set to ``true``, the module is prevalidates the request (boolean). (optional, default: ``true``)
 
   - ``FundingSources``: Array with the allowed funding sources, ``['All']`` or ``['Balance']`` (string[]). (optional, default: ``['All']``)
 
@@ -138,7 +138,7 @@ To create a new payment, call the ``startPayment`` function. [[Barion Docs](http
 
 **Parameters**:
 
-![][3DS] - Properties marked with this badge must be provided to comply with 3D Secure authentication. Provide as much attributes as you can to avoid 3DS challenge flow for your customers. If the merchant does not provide 3DS-related properties, it doesn't mean that the payment will fail. It means that the payer will have a higher chance of getting a challenge during payment.
+![][3DS] - Properties marked with this badge must be provided to comply with 3D Secure authentication. Provide as many attributes as you can to avoid 3DS challenge flow for your customers. If the merchant does not provide 3DS-related properties, that does not mean that the payment will fail. It means that the payer will have a higher chance of getting a challenge during payment.
 
   - ``PaymentType``: Type of the payment, ``'Immediate'`` (classic),  ``'Reservation'`` or ``DelayedCapture`` ([read more](https://docs.barion.com/Reservation_payment)) (string). (required)
     
@@ -186,7 +186,7 @@ To create a new payment, call the ``startPayment`` function. [[Barion Docs](http
   
   - ``BillingAddress``: ![][3DS] The billing address associated with the payment, if applicable ([BillingAddress](https://docs.barion.com/BillingAddress)). (optional)
   
-  - ``PayerAccount``: ![][3DS] Information about the account of the payer ([PayerAccountInformation](https://docs.barion.com/PayerAccountInformation)). (optional)
+  - ``PayerAccount``: ![][3DS] Information about the payer's account ([PayerAccountInformation](https://docs.barion.com/PayerAccountInformation)). (optional)
   
   - ``PurchaseInformation``: ![][3DS] Information about the purchase ([PurchaseInformation](https://docs.barion.com/PurchaseInformation)). (optional)
   
@@ -319,7 +319,7 @@ barion.finishReservation({
 To capture (finish) a previously authorized payment, use the ``captureAuthorizedPayment`` function. [[Barion Docs](https://docs.barion.com/Payment-Capture-v2)]
 
 **Parameters**:
-- ``PaymentId``: ID of the payment in the Barion system (string). (required)
+- ``PaymentId``: The payment's ID in the Barion system (string). (required)
 - ``Transactions``: Payment transactions to capture ([TransactionToFinish](https://docs.barion.com/TransactionToFinish)[]). (required)
 
 **Output**: [Read at Barion Docs](https://docs.barion.com/Payment-Capture-v2#Output_properties)
@@ -361,7 +361,7 @@ barion.captureAuthorizedPayment({
 To cancel a previously authorized payment, use the ``cancelAuthorizedPayment`` function. [[Barion Docs](https://docs.barion.com/Payment-CancelAuthorization-v2)]
 
 **Parameters**:
-- ``PaymentId``: ID of the payment in the Barion system (string). (required)
+- ``PaymentId``: The payment's ID in the Barion system (string). (required)
 
 **Output**: [Read at Barion Docs](https://docs.barion.com/Payment-CancelAuthorization-v2#Output_properties)
 
@@ -430,7 +430,7 @@ barion.refundPayment({
 });
 ```
 
-### Send money to bank account - barion.bankTransfer(options, \[callback\])
+### Send money to a bank account - barion.bankTransfer(options, \[callback\])
 To send money to a bank account internationally, call the ``bankTransfer`` function. [[Barion Docs](https://docs.barion.com/Withdraw-BankTransfer-v2)]
 
 **Parameters**:
@@ -451,7 +451,7 @@ To send money to a bank account internationally, call the ``bankTransfer`` funct
 
   - ``BankAccount``: The recipient's bank account ([BankAccount](https://docs.barion.com/BankAccount)). (required)
 
-  - ``Comment``: Comment of the transfer (string). (optional)
+  - ``Comment``: Comment about the transfer (string). (optional)
 
 **Output**: [Read at Barion Docs](https://docs.barion.com/Withdraw-BankTransfer-v2#Output_properties)
 
@@ -495,7 +495,7 @@ barion.bankTransfer({
 });
 ```
 
-### Send money to Barion user or email address - barion.barionTransfer(options, \[callback\])
+### Send money to a Barion user or email address - barion.barionTransfer(options, \[callback\])
 To send money to a Barion user or to an email address, call the ``barionTransfer`` function. [[Barion Docs](https://docs.barion.com/Transfer-Send-v1)]
 
 **Parameters**:
@@ -548,18 +548,18 @@ barion.barionTransfer({
 });
 ```
 
-### Handle errors
-There are 3 main types of errors that can be thrown, when you use the ``node-barion`` module:
-  - ``BarionError``: Thrown, when the Barion system responds with errors.
+### Handling errors
+There are 3 main types of errors that can be thrown when you use the ``node-barion`` module:
+  - ``BarionError``: Thrown when the Barion system responds with errors.
 
     This error has a ``name`` field, set to ``'BarionError'``.
 
-    This error has an ``errors`` array, which contains the returned errors. Every error has the following fields: ``Title``, ``Description``, ``ErrorCode``, ``HappenedAt``, ``AuthData``, ``EndPoint`` ([read more](https://docs.barion.com/Calling_the_API#Handling_the_response)).<br>
+    This error has an ``errors`` array which contains the returned errors. Every error has the following fields: ``Title``, ``Description``, ``ErrorCode``, ``HappenedAt``, ``AuthData``, ``EndPoint`` ([read more](https://docs.barion.com/Calling_the_API#Handling_the_response)).<br>
     > **NOTE**: The ``errors`` array is set to ``[]`` (empty array), when the Barion API responds with:
     > - generic error (such as ``{'Message': 'An error has occurred.'}``),
     > - invalid JSON (such as an HTML maintenance page)
 
-  - ``BarionModelError``: Thrown, when the prevalidation of the request is failed. ``node-barion`` can throw this type of error only if ``ValidateModels`` option is set to ``true`` on [instantiation](#instantiate-new-barion-object---barionoptions).
+  - ``BarionModelError``: Thrown when the prevalidation of the request is failed. ``node-barion`` can throw this type of error only if ``ValidateModels`` option is set to ``true`` on [instantiation](#instantiate-new-barion-object---barionoptions).
     > **NOTE**: ``ValidateModels`` option is set to ``true`` by default.
 
     This error has a ``name`` field, set to ``'BarionModelError'``.
@@ -569,7 +569,7 @@ There are 3 main types of errors that can be thrown, when you use the ``node-bar
   - ``Other errors``: Common Javascript errors, such as ``Error`` or ``TypeError`` (thrown e.g. when network error occurred).
 
 #### Usage example
-You can distinguish types of errors based on their names, but it is not a must. Instead, you can simply log them to somewhere without any condition checking.
+You are able to distinguish types of errors based on their names, but it is not required. Instead, you can simply log them without any condition checking.
 
 ##### With callback
 ```js
@@ -619,12 +619,12 @@ Contributions are welcome.
 
 If you report a bug/issue, please provide the simplest example code where the error is reproducible (of course, without any confidential data) and describe the environment, where you run ``node-barion``. 
 
-If you found a security issue, please contact me in [email](mailto:aron123dev@gmail.com), and I will get back to you as soon as possible.
+If you find a security issue, please contact me at [email](mailto:aron123dev@gmail.com) and I will get back to you as soon as possible.
 
-I do not merge any PRs that break the build success. To test your changes, before sending a PR, you should follow the instructions below:
+I do not merge any PRs that break the build success. To test your changes before sending a PR, you should follow the instructions below:
 
 0) Make sure you have a test Barion account, with at least 300 HUF balance.
-1) Add your credentials to Barion in ``test/integration/credentials.json`` (there is an EXAMPLE in the directory, with the required JSON structure).
+1) Add your credentials to Barion in ``test/integration/credentials.json`` (there is an EXAMPLE in the directory with the required JSON structure).
 2) Run the tests: ``npm run test``
 3) To check coverage, run: ``npm run coverage``
 4) Run integration tests: ``npm run integration-test``
