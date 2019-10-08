@@ -19,9 +19,9 @@ Helps manage e-payment transactions through the [Barion Smart Gateway](https://w
     - [Refund payment partially or completely](#refund-payment-partially-or-completely---barionrefundpaymentoptions-callback)
     - [Capture a previously authorized payment](#capture-a-previously-authorized-payment---barioncaptureauthorizedpaymentoptions-callback)
     - [Cancel a previously authorized payment](#cancel-a-previously-authorized-payment---barioncancelauthorizedpaymentoptions-callback)
-    - [Send money to bank account](#send-money-to-bank-account---barionbanktransferoptions-callback)
-    - [Send money to Barion user or email address](#send-money-to-barion-user-or-email-address---barionbariontransferoptions-callback)
-    - [Handle errors](#handle-errors)
+    - [Send money to a bank account](#send-money-to-a-bank-account---barionbanktransferoptions-callback)
+    - [Send money to a Barion user or email address](#send-money-to-a-barion-user-or-email-address---barionbariontransferoptions-callback)
+    - [Handling errors](#handling-errors)
 
   - [Future improvements](#future-improvements)
 
@@ -80,7 +80,7 @@ If you are not familiar with Promise and other ES6 stuff, [get closer to it](htt
 - send money out of Barion via international bank transfer
 - send money to existing Barion account or email address
 
-> **IMPORTANT**: ``node-barion`` is completely consistent with [Barion Docs](https://docs.barion.com/Main_Page), so you can use exactly the same field names, that are specified in it. **We highly recommend reading the official Barion documentation** before you start to use ``node-barion`` module.<br>
+> **IMPORTANT**: ``node-barion`` is completely consistent with [Barion Docs](https://docs.barion.com/Main_Page), so you can use exactly the same field names, that are specified in it. **Reading the official Barion documentation is highly reccomended** before starting to use ``node-barion`` module.<br>
 > **IMPORTANT**: Barion uses *PascalCased* field naming, but **node-barion is case insensitive** (this means that if Barion Docs mention a field name *PaymentId*, you can either use *PaymentId*, *paymentId*, *paymentid* or *paymentID* notation in your application, as ``node-barion`` converts these to the standard *PaymentId* name).
 
 The signature for every instance method is ``(options, [callback])``, where ``options`` is an object which contains the input parameters and ``callback`` is a function which processes the response.<br>
@@ -495,7 +495,7 @@ barion.bankTransfer({
 });
 ```
 
-### Send money to Barion user or email address - barion.barionTransfer(options, \[callback\])
+### Send money to a Barion user or email address - barion.barionTransfer(options, \[callback\])
 To send money to a Barion user or to an email address, call the ``barionTransfer`` function. [[Barion Docs](https://docs.barion.com/Transfer-Send-v1)]
 
 **Parameters**:
