@@ -157,5 +157,20 @@ module.exports = {
             ErrorNumber: 2004,
             AuthData: UserName
         }
+    },
+    getAccounts: {
+        successRequestBody: {
+            UserName,
+            Password
+        },
+        successResponseBody: {
+            Errors: []
+        },
+        errorRequestBody: {
+            Password: "appletree"
+        },
+        expectedError: {
+            ErrorCode: "AuthenticationFailed"
+        }
     }
 };

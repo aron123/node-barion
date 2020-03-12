@@ -162,6 +162,20 @@ describe('lib/services.js', function () {
         });
     });
 
+    describe('#getAccounts(environment, options)', function () {
+        it('should return a Promise on success', function (done) {
+            const services = serviceMocks.okService;
+            services.getAccounts('test', {})
+                .then(() => done());
+        });
+
+        it('should return a Promise on failure', function (done) {
+            const services = serviceMocks.errorService;
+            services.getAccounts('test', {})
+                .catch(() => done());
+        });
+    });
+
     describe('#getBaseUrl', function () {
         it('should return test environment\'s URL to pointless input', function () {
             const services = serviceMocks.okService;

@@ -49,7 +49,8 @@ const Barions = {
             cancelAuthorizedPayment: returnSuccess,
             refundPayment: returnSuccess,
             bankTransfer: returnSuccess,
-            barionTransfer: returnSuccess
+            barionTransfer: returnSuccess,
+            getAccounts: returnSuccess
         }
     }),
     ServiceErrorBarion: proxyquire('../lib/barion', {
@@ -61,7 +62,8 @@ const Barions = {
             cancelAuthorizedPayment: returnError,
             refundPayment: returnError,
             bankTransfer: returnError,
-            barionTransfer: returnError
+            barionTransfer: returnError,
+            getAccounts: returnError
         }
     }),
     ValidationErrorBarion: proxyquire('../lib/barion', {
@@ -73,7 +75,8 @@ const Barions = {
             cancelAuthorizedPayment: returnSuccess,
             refundPayment: returnSuccess,
             bankTransfer: returnSuccess,
-            barionTransfer: returnSuccess
+            barionTransfer: returnSuccess,
+            getAccounts: returnSuccess
         },
         './build': {
             buildRequest: throwValidationError
@@ -88,7 +91,8 @@ const Barions = {
             cancelAuthorizedPayment: returnSuccess,
             refundPayment: returnSuccess,
             bankTransfer: returnSuccess,
-            barionTransfer: returnSuccess
+            barionTransfer: returnSuccess,
+            getAccounts: returnSuccess
         },
         './build': {
             buildRequestWithoutValidation: throwSanitizationError
@@ -755,6 +759,78 @@ describe('lib/barion.js', function () {
 
         it('should answer with Promise on sanitization error when validation is turned off', function (done) {
             const promise = sanitizationErrorBarion.barionTransfer(request);
+            expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
+        });
+    });
+
+    describe('#getAccounts(options, [callback])', function () {
+        const request = {
+            UserName: 'info@example.com',
+            Password: 'admin1234'
+        };
+
+        it('should answer with callback on success', function (done) {
+            okBarion.getAccounts(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on success when validation is turned off', function (done) {
+            okBarionWithoutValidation.getAccounts(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on error', function (done) {
+            ServiceErrorBarion.getAccounts(request, (err, res) => {
+                expect(err).to.deep.equal(errorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on validation error', function (done) {
+            validationErrorBarion.getAccounts(request, (err, res) => {
+                expect(err).to.deep.equal(validationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on sanitization error when validation is turned off', function (done) {
+            sanitizationErrorBarion.getAccounts(request, (err, res) => {
+                expect(err).to.deep.equal(sanitizationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with Promise on success', function (done) {
+            const promise = okBarion.getAccounts(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on success when validation is turned off', function (done) {
+            const promise = okBarionWithoutValidation.getAccounts(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on error', function (done) {
+            const promise = ServiceErrorBarion.getAccounts(request);
+            expect(promise).to.eventually.rejectedWith(errorObject).notify(done);
+        });
+
+        it('should answer with Promise on validation error', function (done) {
+            const promise = validationErrorBarion.getAccounts(request);
+            expect(promise).to.eventually.rejectedWith(validationErrorObject).notify(done);
+        });
+
+        it('should answer with Promise on sanitization error when validation is turned off', function (done) {
+            const promise = sanitizationErrorBarion.getAccounts(request);
             expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
         });
     });

@@ -21,6 +21,7 @@ Helps manage e-payment transactions through the [Barion Smart Gateway](https://w
     - [Cancel a previously authorized payment](#cancel-a-previously-authorized-payment---barioncancelauthorizedpaymentoptions-callback)
     - [Send money to a bank account](#send-money-to-a-bank-account---barionbanktransferoptions-callback)
     - [Send money to a Barion user or email address](#send-money-to-a-barion-user-or-email-address---barionbariontransferoptions-callback)
+    - [Get existing accounts of the user](#get-existing-accounts-of-the-user---bariongetaccountsoptions-callback)
     - [Handling errors](#handling-errors)
 
   - [Future improvements](#future-improvements)
@@ -78,6 +79,7 @@ If you are not familiar with Promise and other ES6 stuff, [get closer to it](htt
 - capture or cancel a previously authorized payment
 - refund a completed payment
 - send money out of Barion via international bank transfer
+- get existing accounts of the user
 - send money to existing Barion account or email address
 
 > **IMPORTANT**: ``node-barion`` is completely consistent with [Barion Docs](https://docs.barion.com/Main_Page), so you can use exactly the same field names, that are specified in it. **Reading the official Barion documentation is highly reccomended** before starting to use ``node-barion`` module.<br>
@@ -488,6 +490,38 @@ barion.bankTransfer({
         AccountNumber: '10032000-01076019'
     },
     Comment: 'Keep the change you filthy animal!'
+}).then(data => {
+    //process data
+}).catch(err => {
+    //handle error
+});
+```
+
+### Get existing accounts of the user - barion.getAccounts(options, \[callback\])
+To query the existing accounts of a user, call the ``getAccounts`` function. [[Barion Docs](https://docs.barion.com/Accounts-Get-v2)]
+
+**Parameters**:
+  - ``UserName``: Email address of the user in the Barion system (string). (required)
+
+  - ``Password``: Password of the user in the Barion system (string). (required)
+
+**Output**: [Read at Barion Docs](https://docs.barion.com/Accounts-Get-v2#Output_properties)
+
+#### Usage example
+##### With callback
+```js
+barion.getAccounts({
+    UserName: 'info@example.com',
+    Password: 'someRlyStrongP4ss#!'
+}, function (err, data) {
+    //handle error / process data
+});
+```
+##### With promise
+```js
+barion.barionTransfer({
+    UserName: 'info@example.com',
+    Password: 'someRlyStrongP4ss#!'
 }).then(data => {
     //process data
 }).catch(err => {
