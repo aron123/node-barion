@@ -483,4 +483,86 @@ describe('Integration tests', function () {
             }
         );
     });
+
+    describe('Email transfer (callback)', function () {
+        it('should start email transfer when validation is turned on', function (done) {
+            validatedBarion.emailTransfer(testData.emailTransfer.successRequestBody, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.include(testData.emailTransfer.successResponseBody);
+                done();
+            });
+        });
+
+        it('should answer with BarionModelError when request object is not proper and validation is turned on',
+            function (done) {
+                validatedBarion.emailTransfer(testData.emailTransfer.errorRequestBody, (err, res) => {
+                    expect(res).to.be.null;
+                    expect(err.name).to.equal('BarionModelError');
+                    expect(err.errors).to.be.an('array').and.have.length.greaterThan(0);
+                    done();
+                });
+            }
+        );
+
+        it('should start email transfer when validation is turned off', function (done) {
+            notValidatedBarion.emailTransfer(testData.emailTransfer.successRequestBody, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.include(testData.emailTransfer.successResponseBody);
+                done();
+            });
+        });
+
+        it('should answer with BarionError when request object is not proper and validation is turned off',
+            function (done) {
+                notValidatedBarion.emailTransfer(testData.emailTransfer.errorRequestBody, (err, res) => {
+                    expect(res).to.be.null;
+                    expect(err.name).to.equal('BarionError');
+                    expect(err.errors).to.be.an('array');
+                    expect(err.errors[0]).to.deep.include(testData.emailTransfer.expectedError);
+                    done();
+                });
+            }
+        );
+    });
+
+    describe('Email transfer (Promise)', function () {
+        it('should start email transfer when validation is turned on', function (done) {
+            validatedBarion.emailTransfer(testData.emailTransfer.successRequestBody)
+                .then(res => {
+                    expect(res).to.deep.include(testData.emailTransfer.successResponseBody);
+                    done();
+                });
+        });
+
+        it('should answer with BarionModelError when request object is not proper and validation is turned on',
+            function (done) {
+                validatedBarion.emailTransfer(testData.emailTransfer.errorRequestBody)
+                    .catch(err => {
+                        expect(err.name).to.equal('BarionModelError');
+                        expect(err.errors).to.be.an('array').and.have.length.greaterThan(0);
+                        done();
+                    });
+            }
+        );
+
+        it('should start email transfer when validation is turned off', function (done) {
+            notValidatedBarion.emailTransfer(testData.emailTransfer.successRequestBody)
+                .then(res => {
+                    expect(res).to.deep.include(testData.emailTransfer.successResponseBody);
+                    done();
+                });
+        });
+
+        it('should answer with BarionError when request object is not proper and validation is turned off',
+            function (done) {
+                notValidatedBarion.emailTransfer(testData.emailTransfer.errorRequestBody)
+                    .catch(err => {
+                        expect(err.name).to.equal('BarionError');
+                        expect(err.errors).to.be.an('array');
+                        expect(err.errors[0]).to.deep.include(testData.emailTransfer.expectedError);
+                        done();
+                    });
+            }
+        );
+    });
 });

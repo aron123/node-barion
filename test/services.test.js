@@ -148,6 +148,20 @@ describe('lib/services.js', function () {
         });
     });
 
+    describe('#getAccounts(environment, options)', function () {
+        it('should return a Promise on success', function (done) {
+            const services = serviceMocks.okService;
+            services.getAccounts('test', {})
+                .then(() => done());
+        });
+
+        it('should return a Promise on failure', function (done) {
+            const services = serviceMocks.errorService;
+            services.getAccounts('test', {})
+                .catch(() => done());
+        });
+    });
+
     describe('#barionTransfer(environment, options)', function () {
         it('should return a Promise on success', function (done) {
             const services = serviceMocks.okService;
@@ -162,16 +176,16 @@ describe('lib/services.js', function () {
         });
     });
 
-    describe('#getAccounts(environment, options)', function () {
+    describe('#emailTransfer(environment, options)', function () {
         it('should return a Promise on success', function (done) {
             const services = serviceMocks.okService;
-            services.getAccounts('test', {})
+            services.emailTransfer('test', {})
                 .then(() => done());
         });
 
         it('should return a Promise on failure', function (done) {
             const services = serviceMocks.errorService;
-            services.getAccounts('test', {})
+            services.emailTransfer('test', {})
                 .catch(() => done());
         });
     });

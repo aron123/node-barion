@@ -20,8 +20,10 @@ Helps manage e-payment transactions through the [Barion Smart Gateway](https://w
     - [Capture a previously authorized payment](#capture-a-previously-authorized-payment---barioncaptureauthorizedpaymentoptions-callback)
     - [Cancel a previously authorized payment](#cancel-a-previously-authorized-payment---barioncancelauthorizedpaymentoptions-callback)
     - [Send money to a bank account](#send-money-to-a-bank-account---barionbanktransferoptions-callback)
-    - [Send money to a Barion user or email address](#send-money-to-a-barion-user-or-email-address---barionbariontransferoptions-callback)
     - [Get existing accounts of the user](#get-existing-accounts-of-the-user---bariongetaccountsoptions-callback)
+    - [Send money to a Barion user or email address](#send-money-to-a-barion-user-or-email-address---barionbariontransferoptions-callback)
+    - [Send money to a Barion user or email address](#send-e-money-to-an-email-address---barionemailtransferoptions-callback)
+    
     - [Handling errors](#handling-errors)
 
   - [Future improvements](#future-improvements)
@@ -522,6 +524,60 @@ barion.getAccounts({
 barion.getAccounts({
     UserName: 'info@example.com',
     Password: 'someRlyStrongP4ss#!'
+}).then(data => {
+    //process data
+}).catch(err => {
+    //handle error
+});
+```
+
+### Send e-money to an email address - barion.emailTransfer(options, \[callback\])
+To send money to a Barion user or to an email address, call the ``emailTransfer`` function. [[Barion Docs](https://docs.barion.com/Transfer-Email-v2)]
+
+**Parameters**:
+  - ``UserName``: Email address of the user in the Barion system (string). (required)
+
+  - ``Password``: Password of the user in the Barion system (string). (required)
+
+  - ``SourceAccountId``: The identifier of the Barion wallet. Must be an account of the authenticating user. It can be determined using the [getAccounts](#get-existing-accounts-of-the-user---bariongetaccountsoptions-callback) function (string). (required)
+
+  - ``Amount``: The total amount to transfer ([Money](https://docs.barion.com/Money)). (required)
+
+  - ``TargetEmail``: The recipient's email address. If they are an active Barion user, they receive the money instantly. If the e-mail address is not registered in Barion, they must register in 7 days  to claim the money (string). (required)
+
+  - ``Comment``: Comment of the transfer (string). (optional)
+
+**Output**: [Read at Barion Docs](https://docs.barion.com/Transfer-Email-v2#Output_properties)
+
+#### Usage example
+##### With callback
+```js
+barion.emailTransfer({
+    UserName: 'info@example.com',
+    Password: 'someRlyStrongP4ss#!',
+    SourceAccountId: 'bdf45c1d-bb98-4fee-bbf1-62411fb26b86',
+    Amount: {
+        Currency: 'HUF',
+        Value: 50
+    },
+    TargetEmail: 'hello@example.com',
+    Comment: 'Buy some milk please.'
+}, function (err, data) {
+    //handle error / process data
+});
+```
+##### With promise
+```js
+barion.emailTransfer({
+    UserName: 'info@example.com',
+    Password: 'someRlyStrongP4ss#!',
+    SourceAccountId: 'bdf45c1d-bb98-4fee-bbf1-62411fb26b86',
+    Amount: {
+        Currency: 'HUF',
+        Value: 50
+    },
+    TargetEmail: 'hello@example.com',
+    Comment: 'Buy some milk please.'
 }).then(data => {
     //process data
 }).catch(err => {
