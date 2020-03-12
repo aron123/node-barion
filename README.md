@@ -519,7 +519,7 @@ barion.getAccounts({
 ```
 ##### With promise
 ```js
-barion.barionTransfer({
+barion.getAccounts({
     UserName: 'info@example.com',
     Password: 'someRlyStrongP4ss#!'
 }).then(data => {
