@@ -21,8 +21,8 @@ Helps manage e-payment transactions through the [Barion Smart Gateway](https://w
     - [Cancel a previously authorized payment](#cancel-a-previously-authorized-payment---barioncancelauthorizedpaymentoptions-callback)
     - [Send money to a bank account](#send-money-to-a-bank-account---barionbanktransferoptions-callback)
     - [Get existing accounts of the user](#get-existing-accounts-of-the-user---bariongetaccountsoptions-callback)
-    - [Send money to a Barion user or email address](#send-money-to-a-barion-user-or-email-address---barionbariontransferoptions-callback)
     - [Send money to a Barion user or email address](#send-e-money-to-an-email-address---barionemailtransferoptions-callback)
+    - [Send money to a Barion user or email address](#send-money-to-a-barion-user-or-email-address---barionbariontransferoptions-callback) [DEPRECATED]
     
     - [Handling errors](#handling-errors)
 
@@ -586,6 +586,10 @@ barion.emailTransfer({
 ```
 
 ### Send money to a Barion user or email address - barion.barionTransfer(options, \[callback\])
+[DEPRECATED]
+> **IMPORTANT**: This function is deprecated since version 2.1.0, and will be removed in the next major version of the module.
+> Please use the [emailTransfer](#send-e-money-to-an-email-address---barionemailtransferoptions-callback) function instead.
+
 To send money to a Barion user or to an email address, call the ``barionTransfer`` function. [[Barion Docs](https://docs.barion.com/Transfer-Send-v1)]
 
 **Parameters**:
@@ -728,3 +732,4 @@ Unless otherwise stated in sources, the terms specified in LICENSE file are appl
 <!-- References -->
 [3DS]: https://img.shields.io/badge/-3DS-yellow "Required for 3DS"
 [TEST-ONLY]: https://img.shields.io/badge/-TEST%20ONLY-red "Feature is currently only available on the sandox server"
+[DEPRECATED]: https://img.shields.io/badge/-deprecated-red "Deprecated feature"
