@@ -5,6 +5,7 @@
 const POSKey = process.env.BARION_POS_KEY || require('./credentials.json').POSKey;
 const UserName = process.env.BARION_USER_NAME || require('./credentials.json').UserName;
 const Password = process.env.BARION_PASSWORD || require('./credentials').Password;
+const AccountId = process.env.BARION_ACCOUNT_ID || require('./credentials.json').AccountId;
 
 module.exports = {
     initOptions: {
@@ -23,7 +24,7 @@ module.exports = {
         successRequestBody: {
             PaymentType: 'Immediate',
             GuestCheckOut: true,
-            FundingSources: [ 'All' ],
+            FundingSources: ['All'],
             OrderNumber: 'O-2019-0001',
             PaymentRequestId: 'O-2019-0001-1',
             Transactions: [
@@ -46,7 +47,7 @@ module.exports = {
         errorRequestBody: {
             PaymentType: 'Immediate',
             GuestCheckOut: true,
-            FundingSources: [ 'All' ],
+            FundingSources: ['All'],
             OrderNumber: 'O-2019-0001',
             PaymentRequestId: 'O-2019-0001-1',
             Locale: 'hu-HU',
@@ -65,7 +66,7 @@ module.exports = {
             POSOwnerEmail: UserName,
             Status: 'Prepared',
             PaymentType: 'Immediate',
-            AllowedFundingSources: [ 'All' ],
+            AllowedFundingSources: ['All'],
             GuestCheckout: true,
             Total: 50,
             SuggestedLocale: 'hu-HU',
@@ -156,6 +157,52 @@ module.exports = {
         expectedError: {
             ErrorNumber: 2004,
             AuthData: UserName
+        }
+    },
+    getAccounts: {
+        successRequestBody: {
+            UserName,
+            Password
+        },
+        successResponseBody: {
+            Errors: []
+        },
+        errorRequestBody: {
+            Password: "appletree"
+        },
+        expectedError: {
+            ErrorCode: "AuthenticationFailed"
+        }
+    },
+    emailTransfer: {
+        successRequestBody: {
+            UserName,
+            Password,
+            SourceAccountId: AccountId,
+            Amount: {
+                Currency: 'HUF',
+                Value: 10
+            },
+            TargetEmail: 'info@example.com',
+            Comment: 'Some really cool example comment.'
+        },
+        successResponseBody: {
+            IsTransferSuccessful: true,
+            Errors: []
+        },
+        errorRequestBody: {
+            UserName,
+            Password,
+            SourceAccountId: 'appletree',
+            Amount: {
+                Currency: 'HUF',
+                Value: 10
+            },
+            TargetEmail: 'info@example.com',
+            Comment: 'Some really cool example comment.'
+        },
+        expectedError: {
+            ErrorCode: 'ModelValidationError'
         }
     }
 };
