@@ -22,7 +22,7 @@ Helps manage e-payment transactions through the [Barion Smart Gateway](https://w
     - [Send money to a bank account](#send-money-to-a-bank-account---barionbanktransferoptions-callback)
     - [Get existing accounts of the user](#get-existing-accounts-of-the-user---bariongetaccountsoptions-callback)
     - [Send money to a Barion user or email address](#send-e-money-to-an-email-address---barionemailtransferoptions-callback)
-    - [Send money to a Barion user or email address](#send-money-to-a-barion-user-or-email-address---barionbariontransferoptions-callback) [DEPRECATED]
+    - [Send money to a Barion user or email address](#send-money-to-a-barion-user-or-email-address---barionbariontransferoptions-callback) ![][DEPRECATED]
     
     - [Handling errors](#handling-errors)
 
@@ -586,7 +586,7 @@ barion.emailTransfer({
 ```
 
 ### Send money to a Barion user or email address - barion.barionTransfer(options, \[callback\])
-[DEPRECATED]
+![][DEPRECATED]
 > **IMPORTANT**: This function is deprecated since version 2.1.0, and will be removed in the next major version of the module.
 > Please use the [emailTransfer](#send-e-money-to-an-email-address---barionemailtransferoptions-callback) function instead.
 
