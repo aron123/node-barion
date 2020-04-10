@@ -103,7 +103,7 @@ describe('lib/schema.js', function () {
         });
     });
 
-    describe('#CaseInSensitiveSchema(schema)', function() {
+    describe('#CaseInSensitiveSchema(schema)', function () {
         it('should ignore schemas that are not objects', function () {
             const stringSchema = Joi.string().required();
             const result = new CaseInsensitiveSchema(stringSchema);
@@ -128,7 +128,7 @@ describe('lib/schema.js', function () {
             expect(value).to.deep.equal({
                 id: 1,
                 name: 'Bob',
-                age:12
+                age: 12
             });
         });
     });

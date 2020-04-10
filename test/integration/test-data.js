@@ -24,7 +24,7 @@ module.exports = {
         successRequestBody: {
             PaymentType: 'Immediate',
             GuestCheckOut: true,
-            FundingSources: ['All'],
+            FundingSources: [ 'All' ],
             OrderNumber: 'O-2019-0001',
             PaymentRequestId: 'O-2019-0001-1',
             Transactions: [
@@ -47,7 +47,7 @@ module.exports = {
         errorRequestBody: {
             PaymentType: 'Immediate',
             GuestCheckOut: true,
-            FundingSources: ['All'],
+            FundingSources: [ 'All' ],
             OrderNumber: 'O-2019-0001',
             PaymentRequestId: 'O-2019-0001-1',
             Locale: 'hu-HU',
@@ -66,7 +66,7 @@ module.exports = {
             POSOwnerEmail: UserName,
             Status: 'Prepared',
             PaymentType: 'Immediate',
-            AllowedFundingSources: ['All'],
+            AllowedFundingSources: [ 'All' ],
             GuestCheckout: true,
             Total: 50,
             SuggestedLocale: 'hu-HU',
@@ -168,10 +168,10 @@ module.exports = {
             Errors: []
         },
         errorRequestBody: {
-            Password: "appletree"
+            Password: 'appletree'
         },
         expectedError: {
-            ErrorCode: "AuthenticationFailed"
+            ErrorCode: 'AuthenticationFailed'
         }
     },
     emailTransfer: {

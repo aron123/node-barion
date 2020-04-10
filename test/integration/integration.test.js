@@ -6,7 +6,7 @@ const testData = require('./test-data');
 
 describe('Integration tests', function () {
 
-    this.timeout(15000);
+    this.timeout(60000);
 
     let validatedBarion;
     let notValidatedBarion;
@@ -401,7 +401,7 @@ describe('Integration tests', function () {
             }
         );
     });
-    
+
     describe('Get accounts (callback)', function () {
         it('should query accounts when validation is turned on', function (done) {
             validatedBarion.getAccounts(testData.getAccounts.successRequestBody, (err, res) => {
