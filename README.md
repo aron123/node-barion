@@ -228,7 +228,9 @@ let orderPayment = {
         City: 'Budapest',
         Street: 'Kossuth Street 2.'
     },
-    Currency: 'HUF'
+    Currency: 'HUF',
+    RedirectUrl: 'https://example.com/payment-result',
+    CallbackUrl: 'https://example.com/api/barion/callback/',
 };
 ```
 
