@@ -6,7 +6,7 @@ const testData = require('./test-data');
 
 describe('Integration tests', function () {
 
-    this.timeout(15000);
+    this.timeout(60000);
 
     let validatedBarion;
     let notValidatedBarion;
