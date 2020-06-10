@@ -16,6 +16,11 @@ describe('Integration tests', function () {
         notValidatedBarion = new Barion(testData.initOptions.withoutValidation);
     });
 
+    afterEach(function (done) {
+        // wait 10s between test cases to avoid rate limit errors
+        setTimeout(() => done(), 10000);
+    });
+
     describe('Start payment (callback)', function () {
         it('should initialize payment when validation is turned on', function (done) {
             validatedBarion.startPayment(testData.startPayment.successRequestBody, (err, res) => {
