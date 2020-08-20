@@ -143,7 +143,7 @@ module.exports = {
             Amount: -1,
             ToName: 'info@example.com',
             Currency: 'HUF',
-            TransactionType: 3,
+            TransactionType: 2,
             Direction: 0,
             ErrorList: []
         },
