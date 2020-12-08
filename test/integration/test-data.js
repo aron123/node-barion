@@ -6,6 +6,8 @@ const POSKey = process.env.BARION_POS_KEY || require('./credentials.json').POSKe
 const UserName = process.env.BARION_USER_NAME || require('./credentials.json').UserName;
 const Password = process.env.BARION_PASSWORD || require('./credentials').Password;
 const AccountId = process.env.BARION_ACCOUNT_ID || require('./credentials.json').AccountId;
+const StatementYear = process.env.BARION_STATEMENT_MONTH || require('./credentials.json').StatementDownload.Year;
+const StatementMonth = process.env.BARION_STATEMENT_YEAR || require('./credentials.json').StatementDownload.Month;
 
 module.exports = {
     initOptions: {
@@ -203,6 +205,26 @@ module.exports = {
         },
         expectedError: {
             ErrorCode: 'ModelValidationError'
+        }
+    },
+    downloadStatement: {
+        successRequestBody: {
+            UserName,
+            Password,
+            Year: StatementYear,
+            Month: StatementMonth,
+            Currency: 'HUF'
+        },
+        // successResponseBody: buffer with length larger than 0
+        errorRequestBody: {
+            UserName,
+            Password,
+            Year: -2020,
+            Month: 1,
+            Currency: 'HUF'
+        },
+        expectedError: {
+            ErrorCode: 'StatementNotFound'
         }
     }
 };

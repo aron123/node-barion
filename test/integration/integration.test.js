@@ -574,4 +574,98 @@ describe('Integration tests', function () {
             }
         );
     });
+
+    describe('Download statement (callback)', function () {
+        it('should download monthly statement when validation is turned on', function (done) {
+            validatedBarion.downloadStatement(testData.downloadStatement.successRequestBody, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.be.an('object');
+                expect(res.buffer).to.be.instanceOf(Buffer);
+                expect(res.buffer.length).to.be.greaterThan(0);
+                expect(res.type).to.equal('application/pdf');
+                done();
+            });
+        });
+
+        it('should answer with BarionModelError when request object is not proper and validation is turned on',
+            function (done) {
+                validatedBarion.downloadStatement(testData.downloadStatement.errorRequestBody, (err, res) => {
+                    expect(res).to.be.null;
+                    expect(err.name).to.equal('BarionModelError');
+                    expect(err.errors).to.be.an('array').and.have.length.greaterThan(0);
+                    done();
+                });
+            }
+        );
+
+        it('should download statement when validation is turned off', function (done) {
+            notValidatedBarion.downloadStatement(testData.downloadStatement.successRequestBody, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.be.an('object');
+                expect(res.buffer).to.be.instanceOf(Buffer);
+                expect(res.buffer.length).to.be.greaterThan(0);
+                expect(res.type).to.equal('application/pdf');
+                done();
+            });
+        });
+
+        it('should answer with BarionError when request object is not proper and validation is turned off',
+            function (done) {
+                notValidatedBarion.downloadStatement(testData.downloadStatement.errorRequestBody, (err, res) => {
+                    expect(res).to.be.null;
+                    expect(err.name).to.equal('BarionError');
+                    expect(err.errors).to.be.an('array');
+                    expect(err.errors[0]).to.deep.include(testData.downloadStatement.expectedError);
+                    done();
+                });
+            }
+        );
+    });
+
+    describe('Statement download (Promise)', function () {
+        it('should download statement when validation is turned on', function (done) {
+            validatedBarion.downloadStatement(testData.downloadStatement.successRequestBody)
+                .then(res => {
+                    expect(res).to.be.an('object');
+                    expect(res.buffer).to.be.instanceOf(Buffer);
+                    expect(res.buffer.length).to.be.greaterThan(0);
+                    expect(res.type).to.equal('application/pdf');
+                    done();
+                });
+        });
+
+        it('should answer with BarionModelError when request object is not proper and validation is turned on',
+            function (done) {
+                validatedBarion.downloadStatement(testData.downloadStatement.errorRequestBody)
+                    .catch(err => {
+                        expect(err.name).to.equal('BarionModelError');
+                        expect(err.errors).to.be.an('array').and.have.length.greaterThan(0);
+                        done();
+                    });
+            }
+        );
+
+        it('should download statement when validation is turned off', function (done) {
+            notValidatedBarion.downloadStatement(testData.downloadStatement.successRequestBody)
+                .then(res => {
+                    expect(res).to.be.an('object');
+                    expect(res.buffer).to.be.instanceOf(Buffer);
+                    expect(res.buffer.length).to.be.greaterThan(0);
+                    expect(res.type).to.equal('application/pdf');
+                    done();
+                });
+        });
+
+        it('should answer with BarionError when request object is not proper and validation is turned off',
+            function (done) {
+                notValidatedBarion.downloadStatement(testData.downloadStatement.errorRequestBody)
+                    .catch(err => {
+                        expect(err.name).to.equal('BarionError');
+                        expect(err.errors).to.be.an('array');
+                        expect(err.errors[0]).to.deep.include(testData.downloadStatement.expectedError);
+                        done();
+                    });
+            }
+        );
+    });
 });
