@@ -43,6 +43,11 @@ describe('lib/fetch-api.js', function () {
 
         const getFromBarion = fetchBarion.getFromBarion;
 
+        it('should strip undefined query params', function () {
+            getFromBarion('http://example.com/success', { a: 3, b: undefined, c: 'asd', d: undefined });
+            expect(barionMock.default.lastUrl()).to.be.equal('http://example.com/success?a=3&c=asd');
+        });
+
         it('should throw error if invalid URL is passed', function () {
             expect(() => getFromBarion('example')).to.throw();
         });
