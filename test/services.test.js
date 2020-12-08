@@ -21,7 +21,8 @@ const serviceMocks = {
     okService: proxyquire('../lib/services', {
         '../lib/fetch-api': {
             postToBarion: () => Promise.resolve({ success: true, answer: 'example' }),
-            getFromBarion: () => Promise.resolve({ success: true, answer: 'example' })
+            getFromBarion: () => Promise.resolve({ success: true, answer: 'example' }),
+            getBinaryFromBarion: () => Promise.resolve(Buffer.from('ABC'))
         }
     }),
     /*
@@ -33,6 +34,9 @@ const serviceMocks = {
                 { Title: 'Authentication failed.', HappenedAt: '2019-01-19T18:46:51.0808761Z' }
             ])),
             getFromBarion: () => Promise.reject(new BarionError('Barion request errored out', [
+                { Title: 'Authentication failed.', HappenedAt: '2019-01-19T18:46:51.0808761Z' }
+            ])),
+            getBinaryFromBarion: () => Promise.reject(new BarionError('Barion request errored out', [
                 { Title: 'Authentication failed.', HappenedAt: '2019-01-19T18:46:51.0808761Z' }
             ]))
         }
@@ -190,6 +194,20 @@ describe('lib/services.js', function () {
         });
     });
 
+    describe('#downloadStatement(environment, options)', function () {
+        it('should return a Promise on success', function (done) {
+            const services = serviceMocks.okService;
+            services.downloadStatement('test', {})
+                .then(() => done());
+        });
+
+        it('should return a Promise on failure', function (done) {
+            const services = serviceMocks.errorService;
+            services.downloadStatement('test', {})
+                .catch(() => done());
+        });
+    });
+
     describe('#getBaseUrl', function () {
         it('should return test environment\'s URL to pointless input', function () {
             const services = serviceMocks.okService;
@@ -216,6 +234,7 @@ describe('lib/services.js', function () {
         const sandbox = chai.spy.sandbox();
         const fetchAPI = require('../lib/fetch-api');
         const getFromBarion = sandbox.on(fetchAPI, 'getFromBarion', () => Promise.resolve({ success: true }));
+        const getBinaryFromBarion = sandbox.on(fetchAPI, 'getBinaryFromBarion', () => Promise.resolve(Buffer.from('ABC')));
         const postToBarion = sandbox.on(fetchAPI, 'postToBarion', () => Promise.resolve({ success: true }));
         const services = require('../lib/services');
 
@@ -224,12 +243,14 @@ describe('lib/services.js', function () {
             expect(getFromBarion).to.have.been.called.with(new URL(`${baseUrls.test}/api/test`), { some: 'value' });
         });
 
-        it('should call fetch-api modules functions based on the given HTTP method', function () {
+        it('should call fetch-api modules functions based on the given HTTP method and binary option', function () {
             services._private.doRequest('test', { method: 'GET', path: '/api/get' }, { key: 'val1' });
-            services._private.doRequest('test', { method: 'POST', path: '/api/post' }, { key: 'val2' });
+            services._private.doRequest('test', { method: 'GET', path: '/api/get-binary', binary: true }, { key: 'val2' });
+            services._private.doRequest('test', { method: 'POST', path: '/api/post' }, { key: 'val3' });
 
             expect(getFromBarion).to.have.been.called.with(new URL(`${baseUrls.test}/api/get`), { key: 'val1' });
-            expect(postToBarion).to.have.been.called.with(new URL(`${baseUrls.test}/api/post`), { key: 'val2' });
+            expect(getBinaryFromBarion).to.have.been.called.with(new URL(`${baseUrls.test}/api/get-binary`), { key: 'val2' });
+            expect(postToBarion).to.have.been.called.with(new URL(`${baseUrls.test}/api/post`), { key: 'val3' });
         });
 
         it('should throw error on not supported HTTP method', function () {

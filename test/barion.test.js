@@ -51,7 +51,8 @@ const Barions = {
             bankTransfer: returnSuccess,
             barionTransfer: returnSuccess,
             getAccounts: returnSuccess,
-            emailTransfer: returnSuccess
+            emailTransfer: returnSuccess,
+            downloadStatement: returnSuccess
         }
     }),
     ServiceErrorBarion: proxyquire('../lib/barion', {
@@ -65,7 +66,8 @@ const Barions = {
             bankTransfer: returnError,
             barionTransfer: returnError,
             getAccounts: returnError,
-            emailTransfer: returnError
+            emailTransfer: returnError,
+            downloadStatement: returnError
         }
     }),
     ValidationErrorBarion: proxyquire('../lib/barion', {
@@ -79,7 +81,8 @@ const Barions = {
             bankTransfer: returnSuccess,
             barionTransfer: returnSuccess,
             getAccounts: returnSuccess,
-            emailTransfer: returnSuccess
+            emailTransfer: returnSuccess,
+            downloadStatement: returnSuccess
         },
         './build': {
             buildRequest: throwValidationError
@@ -96,7 +99,8 @@ const Barions = {
             bankTransfer: returnSuccess,
             barionTransfer: returnSuccess,
             getAccounts: returnSuccess,
-            emailTransfer: returnSuccess
+            emailTransfer: returnSuccess,
+            downloadStatement: returnSuccess
         },
         './build': {
             buildRequestWithoutValidation: throwSanitizationError
@@ -914,6 +918,78 @@ describe('lib/barion.js', function () {
 
         it('should answer with Promise on sanitization error when validation is turned off', function (done) {
             const promise = sanitizationErrorBarion.emailTransfer(request);
+            expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
+        });
+    });
+
+    describe('#downloadStatement(options, [callback])', function () {
+        const request = {
+            UserName: 'info@example.com',
+            Password: 'admin1234',
+            Year: 2020,
+            Month: 12
+        };
+
+        it('should answer with callback on success', function (done) {
+            okBarion.downloadStatement(request, (err, res) => {
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on success when validation is turned off', function (done) {
+            okBarionWithoutValidation.downloadStatement(request, (err, res) => {
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on error', function (done) {
+            serviceErrorBarion.downloadStatement(request, (err, res) => {
+                expect(err).to.deep.equal(errorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on validation error', function (done) {
+            validationErrorBarion.downloadStatement(request, (err, res) => {
+                expect(err).to.deep.equal(validationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on sanitization error when validation is turned off', function (done) {
+            sanitizationErrorBarion.downloadStatement(request, (err, res) => {
+                expect(err).to.deep.equal(sanitizationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with Promise on success', function (done) {
+            const promise = okBarion.downloadStatement(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on success when validation is turned off', function (done) {
+            const promise = okBarionWithoutValidation.downloadStatement(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on error', function (done) {
+            const promise = serviceErrorBarion.downloadStatement(request);
+            expect(promise).to.eventually.rejectedWith(errorObject).notify(done);
+        });
+
+        it('should answer with Promise on validation error', function (done) {
+            const promise = validationErrorBarion.downloadStatement(request);
+            expect(promise).to.eventually.rejectedWith(validationErrorObject).notify(done);
+        });
+
+        it('should answer with Promise on sanitization error when validation is turned off', function (done) {
+            const promise = sanitizationErrorBarion.downloadStatement(request);
             expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
         });
     });
