@@ -17,8 +17,12 @@ describe('Integration tests', function () {
     });
 
     afterEach(function (done) {
-        // wait 10s between test cases to avoid rate limit errors
-        setTimeout(() => done(), 10000);
+        if (process.env.NODE_ENV === 'travis_ci') {
+            // wait 10s between test cases to avoid rate limit errors
+            return setTimeout(() => done(), 10000);
+        }
+
+        done();
     });
 
     describe('Start payment (callback)', function () {
