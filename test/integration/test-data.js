@@ -80,10 +80,6 @@ module.exports = {
             {
                 ErrorCode: 'ModelValidationError',
                 AuthData: UserName,
-            },
-            {
-                ErrorCode: 'ModelValidationError',
-                AuthData: UserName
             }
         ]
     },

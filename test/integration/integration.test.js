@@ -160,7 +160,6 @@ describe('Integration tests', function () {
                     expect(err.name).to.equal('BarionError');
                     expect(err.errors).to.be.an('array');
                     expect(err.errors[0]).to.deep.include(testData.getPaymentState.expectedErrors[0]);
-                    expect(err.errors[1]).to.deep.include(testData.getPaymentState.expectedErrors[1]);
                     done();
                 });
             }
@@ -220,7 +219,6 @@ describe('Integration tests', function () {
                         expect(err.name).to.equal('BarionError');
                         expect(err.errors).to.be.an('array');
                         expect(err.errors[0]).to.deep.include(testData.getPaymentState.expectedErrors[0]);
-                        expect(err.errors[1]).to.deep.include(testData.getPaymentState.expectedErrors[1]);
                         done();
                     });
             }
