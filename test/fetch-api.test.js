@@ -137,12 +137,12 @@ describe('lib/fetch-api.js', function () {
 
         it('should resolve binary data after successful response', async function () {
             const res = await getBinaryFromBarion('http://example.com/binary-success');
-            expect(Buffer.compare(fetchTest.binarySuccessResponse.body, res.buffer)).to.equal(0);
+            expect(Buffer.compare(fetchTest.binarySuccessResponse.body, res.Buffer)).to.equal(0);
         });
 
         it('should resolve correct content type after successful response', async function () {
             const res = await getBinaryFromBarion('http://example.com/binary-success');
-            expect(fetchTest.binarySuccessResponse.headers['Content-Type']).to.equal(res.type);
+            expect(fetchTest.binarySuccessResponse.headers['Content-Type']).to.equal(res.Type);
         });
     });
 

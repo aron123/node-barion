@@ -580,9 +580,9 @@ describe('Integration tests', function () {
             validatedBarion.downloadStatement(testData.downloadStatement.successRequestBody, (err, res) => {
                 expect(err).to.be.null;
                 expect(res).to.be.an('object');
-                expect(res.buffer).to.be.instanceOf(Buffer);
-                expect(res.buffer.length).to.be.greaterThan(0);
-                expect(res.type).to.equal('application/pdf');
+                expect(res.Buffer).to.be.instanceOf(Buffer);
+                expect(res.Buffer.length).to.be.greaterThan(0);
+                expect(res.Type).to.equal('application/pdf');
                 done();
             });
         });
@@ -602,9 +602,9 @@ describe('Integration tests', function () {
             notValidatedBarion.downloadStatement(testData.downloadStatement.successRequestBody, (err, res) => {
                 expect(err).to.be.null;
                 expect(res).to.be.an('object');
-                expect(res.buffer).to.be.instanceOf(Buffer);
-                expect(res.buffer.length).to.be.greaterThan(0);
-                expect(res.type).to.equal('application/pdf');
+                expect(res.Buffer).to.be.instanceOf(Buffer);
+                expect(res.Buffer.length).to.be.greaterThan(0);
+                expect(res.Type).to.equal('application/pdf');
                 done();
             });
         });
@@ -627,9 +627,9 @@ describe('Integration tests', function () {
             validatedBarion.downloadStatement(testData.downloadStatement.successRequestBody)
                 .then(res => {
                     expect(res).to.be.an('object');
-                    expect(res.buffer).to.be.instanceOf(Buffer);
-                    expect(res.buffer.length).to.be.greaterThan(0);
-                    expect(res.type).to.equal('application/pdf');
+                    expect(res.Buffer).to.be.instanceOf(Buffer);
+                    expect(res.Buffer.length).to.be.greaterThan(0);
+                    expect(res.Type).to.equal('application/pdf');
                     done();
                 });
         });
@@ -649,9 +649,9 @@ describe('Integration tests', function () {
             notValidatedBarion.downloadStatement(testData.downloadStatement.successRequestBody)
                 .then(res => {
                     expect(res).to.be.an('object');
-                    expect(res.buffer).to.be.instanceOf(Buffer);
-                    expect(res.buffer.length).to.be.greaterThan(0);
-                    expect(res.type).to.equal('application/pdf');
+                    expect(res.Buffer).to.be.instanceOf(Buffer);
+                    expect(res.Buffer.length).to.be.greaterThan(0);
+                    expect(res.Type).to.equal('application/pdf');
                     done();
                 });
         });
