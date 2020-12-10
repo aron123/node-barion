@@ -17,8 +17,12 @@ describe('Integration tests', function () {
     });
 
     afterEach(function (done) {
-        // wait 10s between test cases to avoid rate limit errors
-        setTimeout(() => done(), 10000);
+        if (process.env.NODE_ENV === 'travis_ci') {
+            // wait 10s between test cases to avoid rate limit errors
+            return setTimeout(() => done(), 10000);
+        }
+
+        done();
     });
 
     describe('Start payment (callback)', function () {
@@ -156,7 +160,6 @@ describe('Integration tests', function () {
                     expect(err.name).to.equal('BarionError');
                     expect(err.errors).to.be.an('array');
                     expect(err.errors[0]).to.deep.include(testData.getPaymentState.expectedErrors[0]);
-                    expect(err.errors[1]).to.deep.include(testData.getPaymentState.expectedErrors[1]);
                     done();
                 });
             }
@@ -216,7 +219,6 @@ describe('Integration tests', function () {
                         expect(err.name).to.equal('BarionError');
                         expect(err.errors).to.be.an('array');
                         expect(err.errors[0]).to.deep.include(testData.getPaymentState.expectedErrors[0]);
-                        expect(err.errors[1]).to.deep.include(testData.getPaymentState.expectedErrors[1]);
                         done();
                     });
             }
@@ -565,6 +567,100 @@ describe('Integration tests', function () {
                         expect(err.name).to.equal('BarionError');
                         expect(err.errors).to.be.an('array');
                         expect(err.errors[0]).to.deep.include(testData.emailTransfer.expectedError);
+                        done();
+                    });
+            }
+        );
+    });
+
+    describe('Download statement (callback)', function () {
+        it('should download monthly statement when validation is turned on', function (done) {
+            validatedBarion.downloadStatement(testData.downloadStatement.successRequestBody, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.be.an('object');
+                expect(res.Buffer).to.be.instanceOf(Buffer);
+                expect(res.Buffer.length).to.be.greaterThan(0);
+                expect(res.Type).to.equal('application/pdf');
+                done();
+            });
+        });
+
+        it('should answer with BarionModelError when request object is not proper and validation is turned on',
+            function (done) {
+                validatedBarion.downloadStatement(testData.downloadStatement.errorRequestBody, (err, res) => {
+                    expect(res).to.be.null;
+                    expect(err.name).to.equal('BarionModelError');
+                    expect(err.errors).to.be.an('array').and.have.length.greaterThan(0);
+                    done();
+                });
+            }
+        );
+
+        it('should download statement when validation is turned off', function (done) {
+            notValidatedBarion.downloadStatement(testData.downloadStatement.successRequestBody, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.be.an('object');
+                expect(res.Buffer).to.be.instanceOf(Buffer);
+                expect(res.Buffer.length).to.be.greaterThan(0);
+                expect(res.Type).to.equal('application/pdf');
+                done();
+            });
+        });
+
+        it('should answer with BarionError when request object is not proper and validation is turned off',
+            function (done) {
+                notValidatedBarion.downloadStatement(testData.downloadStatement.errorRequestBody, (err, res) => {
+                    expect(res).to.be.null;
+                    expect(err.name).to.equal('BarionError');
+                    expect(err.errors).to.be.an('array');
+                    expect(err.errors[0]).to.deep.include(testData.downloadStatement.expectedError);
+                    done();
+                });
+            }
+        );
+    });
+
+    describe('Statement download (Promise)', function () {
+        it('should download statement when validation is turned on', function (done) {
+            validatedBarion.downloadStatement(testData.downloadStatement.successRequestBody)
+                .then(res => {
+                    expect(res).to.be.an('object');
+                    expect(res.Buffer).to.be.instanceOf(Buffer);
+                    expect(res.Buffer.length).to.be.greaterThan(0);
+                    expect(res.Type).to.equal('application/pdf');
+                    done();
+                });
+        });
+
+        it('should answer with BarionModelError when request object is not proper and validation is turned on',
+            function (done) {
+                validatedBarion.downloadStatement(testData.downloadStatement.errorRequestBody)
+                    .catch(err => {
+                        expect(err.name).to.equal('BarionModelError');
+                        expect(err.errors).to.be.an('array').and.have.length.greaterThan(0);
+                        done();
+                    });
+            }
+        );
+
+        it('should download statement when validation is turned off', function (done) {
+            notValidatedBarion.downloadStatement(testData.downloadStatement.successRequestBody)
+                .then(res => {
+                    expect(res).to.be.an('object');
+                    expect(res.Buffer).to.be.instanceOf(Buffer);
+                    expect(res.Buffer.length).to.be.greaterThan(0);
+                    expect(res.Type).to.equal('application/pdf');
+                    done();
+                });
+        });
+
+        it('should answer with BarionError when request object is not proper and validation is turned off',
+            function (done) {
+                notValidatedBarion.downloadStatement(testData.downloadStatement.errorRequestBody)
+                    .catch(err => {
+                        expect(err.name).to.equal('BarionError');
+                        expect(err.errors).to.be.an('array');
+                        expect(err.errors[0]).to.deep.include(testData.downloadStatement.expectedError);
                         done();
                     });
             }

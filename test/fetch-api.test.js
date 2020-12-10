@@ -16,6 +16,7 @@ const { fetchTest } = require('./test-data');
 const barionMock = {
     default: fetchMock
         .mock('begin:http://example.com/success', fetchTest.successResponse)
+        .mock('begin:http://example.com/binary-success', fetchTest.binarySuccessResponse, { sendAsJson: false })
         .mock('begin:http://example.com/error', fetchTest.errorResponse)
         .mock('begin:http://example.com/v1-success', fetchTest.v1SuccessResponse)
         .mock('begin:http://example.com/v1-error', fetchTest.v1ErrorResponse)
@@ -41,6 +42,11 @@ describe('lib/fetch-api.js', function () {
     describe('#getFromBarion(url, params)', function () {
 
         const getFromBarion = fetchBarion.getFromBarion;
+
+        it('should strip undefined query params', function () {
+            getFromBarion('http://example.com/success', { a: 3, b: undefined, c: 'asd', d: undefined });
+            expect(barionMock.default.lastUrl()).to.be.equal('http://example.com/success?a=3&c=asd');
+        });
 
         it('should throw error if invalid URL is passed', function () {
             expect(() => getFromBarion('example')).to.throw();
@@ -89,6 +95,54 @@ describe('lib/fetch-api.js', function () {
         it('should resolve with data after successful response in v1 API', function () {
             return expect(getFromBarion('http://example.com/v1-success', { a: 'b', c: 5}))
                 .to.eventually.deep.include(fetchTest.v1SuccessResponse);
+        });
+    });
+
+    describe('#getBinaryFromBarion()', function () {
+
+        const getBinaryFromBarion = fetchBarion.getBinaryFromBarion;
+
+        it('should throw error if invalid URL is passed', function () {
+            expect(() => getBinaryFromBarion('example')).to.throw();
+        });
+
+        it('should not throw error if empty request body is passed', function () {
+            expect(() => getBinaryFromBarion('http://example.com/success')).to.not.throw();
+            expect(() => getBinaryFromBarion('http://example.com/success'), null).to.not.throw();
+            expect(() => getBinaryFromBarion('http://example.com/success'), {}).to.not.throw();
+        });
+
+        it('should reject if get HTTP error response', function () {
+            return Promise.all([
+                expect(getBinaryFromBarion('http://example.com/error')).to.be.rejectedWith(barionErrorMessageMatcher),
+                expect(getBinaryFromBarion('http://example.com/v1-error')).to.be.rejectedWith(barionErrorMessageMatcher),
+                expect(getBinaryFromBarion('http://example.com/internal-server-error'))
+                    .to.be.rejectedWith(barionErrorMessageMatcher)
+            ]);
+        });
+
+        it('should reject with empty errors array when no Errors array is defined in response', function () {
+            return getBinaryFromBarion('http://example.com/internal-server-error')
+                .then(() => {
+                    throw new Error('Promise have to reject, but resolved');
+                })
+                .catch(err => {
+                    expect(err.errors).to.be.an('array').and.empty;
+                });
+        });
+
+        it('should reject on network error', function () {
+            return expect(getBinaryFromBarion('http://example.com/network-error')).to.be.rejectedWith('Failed to fetch data');
+        });
+
+        it('should resolve binary data after successful response', async function () {
+            const res = await getBinaryFromBarion('http://example.com/binary-success');
+            expect(Buffer.compare(fetchTest.binarySuccessResponse.body, res.Buffer)).to.equal(0);
+        });
+
+        it('should resolve correct content type after successful response', async function () {
+            const res = await getBinaryFromBarion('http://example.com/binary-success');
+            expect(fetchTest.binarySuccessResponse.headers['Content-Type']).to.equal(res.Type);
         });
     });
 

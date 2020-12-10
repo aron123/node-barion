@@ -8,6 +8,13 @@ module.exports = {
             success: true,
             stringVal: 'ok'
         },
+        binarySuccessResponse: {
+            // top secret url, do not share with the public
+            body: Buffer.from('https://www.youtube.com/watch?v=dQw4w9WgXcQ'),
+            headers: {
+                'Content-Type': 'application/pdf'
+            }
+        },
         errorResponse: {
             body: {
                 Errors: [
