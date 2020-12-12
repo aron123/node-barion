@@ -22,7 +22,6 @@ Helps manage e-payment transactions through the [Barion Smart Gateway](https://w
     - [Send money to a bank account](#send-money-to-a-bank-account---barionbanktransferoptions-callback)
     - [Get existing accounts of the user](#get-existing-accounts-of-the-user---bariongetaccountsoptions-callback)
     - [Send money to a Barion user or email address](#send-e-money-to-an-email-address---barionemailtransferoptions-callback)
-    - [Send money to a Barion user or email address](#send-money-to-a-barion-user-or-email-address---barionbariontransferoptions-callback) ![][DEPRECATED]
     - [Download statement files](#download-statement-files---bariondownloadstatementoptions-callback)
     
     - [Handling errors](#handling-errors)
@@ -582,63 +581,6 @@ barion.emailTransfer({
     },
     TargetEmail: 'hello@example.com',
     Comment: 'Buy some milk please.'
-}).then(data => {
-    //process data
-}).catch(err => {
-    //handle error
-});
-```
-
-### Send money to a Barion user or email address - barion.barionTransfer(options, \[callback\])
-![][DEPRECATED]
-> **IMPORTANT**: This function is deprecated since version 2.1.0, and will be removed in the next major version of the module.
-> Please use the [emailTransfer](#send-e-money-to-an-email-address---barionemailtransferoptions-callback) function instead.
-
-To send money to a Barion user or to an email address, call the ``barionTransfer`` function. [[Barion Docs](https://docs.barion.com/Transfer-Send-v1)]
-
-**Parameters**:
-  - ``UserName``: Email address of the shop in the Barion system (string). (required)
-
-  - ``Password``: Password of the shop in the Barion system (string). (required)
-
-  - ``Currency``: The currency to use (string). (optional, because it is assigned in the constructor)<br>
-    Allowed values are:
-    - ``'CZK'`` (Czech crown)
-    - ``'EUR'`` (Euro)
-    - ``'HUF'`` (Hungarian forint)
-    - ``'USD'`` (U.S. dollar)
-
-  - ``Amount``: Amount of the money to send (number). (required)
-
-  - ``Recipient``: Email address of the recipient (string). (required)
-
-  - ``Comment``: Comment of the transfer (string). (optional)
-
-**Output**: [Read at Barion Docs](https://docs.barion.com/Transfer-Send-v1#Output_properties)
-
-#### Usage example
-##### With callback
-```js
-barion.barionTransfer({
-    UserName: 'info@example.com',
-    Password: 'someRlyStrongP4ss#!',
-    Currency: 'HUF',
-    Amount: 1,
-    Recipient: 'info@example.com',
-    Comment: 'Have a nice party'
-}, function (err, data) {
-    //handle error / process data
-});
-```
-##### With promise
-```js
-barion.barionTransfer({
-    UserName: 'info@example.com',
-    Password: 'someRlyStrongP4ss#!',
-    Currency: 'HUF',
-    Amount: 1,
-    Recipient: 'info@example.com',
-    Comment: 'Have a nice party'
 }).then(data => {
     //process data
 }).catch(err => {

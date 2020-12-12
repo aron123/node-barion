@@ -38,7 +38,9 @@ module.exports = {
                 }
             ],
             Locale: 'hu-HU',
-            Currency: 'HUF'
+            Currency: 'HUF',
+            CallbackUrl: 'https://shop.example.com/api/callback',
+            RedirectUrl: 'https://shop.example.com/redirect'
         },
         successResponseBody: {
             PaymentRequestId: 'O-2019-0001-1',
@@ -127,34 +129,6 @@ module.exports = {
             ErrorCode: 'ModelValidationError',
             // TODO: Potential bug in Barion API (sets AuthData to empty string)
             // AuthData: UserName
-        }
-    },
-    barionTransfer: {
-        successRequestBody: {
-            UserName,
-            Password,
-            Currency: 'HUF',
-            Amount: 1,
-            Recipient: 'info@example.com'
-        },
-        successResponseBody: {
-            Amount: -1,
-            ToName: 'info@example.com',
-            Currency: 'HUF',
-            TransactionType: 2,
-            Direction: 0,
-            ErrorList: []
-        },
-        errorRequestBody: {
-            UserName,
-            Password,
-            Currency: 'HUF',
-            Amount: 1,
-            Recipient: 'info#example.com'
-        },
-        expectedError: {
-            ErrorNumber: 2004,
-            AuthData: UserName
         }
     },
     getAccounts: {
