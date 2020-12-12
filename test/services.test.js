@@ -166,20 +166,6 @@ describe('lib/services.js', function () {
         });
     });
 
-    describe('#barionTransfer(environment, options)', function () {
-        it('should return a Promise on success', function (done) {
-            const services = serviceMocks.okService;
-            services.barionTransfer('test', {})
-                .then(() => done());
-        });
-
-        it('should return a Promise on failure', function (done) {
-            const services = serviceMocks.errorService;
-            services.barionTransfer('test', {})
-                .catch(() => done());
-        });
-    });
-
     describe('#emailTransfer(environment, options)', function () {
         it('should return a Promise on success', function (done) {
             const services = serviceMocks.okService;
