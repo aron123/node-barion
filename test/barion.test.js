@@ -13,7 +13,7 @@ const { BarionError, BarionModelError } = require('../lib/errors');
 const successObject = {
     success: true,
     paymentId: 'abcdefg',
-    transactions: [ { a: 'b' }, { a: 'c' } ]
+    transactions: [{ a: 'b' }, { a: 'c' }]
 };
 const returnSuccess = () => Promise.resolve(successObject);
 
@@ -135,7 +135,7 @@ describe('lib/barion.js', function () {
             expect(barion.defaults).to.deep.include({
                 POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1',
                 Environment: 'test',
-                FundingSources: [ 'All' ],
+                FundingSources: ['All'],
                 GuestCheckOut: true,
                 Locale: 'hu-HU',
                 Currency: 'HUF'
@@ -169,6 +169,8 @@ describe('lib/barion.js', function () {
         const request = {
             PaymentRequestId: 'ORDER#6409-1',
             PaymentType: 'Immediate',
+            RedirectUrl: 'https://shop.example.com/redirect',
+            CallbackUrl: 'https://shop.example.com/api/barion-callback',
             Transactions: [
                 {
                     POSTransactionId: 'ORDER#6409',

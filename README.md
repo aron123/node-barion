@@ -170,9 +170,9 @@ To create a new payment, call the ``startPayment`` function. [[Barion Docs](http
   
   - ``RecurrenceType``: ![][3DS] Indiates the nature of the recurrence ([RecurrenceType](https://docs.barion.com/RecurrenceType) string). (optional, can be defined only when ``RecurrenceId`` is specified)
   
-  - ``RedirectUrl``: URL to redirect the user after the payment is completed (string). (optional)
+  - ``RedirectUrl``: URL to redirect the user after the payment is completed (string). (required)
   
-  - ``CallbackUrl``: URL that Barion should call, when the payment state changes (string). (optional)
+  - ``CallbackUrl``: URL that Barion should call, when the payment state changes (string). (required)
   
   - ``Transactions``: Array of transactions contained by the payment ([PaymentTransaction](https://docs.barion.com/PaymentTransaction)[]). (required)
   

@@ -18,6 +18,8 @@ const reservationStandard = {
     GuestCheckOut: true,
     FundingSources: [ 'All' ],
     PaymentRequestId: '2019-001',
+    RedirectUrl: 'https://shop.example.com/redirect',
+    CallbackUrl: 'https://shop.example.com/api/barion-callback',
     Transactions
 };
 
@@ -29,6 +31,8 @@ const immediateStandard = {
     GuestCheckOut: true,
     FundingSources: [ 'All' ],
     PaymentRequestId: '2019-001',
+    RedirectUrl: 'https://shop.example.com/redirect',
+    CallbackUrl: 'https://shop.example.com/api/barion-callback',
     Transactions
 };
 
@@ -42,6 +46,8 @@ const recurringStandard = {
     GuestCheckOut: true,
     FundingSources: [ 'All' ],
     PaymentRequestId: '2019-001',
+    RedirectUrl: 'https://shop.example.com/redirect',
+    CallbackUrl: 'https://shop.example.com/api/barion-callback',
     Transactions
 };
 
@@ -54,6 +60,8 @@ const delayedCaptureStandard = {
     GuestCheckOut: true,
     FundingSources: [ 'All' ],
     PaymentRequestId: '2019-001',
+    RedirectUrl: 'https://shop.example.com/redirect',
+    CallbackUrl: 'https://shop.example.com/api/barion-callback',
     Transactions
 };
 
