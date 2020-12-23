@@ -6,6 +6,8 @@ const POSKey = process.env.BARION_POS_KEY || require('./credentials.json').POSKe
 const UserName = process.env.BARION_USER_NAME || require('./credentials.json').UserName;
 const Password = process.env.BARION_PASSWORD || require('./credentials').Password;
 const AccountId = process.env.BARION_ACCOUNT_ID || require('./credentials.json').AccountId;
+const CallbackUrl = process.env.BARION_CALLBACK_URL || require('./credentials.json').CallbackUrl;
+const RedirectUrl = process.env.BARION_REDIRECT_URL || require('./credentials.json').RedirectUrl;
 const StatementYear = process.env.BARION_STATEMENT_MONTH || require('./credentials.json').StatementDownload.Year;
 const StatementMonth = process.env.BARION_STATEMENT_YEAR || require('./credentials.json').StatementDownload.Month;
 
@@ -39,8 +41,8 @@ module.exports = {
             ],
             Locale: 'hu-HU',
             Currency: 'HUF',
-            CallbackUrl: 'https://shop.example.com/api/callback',
-            RedirectUrl: 'https://shop.example.com/redirect'
+            CallbackUrl,
+            RedirectUrl
         },
         successResponseBody: {
             PaymentRequestId: 'O-2019-0001-1',
