@@ -8,8 +8,8 @@ const Password = process.env.BARION_PASSWORD || require('./credentials').Passwor
 const AccountId = process.env.BARION_ACCOUNT_ID || require('./credentials.json').AccountId;
 const CallbackUrl = process.env.BARION_CALLBACK_URL || require('./credentials.json').CallbackUrl;
 const RedirectUrl = process.env.BARION_REDIRECT_URL || require('./credentials.json').RedirectUrl;
-const StatementYear = process.env.BARION_STATEMENT_MONTH || require('./credentials.json').StatementDownload.Year;
-const StatementMonth = process.env.BARION_STATEMENT_YEAR || require('./credentials.json').StatementDownload.Month;
+const StatementYear = process.env.BARION_STATEMENT_YEAR || require('./credentials.json').StatementDownload.Year;
+const StatementMonth = process.env.BARION_STATEMENT_MONTH || require('./credentials.json').StatementDownload.Month;
 
 module.exports = {
     initOptions: {
