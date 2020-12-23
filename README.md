@@ -117,7 +117,6 @@ In the constructor, you can define default values that can be overridden later i
     - ``'hu-HU'`` (Hungarian)
     - ``'sk-SK'`` (Slovakian)
     - ``'sl-SI'`` (Slovenian)
-    - ``'el-GR'`` (Greek)
 
   - ``Currency``: The default currency to use (string). (optional, default: ``'HUF'``)<br>
     Allowed values are:
