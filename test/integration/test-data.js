@@ -16,12 +16,12 @@ module.exports = {
         withValidation: {
             POSKey,
             Environment: 'test',
-            ValidateModels: true
+            Secure: true
         },
         withoutValidation: {
             POSKey,
             Environment: 'test',
-            ValidateModels: false
+            Secure: false
         }
     },
     startPayment: {

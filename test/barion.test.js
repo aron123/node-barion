@@ -145,7 +145,7 @@ describe('lib/barion.js', function () {
 
     const okBarionWithoutValidation = new Barions.OkBarion({
         POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1',
-        ValidateModels: false
+        Secure: false
     });
 
     const serviceErrorBarion = new Barions.ServiceErrorBarion({
@@ -158,7 +158,7 @@ describe('lib/barion.js', function () {
 
     const sanitizationErrorBarion = new Barions.SanitizationErrorBarion({
         POSKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1',
-        ValidateModels: false
+        Secure: false
     });
 
     describe('#startPayment(options, [callback])', function () {
