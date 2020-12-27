@@ -88,13 +88,27 @@ describe('lib/fetch-api.js', function () {
         });
 
         it('should resolve with data after successful response', function () {
-            return expect(getFromBarion('http://example.com/success', { a: 'b', c: 5}))
+            return expect(getFromBarion('http://example.com/success', { a: 'b', c: 5 }))
                 .to.eventually.deep.include(fetchTest.successResponse);
         });
 
         it('should resolve with data after successful response in v1 API', function () {
-            return expect(getFromBarion('http://example.com/v1-success', { a: 'b', c: 5}))
+            return expect(getFromBarion('http://example.com/v1-success', { a: 'b', c: 5 }))
                 .to.eventually.deep.include(fetchTest.v1SuccessResponse);
+        });
+
+        it('should use credentials for Basic Authentication', async function () {
+            await getFromBarion('http://example.com/success', { UserName: 'a', Password: 'b', Extra: true });
+            expect(barionMock.default.lastOptions()).to.deep.include({
+                headers: {
+                    Authorization: 'Basic YTpi' // base64-encoded a:b
+                }
+            });
+        });
+
+        it('should not use credentials in query parameters', async function () {
+            await getFromBarion('http://example.com/success', { UserName: 'a', Password: 'b', Extra: true });
+            expect(barionMock.default.lastUrl()).to.equal('http://example.com/success?Extra=true');
         });
     });
 
@@ -144,6 +158,20 @@ describe('lib/fetch-api.js', function () {
             const res = await getBinaryFromBarion('http://example.com/binary-success');
             expect(fetchTest.binarySuccessResponse.headers['Content-Type']).to.equal(res.Type);
         });
+
+        it('should use credentials for Basic Authentication', async function () {
+            await getBinaryFromBarion('http://example.com/success', { UserName: 'a', Password: 'b', Extra: true });
+            expect(barionMock.default.lastOptions()).to.deep.include({
+                headers: {
+                    Authorization: 'Basic YTpi' // base64-encoded a:b
+                }
+            });
+        });
+
+        it('should not use credentials in query parameters', async function () {
+            await getBinaryFromBarion('http://example.com/success', { UserName: 'a', Password: 'b', Extra: true });
+            expect(barionMock.default.lastUrl()).to.equal('http://example.com/success?Extra=true');
+        });
     });
 
     describe('#postToBarion()', function () {
@@ -188,13 +216,28 @@ describe('lib/fetch-api.js', function () {
         });
 
         it('should resolve data after successful response', function () {
-            return expect(postToBarion('http://example.com/success', { a: 'b', c: 5}))
+            return expect(postToBarion('http://example.com/success', { a: 'b', c: 5 }))
                 .to.eventually.deep.include(fetchTest.successResponse);
         });
 
         it('should resolve with data after successful response in v1 API', function () {
-            return expect(postToBarion('http://example.com/v1-success', { a: 'b', c: 5}))
+            return expect(postToBarion('http://example.com/v1-success', { a: 'b', c: 5 }))
                 .to.eventually.deep.include(fetchTest.v1SuccessResponse);
+        });
+
+        it('should use credentials for Basic Authentication', async function () {
+            await postToBarion('http://example.com/success', { UserName: 'a', Password: 'b', Extra: true });
+            expect(barionMock.default.lastOptions()).to.deep.include({
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Basic YTpi' // base64-encoded a:b
+                }
+            });
+        });
+
+        it('should not use credentials in request body', async function () {
+            await postToBarion('http://example.com/success', { UserName: 'a', Password: 'b', Extra: true });
+            expect(barionMock.default.lastOptions()).to.deep.include({ body: '{"Extra":true}' });
         });
     });
 });
