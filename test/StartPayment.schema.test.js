@@ -158,4 +158,12 @@ describe('lib/domain/StartPayment.js', function () {
         expect(error.details).to.be.an('array').and.have.lengthOf(1);
         expect(error.details[0]).to.deep.include({ message: '"DelayedCapturePeriod" is not allowed' });
     });
+
+    it('should fail validation when TraceId is given for a non-token payment', function () {
+        immediatePayment.TraceId = 'some-good-trace-id';
+        const { error } = StartPayment.validate(immediatePayment);
+
+        expect(error.details).to.be.an('array').and.have.lengthOf(1);
+        expect(error.details[0]).to.deep.include({ message: '"TraceId" is not allowed' });
+    })
 });
