@@ -166,7 +166,9 @@ To create a new payment, call the ``startPayment`` function. [[Barion Docs](http
   
   - ``CardHolderNameHint``: ![][3DS] Full name of the customer. Barion use this to prefill the payment form (string). (optional)
   
-  - ``RecurrenceType``: ![][3DS] Indiates the nature of the recurrence ([RecurrenceType](https://docs.barion.com/RecurrenceType) string). (optional, can be defined only when ``RecurrenceId`` is specified)
+  - ``RecurrenceType``: ![][3DS] Indiates the nature of the recurrence ([RecurrenceType](https://docs.barion.com/RecurrenceType) string). (optional, must be defined only when ``RecurrenceId`` is specified)
+
+  - ``TraceId``: ![][3DS] Identifies the nature of the token payment (string). (optional, must be defined when executing token payments)
   
   - ``RedirectUrl``: URL to redirect the user after the payment is completed (string). (required)
   
