@@ -240,6 +240,11 @@ describe('Integration tests', function () {
         // because typing bank card info on Barion GUI is required after the payment is started
     });
 
+    describe.skip('Complete One-Click payment', function () {
+        // not trivial how to test automatically,
+        // because typing bank card info on Barion GUI is required after the payment is started
+    });
+
     describe.skip('Refund payment', function () {
         // not trivial how to test automatically,
         // because typing bank card info on Barion GUI is required after the payment is started

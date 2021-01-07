@@ -47,6 +47,7 @@ const Barions = {
             finishReservation: returnSuccess,
             captureAuthorizedPayment: returnSuccess,
             cancelAuthorizedPayment: returnSuccess,
+            completePayment: returnSuccess,
             refundPayment: returnSuccess,
             bankTransfer: returnSuccess,
             getAccounts: returnSuccess,
@@ -61,6 +62,7 @@ const Barions = {
             finishReservation: returnError,
             captureAuthorizedPayment: returnError,
             cancelAuthorizedPayment: returnError,
+            completePayment: returnError,
             refundPayment: returnError,
             bankTransfer: returnError,
             getAccounts: returnError,
@@ -75,6 +77,7 @@ const Barions = {
             finishReservation: returnSuccess,
             captureAuthorizedPayment: returnSuccess,
             cancelAuthorizedPayment: returnSuccess,
+            completePayment: returnSuccess,
             refundPayment: returnSuccess,
             bankTransfer: returnSuccess,
             getAccounts: returnSuccess,
@@ -92,6 +95,7 @@ const Barions = {
             finishReservation: returnSuccess,
             captureAuthorizedPayment: returnSuccess,
             cancelAuthorizedPayment: returnSuccess,
+            completePayment: returnSuccess,
             refundPayment: returnSuccess,
             bankTransfer: returnSuccess,
             getAccounts: returnSuccess,
@@ -532,6 +536,77 @@ describe('lib/barion.js', function () {
 
         it('should answer with Promise on sanitization error when validation is turned off', function (done) {
             const promise = sanitizationErrorBarion.cancelAuthorizedPayment(request);
+            expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
+        });
+    });
+
+    describe('#completePayment(options, [callback])', function () {
+        const request = {
+            PaymentId: '277a6ae1-12b0-4192-8e6c-bc7d0612afa2'
+        };
+
+        it('should answer with callback on success', function (done) {
+            okBarion.completePayment(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on success when validation is turned off', function (done) {
+            okBarionWithoutValidation.completePayment(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on error', function (done) {
+            serviceErrorBarion.completePayment(request, (err, res) => {
+                expect(err).to.deep.equal(errorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on validation error', function (done) {
+            validationErrorBarion.completePayment(request, (err, res) => {
+                expect(err).to.deep.equal(validationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on sanitization error when validation is turned off', function (done) {
+            sanitizationErrorBarion.completePayment(request, (err, res) => {
+                expect(err).to.deep.equal(sanitizationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with Promise on success', function (done) {
+            const promise = okBarion.completePayment(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on success when validation is turned off', function (done) {
+            const promise = okBarionWithoutValidation.completePayment(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on error', function (done) {
+            const promise = serviceErrorBarion.completePayment(request);
+            expect(promise).to.eventually.rejectedWith(errorObject).notify(done);
+        });
+
+        it('should answer with Promise on validation error', function (done) {
+            const promise = validationErrorBarion.completePayment(request);
+            expect(promise).to.eventually.rejectedWith(validationErrorObject).notify(done);
+        });
+
+        it('should answer with Promise on sanitization error when validation is turned off', function (done) {
+            const promise = sanitizationErrorBarion.completePayment(request);
             expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
         });
     });

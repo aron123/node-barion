@@ -124,6 +124,20 @@ describe('lib/services.js', function () {
         });
     });
 
+    describe('#completePayment(environment, options)', function () {
+        it('should return a Promise on success', function (done) {
+            const services = serviceMocks.okService;
+            services.completePayment('test', {})
+                .then(() => done());
+        });
+
+        it('should return a Promise on failure', function (done) {
+            const services = serviceMocks.errorService;
+            services.completePayment('test', {})
+                .catch(() => done());
+        });
+    });
+
     describe('#refundPayment(environment, options)', function () {
         it('should return a Promise on success', function (done) {
             const services = serviceMocks.okService;

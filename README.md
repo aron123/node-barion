@@ -19,16 +19,15 @@ Helps manage e-payment transactions through the [Barion Smart Gateway](https://w
     - [Refund payment partially or completely](#refund-payment-partially-or-completely---barionrefundpaymentoptions-callback)
     - [Capture a previously authorized payment](#capture-a-previously-authorized-payment---barioncaptureauthorizedpaymentoptions-callback)
     - [Cancel a previously authorized payment](#cancel-a-previously-authorized-payment---barioncancelauthorizedpaymentoptions-callback)
+    - [Complete a formerly prepared and 3DS authenticated One-Click payment](#complete-a-formerly-prepared-and-3ds-authenticated-one-click-payment---barioncompletepaymentoptions-callback)
     - [Send money to a bank account](#send-money-to-a-bank-account---barionbanktransferoptions-callback)
     - [Get existing accounts of the user](#get-existing-accounts-of-the-user---bariongetaccountsoptions-callback)
     - [Send money to a Barion user or email address](#send-e-money-to-an-email-address---barionemailtransferoptions-callback)
     - [Download statement files](#download-statement-files---bariondownloadstatementoptions-callback)
-    
     - [Handling errors](#handling-errors)
+    - [Secure vs. insecure mode](#secure-vs-insecure-mode)
 
   - [Future improvements](#future-improvements)
-
-  - [Secure vs. insecure mode](#secure-vs-insecure-mode)
 
   - [Contributions](#contributions)
 
@@ -79,6 +78,7 @@ barion.getPaymentState({
 - get the state of an already started payment
 - finish a pending reservation
 - capture or cancel a previously authorized payment
+- complete a formerly prepared One-Click payment
 - refund a completed payment
 - send money out of Barion via international bank transfer
 - get existing accounts of the user
@@ -166,7 +166,9 @@ To create a new payment, call the ``startPayment`` function. [[Barion Docs](http
   
   - ``CardHolderNameHint``: ![][3DS] Full name of the customer. Barion use this to prefill the payment form (string). (optional)
   
-  - ``RecurrenceType``: ![][3DS] Indiates the nature of the recurrence ([RecurrenceType](https://docs.barion.com/RecurrenceType) string). (optional, can be defined only when ``RecurrenceId`` is specified)
+  - ``RecurrenceType``: ![][3DS] Indiates the nature of the recurrence ([RecurrenceType](https://docs.barion.com/RecurrenceType) string). (optional, must be defined only when ``RecurrenceId`` is specified)
+
+  - ``TraceId``: ![][3DS] Identifies the nature of the token payment (string). (optional, must be defined when executing token payments)
   
   - ``RedirectUrl``: URL to redirect the user after the payment is completed (string). (required)
   
@@ -383,6 +385,35 @@ barion.cancelAuthorizedPayment({
 ##### With promise
 ```js
 barion.cancelAuthorizedPayment({
+    PaymentId: '15c1071df3ea4289996ead6ae17'
+}).then(data => {
+    //process data
+}).catch(err => {
+    //handle error
+});
+```
+
+### Complete a formerly prepared and 3DS authenticated One-Click payment - barion.completePayment(options, \[callback\])
+ 
+To complete a formerly prepared and 3DS authenticated payment in the Barion system, use the ``completePayment`` function. [[Barion Docs](https://docs.barion.com/Payment-Complete-v2)]
+
+**Parameters**:
+- ``PaymentId``: The payment's ID in the Barion system (string). (required)
+
+**Output**: [Read at Barion Docs](https://docs.barion.com/Payment-Complete-v2#Output_properties)
+
+#### Usage example
+##### With callback
+```js
+barion.completePayment({
+    PaymentId: '15c1071df3ea4289996ead6ae17'
+}, function (err, data) {
+    //handle error / process data
+});
+```
+##### With promise
+```js
+barion.completePayment({
     PaymentId: '15c1071df3ea4289996ead6ae17'
 }).then(data => {
     //process data
@@ -701,7 +732,7 @@ barion.startPayment(someObj)
     });
 ```
 
-## Secure vs. insecure mode
+### Secure vs. insecure mode
 The `node-barion` module can work in 2 different modes that can be set with the `Secure` (boolean) field when instantiating a new Barion object. The field's default value is `true` (Secure Mode).
 
 When the `Secure` field's value is `true`, the module works in "Secure Mode". In this mode, the module does some checks and transformations (if necessary) on the given object before sends it to the Barion API. If it finds any error, that cannot be fixed automatically, it throws `BarionModelError`.
