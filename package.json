@@ -1,6 +1,6 @@
 {
   "name": "node-barion",
-  "version": "2.1.1",
+  "version": "3.0.0",
   "description": "Node API library for Barion Smart Gateway electronic payment system.",
   "author": "Kiss Aron <aron123dev@gmail.com>",
   "homepage": "https://github.com/aron123/node-barion",
