@@ -35,7 +35,6 @@ jobs:
           parallel: true
 
   report-coverage:
-   finish:
     needs: test
     runs-on: ubuntu-latest
     steps:
