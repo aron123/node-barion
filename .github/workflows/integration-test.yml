@@ -1,6 +1,8 @@
 name:  Integration test
 
-on: [ 'push' ]
+on:
+  schedule:
+    - cron:  '20 2 * * 7' # 2:20 on Sunday
 
 jobs:
   test:
