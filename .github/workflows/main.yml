@@ -27,7 +27,7 @@ jobs:
       - name: Test code, generate coverage report
         run: npm run coverage
 
-      - name: Coveralls Parallel
+      - name: Register coverage report
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ github.token }}
@@ -35,10 +35,13 @@ jobs:
           parallel: true
 
   report-coverage:
+    name: Summarize and report coverage
+
     needs: test
     runs-on: ubuntu-latest
+    
     steps:
-    - name: Coveralls Finished
+    - name: Report coverage
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ github.token }}
