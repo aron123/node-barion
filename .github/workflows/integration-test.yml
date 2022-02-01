@@ -35,23 +35,3 @@ jobs:
           BARION_REDIRECT_URL: ${{ secrets.BARION_REDIRECT_URL }}
           BARION_STATEMENT_YEAR: ${{ secrets.BARION_STATEMENT_YEAR }}
           BARION_STATEMENT_MONTH: ${{ secrets.BARION_STATEMENT_MONTH }}
-
-      - name: Register coverage report
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ github.token }}
-          flag-name: Node ${{ matrix.node_version }}_${{ matrix.architecture }} on ${{ matrix.os }}
-          parallel: true
-
-  report-coverage:
-    name: Summarize and report coverage
-
-    needs: test
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Report coverage
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ github.token }}
-        parallel-finished: true
