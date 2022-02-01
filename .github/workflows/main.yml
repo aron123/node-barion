@@ -3,7 +3,7 @@ name: Unit testing
 on: [ 'push', 'pull_request', 'workflow_dispatch' ]
 
 jobs:
-  test-and-report-coverage:
+  test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -27,5 +27,20 @@ jobs:
       - name: Test code, generate coverage report
         run: npm run coverage
 
-      - name: Report coverage to Coveralls
-        run: npm run report-coverage
+      - name: Coveralls Parallel
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ github.token }}
+          flag-name: Node ${{ matrix.node_version }}_${{ matrix.architecture }} on ${{ matrix.os }}
+          parallel: true
+
+  report-coverage:
+   finish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ github.token }}
+        parallel-finished: true

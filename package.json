@@ -40,8 +40,7 @@
     "lint": "eslint .",
     "test": "mocha test/*.test.js",
     "integration-test": "mocha test/*.test.js test/integration/*.test.js",
-    "coverage": "nyc --all --reporter=text --reporter=lcov npm test",
-    "report-coverage": "nyc report --all --reporter=text-lcov | coveralls"
+    "coverage": "nyc --all --reporter=text --reporter=lcov npm test"
   },
   "devDependencies": {
     "chai": "^4.2.0",
