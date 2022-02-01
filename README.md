@@ -1,5 +1,5 @@
 # node-barion
-[![Build Status](https://travis-ci.com/aron123/node-barion.svg?branch=master)](https://travis-ci.com/aron123/node-barion)
+[![Build Status](https://github.com/aron123/node-barion/actions/workflows/main.yml/badge.svg)](https://github.com/aron123/node-barion/actions/workflows/main.yml)
 [![Coverage Status](https://coveralls.io/repos/github/aron123/node-barion/badge.svg?branch=master)](https://coveralls.io/github/aron123/node-barion?branch=master)
 [![npm version](http://img.shields.io/npm/v/node-barion.svg?style=flat)](https://npmjs.org/package/node-barion "View this project on npm")
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)

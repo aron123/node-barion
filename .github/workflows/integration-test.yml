@@ -1,0 +1,39 @@
+name:  Integration test
+
+on:
+  schedule:
+    - cron:  '20 2 * * 7' # 2:20 on Sunday
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ 'ubuntu-latest', 'windows-latest' ]
+        node_version: [ '16' ]
+        architecture: [ 'x64' ]
+    name: Integration testing on ${{ matrix.os }}
+    
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node_version }}
+          architecture: ${{ matrix.architecture }}
+          
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Run integration test
+        run: npm run integration-test
+        env:
+          BARION_POS_KEY: ${{ secrets.BARION_POS_KEY }}
+          BARION_USER_NAME: ${{ secrets.BARION_USER_NAME }}
+          BARION_PASSWORD: ${{ secrets.BARION_PASSWORD }}
+          BARION_ACCOUNT_ID: ${{ secrets.BARION_ACCOUNT_ID }}
+          BARION_CALLBACK_URL: ${{ secrets.BARION_CALLBACK_URL }}
+          BARION_REDIRECT_URL: ${{ secrets.BARION_REDIRECT_URL }}
+          BARION_STATEMENT_YEAR: ${{ secrets.BARION_STATEMENT_YEAR }}
+          BARION_STATEMENT_MONTH: ${{ secrets.BARION_STATEMENT_MONTH }}
