@@ -10,7 +10,7 @@ jobs:
         os: [ 'ubuntu-latest', 'windows-latest' ]
         node_version: [ '16' ]
         architecture: [ 'x64' ]
-    name: Node ${{ matrix.node_version }}_${{ matrix.architecture }} on ${{ matrix.os }}
+    name: Integration testing on ${{ matrix.os }}
     
     steps:
       - uses: actions/checkout@v2
@@ -26,6 +26,15 @@ jobs:
         
       - name: Run integration test
         run: npm run integration-test
+        env:
+          BARION_POS_KEY: ${{ secrets.BARION_POS_KEY }}
+          BARION_USER_NAME: ${{ secrets.BARION_USER_NAME }}
+          BARION_PASSWORD: ${{ secrets.BARION_PASSWORD }}
+          BARION_ACCOUNT_ID: ${{ secrets.BARION_ACCOUNT_ID }}
+          BARION_CALLBACK_URL: ${{ secrets.BARION_CALLBACK_URL }}
+          BARION_REDIRECT_URL: ${{ secrets.BARION_REDIRECT_URL }}
+          BARION_STATEMENT_YEAR: ${{ secrets.BARION_STATEMENT_YEAR }}
+          BARION_STATEMENT_MONTH: ${{ secrets.BARION_STATEMENT_MONTH }}
 
       - name: Register coverage report
         uses: coverallsapp/github-action@master
