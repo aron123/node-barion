@@ -4,6 +4,5 @@ test/
 .vscode/
 .github/
 
-.travis.yml
 .gitattributes
 .eslintrc.js

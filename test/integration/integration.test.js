@@ -16,15 +16,6 @@ describe('Integration tests', function () {
         notValidatedBarion = new Barion(testData.initOptions.withoutValidation);
     });
 
-    afterEach(function (done) {
-        if (process.env.NODE_ENV === 'travis_ci') {
-            // wait 10s between test cases to avoid rate limit errors
-            return setTimeout(() => done(), 10000);
-        }
-
-        done();
-    });
-
     describe('Start payment (callback)', function () {
         it('should initialize payment when validation is turned on', function (done) {
             validatedBarion.startPayment(testData.startPayment.successRequestBody, (err, res) => {
