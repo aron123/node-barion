@@ -103,7 +103,7 @@ In the constructor, you can define default values that can be overridden later i
 
   - ``Secure``: Indicates how ``node-barion`` should handle input objects before sending them to the Barion API. [Read more](#secure-vs-insecure-mode) (boolean). (optional, default: ``true``)
 
-  - ``FundingSources``: Array with the allowed funding sources, ``['All']`` or ``['Balance']`` (string[]). (optional, default: ``['All']``)
+  - ``FundingSources``: Array with the allowed [funding sources](https://docs.barion.com/FundingSources) (string[]). (optional, default: ``['All']``)
 
   - ``GuestCheckOut``: Indicates if guest checkout is enabled (boolean). (optional, default: ``true``)
 
