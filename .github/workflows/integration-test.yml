@@ -3,6 +3,7 @@ name:  Integration test
 on:
   schedule:
     - cron:  '20 2 * * 0' # 2:20 on Sunday
+  workflow_dispatch:
 
 jobs:
   test:
