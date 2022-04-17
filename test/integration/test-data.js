@@ -28,7 +28,7 @@ module.exports = {
         successRequestBody: {
             PaymentType: 'Immediate',
             GuestCheckOut: true,
-            FundingSources: [ 'All' ],
+            FundingSources: [ 'All', 'Balance' ],
             OrderNumber: 'O-2019-0001',
             PaymentRequestId: 'O-2019-0001-1',
             Transactions: [
@@ -65,14 +65,14 @@ module.exports = {
         }
     },
     getPaymentState: {
-        // successRequestBody: to be defined runtime, before run the test
+        // successRequestBody: to be defined runtime, before running the test
         successResponseBody: {
             PaymentRequestId: 'O-2019-0001-1',
             OrderNumber: 'O-2019-0001',
             POSOwnerEmail: UserName,
             Status: 'Prepared',
             PaymentType: 'Immediate',
-            AllowedFundingSources: [ 'All' ],
+            AllowedFundingSources: [ 'All', 'Balance' ],
             GuestCheckout: true,
             Total: 50,
             SuggestedLocale: 'hu-HU',
