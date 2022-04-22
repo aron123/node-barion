@@ -735,9 +735,9 @@ barion.startPayment(someObj)
 ### Secure vs. insecure mode
 The `node-barion` module can work in 2 different modes that can be set with the `Secure` (boolean) field when instantiating a new Barion object. The field's default value is `true` (Secure Mode).
 
-When the `Secure` field's value is `true`, the module works in "Secure Mode". In this mode, the module does some checks and transformations (if necessary) on the given object before sends it to the Barion API. If it finds any error, that cannot be fixed automatically, it throws `BarionModelError`.
+When the `Secure` field's value is `true`, the module works in "Secure Mode". In this mode, the module does some checks and transformations (if necessary and possible) on the given object before sends it to the Barion API. If it finds any error, that cannot be fixed automatically, it throws `BarionModelError`.
 
-The following steps are applied to all input objects:
+In Secure Mode, the following steps are applied to all input objects:
 
   1) **Sanitizing the object**:
 
@@ -747,13 +747,13 @@ The following steps are applied to all input objects:
 
   - If there are ambiguous field names (e.g. paymentid and PaymentId too), the module throws an error.
 
-  2) **Validating the object**: The module runs syntactic and semantic checks on the given values (e.g. checks if PaymentId is a string and a valid GUID). If something is wrong, it throws an error.
+  1) **Validating the object**: The module runs syntactic and semantic checks on the given values (e.g. checks if PaymentId is a string and a valid GUID). If something is wrong, it throws `BarionModelError`.
 
-  3) **Building the request object**: The module produces the object that will be transmitted to the Barion API. It merges the Barion instance's default values with values in the input object. Fields in the given object are override default values (except the `POSKey` field).
+  2) **Building the request object**: The module produces the object that will be transmitted to the Barion API. It merges the Barion instance's default values with values in the input object. Fields in the given object are override default values (except the `POSKey` field).
 
-  4) **Sending the request to the Barion API**: If building the request object was successful, the module sends the request to the Barion API, and returns its response. If there are username and password in the input object, the module uses [Basic Authentication](https://docs.barion.com/Basic_authentication), and does not transmit credentials as query parameters. 
+  3) **Sending the request to the Barion API**: If building the request object was successful, the module sends the request to the Barion API, and returns its response. If there are username and password in the input object, the module uses [Basic Authentication](https://docs.barion.com/Basic_authentication), and does not transmit credentials as query parameters. 
 
-When the `Secure` field's value is `false`, the module works in "Insecure Mode". This means that the module does not run any checks and transformations on the input object. In this mode, the module only attaches `POSKey` to the given object and sends it to the Barion API "as is". As in this mode, `node-barion` does not know any semantic meaning of the input object's fields, it can send credentials (username and password) as query parameters to the Barion API. **This is not secure**, because these parameters can be logged by servers (e.g. firewalls) in plain text, even if HTTPS connection is used.
+When the `Secure` field's value is `false`, the module works in "Insecure Mode". This means that the module does not run any checks and transformations on the input object. In this mode, the module merges the Barion instance's default values with values in the input object and sends it to the Barion API "as is". As in this mode, `node-barion` does not know any semantic meaning of the input object's fields, it can send credentials (e.g. username and password) as query parameters to the Barion API. **This is not secure**, because these parameters can be logged by servers (e.g. proxies and firewalls) in plain text, even if HTTPS connection is used.
 
 ## Future improvements
   - Make available to set optional fields as defaults (e.g. ``callbackUrl``).
