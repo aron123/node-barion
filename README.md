@@ -85,7 +85,7 @@ barion.getPaymentState({
 - send money to existing Barion account or email address
 - download monthly or daily statements of your account.
 
-> **IMPORTANT**: ``node-barion`` is completely consistent with [Barion Docs](https://docs.barion.com/Main_Page), so you can use exactly the same field names, that are specified in it. **Reading the official Barion documentation is highly reccomended** before starting to use ``node-barion`` module.<br>
+> **IMPORTANT**: ``node-barion`` is completely consistent with [Barion Docs](https://docs.barion.com/Main_Page), so you can use exactly the same field names, that are specified in it. **Reading the official Barion documentation is highly recommended** before starting to use ``node-barion`` module.<br>
 > **IMPORTANT**: Barion uses *PascalCased* field naming, but **node-barion is case insensitive** (this means that if Barion Docs mention a field name *PaymentId*, you can either use *PaymentId*, *paymentId*, *paymentid* or *paymentID* notation in your application, as ``node-barion`` converts these to the standard *PaymentId* name).
 
 The signature for every instance method is ``(options, [callback])``, where ``options`` is an object which contains the input parameters and ``callback`` is a function which processes the response.<br>
