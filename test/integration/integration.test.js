@@ -357,10 +357,7 @@ describe('Integration tests', function () {
                     expect(res).to.be.null;
                     expect(err.name).to.equal('BarionError');
                     expect(err.errors).to.be.an('array');
-                    // TODO: Currently there is a bug in Barion API
-                    // response is a generic error: { Message: 'An error has occurred.' }
-                    expect(err.errors).to.have.lengthOf(0);
-                    //expect(err.errors[0]).to.deep.include(testData.getAccounts.expectedError);
+                    expect(err.errors[0]).to.deep.include(testData.getAccounts.expectedError);
                     done();
                 });
             }
@@ -401,10 +398,7 @@ describe('Integration tests', function () {
                     .catch(err => {
                         expect(err.name).to.equal('BarionError');
                         expect(err.errors).to.be.an('array');
-                        // TODO: Currently there is a bug in Barion API
-                        // response is a generic error: { Message: 'An error has occurred.' }
-                        expect(err.errors).to.have.lengthOf(0);
-                        // expect(err.errors[0]).to.deep.include(testData.getAccounts.expectedError);
+                        expect(err.errors[0]).to.deep.include(testData.getAccounts.expectedError);
                         done();
                     });
             }
