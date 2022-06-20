@@ -1,4 +1,4 @@
-const Joi = require('@hapi/joi');
+const Joi = require('joi');
 const schemaUtils = require('../lib/schema');
 const expect = require('chai').expect;
 
