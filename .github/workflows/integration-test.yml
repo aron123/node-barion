@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         os: [ 'ubuntu-latest', 'windows-latest' ]
-        node_version: [ '16' ]
+        node_version: [ '18' ]
         architecture: [ 'x64' ]
     name: Integration testing on ${{ matrix.os }}
     
