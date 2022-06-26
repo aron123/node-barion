@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         os: [ 'ubuntu-latest', 'windows-latest' ]
-        node_version: [ '12', '14', '16' ]
+        node_version: [ '14', '16', '18' ]
         architecture: [ 'x64' ]
     name: Node ${{ matrix.node_version }}_${{ matrix.architecture }} on ${{ matrix.os }}
     
