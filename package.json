@@ -40,7 +40,8 @@
     "lint": "eslint .",
     "test": "mocha test/*.test.js",
     "integration-test": "mocha test/*.test.js test/integration/*.test.js",
-    "coverage": "nyc --all --reporter=text --reporter=lcov npm test"
+    "coverage": "nyc --all --reporter=text --reporter=lcov npm test",
+    "generate-typedef": "node ./scripts/generate-typedef"
   },
   "devDependencies": {
     "chai": "^4.2.0",
@@ -50,8 +51,10 @@
     "eslint": "^6.0.1",
     "fetch-mock": "^7.3.0",
     "husky": "^2.7.0",
+    "joi-to-typescript": "^4.0.5",
     "lint-staged": "^9.2.3",
     "mocha": "^6.1.4",
+    "mustache": "^4.2.0",
     "nyc": "^14.1.1",
     "proxyquire": "^2.1.0"
   },

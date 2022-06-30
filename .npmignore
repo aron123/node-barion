@@ -3,6 +3,8 @@ coverage/
 test/
 .vscode/
 .github/
+scripts/
+generated/
 
 .gitattributes
 .eslintrc.js
