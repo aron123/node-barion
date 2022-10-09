@@ -8,7 +8,8 @@ module.exports = async function generateDefinition (interfacesPath, definitionOu
 
     let interfacesCode = '';
     for (const filePath of filePaths) {
-        const interfaceDefinition = await fs.readFile(path.join(interfacesPath, filePath), { encoding: 'utf-8' });
+        let interfaceDefinition = await fs.readFile(path.join(interfacesPath, filePath), { encoding: 'utf-8' });
+        interfaceDefinition = interfaceDefinition.replaceAll('export interface', 'interface');
         const defWithoutSurplus = interfaceDefinition.split('\n')
             .filter(part => !part.startsWith('import {') && !part.startsWith('export type default'))
             .join('\n')
