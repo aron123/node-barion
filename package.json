@@ -51,7 +51,7 @@
     "fetch-mock": "^7.3.0",
     "husky": "^2.7.0",
     "lint-staged": "^9.2.3",
-    "mocha": "^6.1.4",
+    "mocha": "^10.1.0",
     "nyc": "^14.1.1",
     "proxyquire": "^2.1.0"
   },
