@@ -61,7 +61,7 @@ module.exports = {
         },
         expectedError: {
             ErrorCode: 'ModelValidationError',
-            AuthData: UserName
+            AuthData: POSKey
         }
     },
     getPaymentState: {
@@ -83,7 +83,7 @@ module.exports = {
         expectedErrors: [
             {
                 ErrorCode: 'ModelValidationError',
-                AuthData: UserName,
+                AuthData: POSKey,
             }
         ]
     },
