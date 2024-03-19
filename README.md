@@ -294,7 +294,7 @@ To finish a pending reservation, use the ``finishReservation`` function. [[Bario
 ##### With callback
 ```js
 barion.finishReservation({
-    PaymentId: '15c1071df3ea4289996ead6ae17'
+    PaymentId: '15c1071df3ea4289996ead6ae17',
     Transactions: [
         {
             TransactionId: 'c9daac12c9154ce3a0c6a1a3',
@@ -308,7 +308,7 @@ barion.finishReservation({
 ##### With promise
 ```js
 barion.finishReservation({
-    PaymentId: '15c1071df3ea4289996ead6ae17'
+    PaymentId: '15c1071df3ea4289996ead6ae17',
     Transactions: [
         {
             TransactionId: 'c9daac12c9154ce3a0c6a1a3',
