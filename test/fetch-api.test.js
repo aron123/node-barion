@@ -151,7 +151,8 @@ describe('lib/fetch-api.js', function () {
         });
 
         it('should reject on network error', function () {
-            return expect(getBinaryFromBarion('http://example.com/network-error')).to.be.rejectedWith('Failed to fetch data');
+            return expect(getBinaryFromBarion('http://example.com/network-error'))
+                .to.be.rejectedWith('Failed to fetch data');
         });
 
         it('should resolve binary data after successful response', async function () {
@@ -243,7 +244,7 @@ describe('lib/fetch-api.js', function () {
             expect(barionMock.default.lastOptions()).to.deep.include({
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Basic YTpi' // base64-encoded a:b
+                    Authorization: 'Basic YTpi' // base64-encoded a:b
                 }
             });
         });
