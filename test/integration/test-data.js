@@ -5,6 +5,7 @@
 const POSKey = process.env.BARION_POS_KEY || require('./credentials.json').POSKey;
 const UserName = process.env.BARION_USER_NAME || require('./credentials.json').UserName;
 const Password = process.env.BARION_PASSWORD || require('./credentials').Password;
+const ApiKey = process.env.BARION_API_KEY || require('./credentials.json').ApiKey;
 const AccountId = process.env.BARION_ACCOUNT_ID || require('./credentials.json').AccountId;
 const CallbackUrl = process.env.BARION_CALLBACK_URL || require('./credentials.json').CallbackUrl;
 const RedirectUrl = process.env.BARION_REDIRECT_URL || require('./credentials.json').RedirectUrl;
@@ -100,6 +101,17 @@ module.exports = {
                 AccountNumber: '10032000-01076019'
             }
         },
+        successRequestBodyWithApiKey: {
+            ApiKey,
+            Currency: 'HUF',
+            Amount: 1,
+            RecipientName: 'xxxxx',
+            BankAccount: {
+                Country: 'HUN',
+                Format: 'Giro',
+                AccountNumber: '10032000-01076019'
+            }
+        },
         successResponseBody: {
             Currency: 'HUF',
             Amount: 1,
@@ -138,6 +150,9 @@ module.exports = {
             UserName,
             Password
         },
+        successRequestBodyWithApiKey: {
+            ApiKey
+        },
         successResponseBody: {
             Errors: []
         },
@@ -152,6 +167,16 @@ module.exports = {
         successRequestBody: {
             UserName,
             Password,
+            SourceAccountId: AccountId,
+            Amount: {
+                Currency: 'HUF',
+                Value: 10
+            },
+            TargetEmail: 'info@example.com',
+            Comment: 'Some really cool example comment.'
+        },
+        successRequestBodyWithApiKey: {
+            ApiKey,
             SourceAccountId: AccountId,
             Amount: {
                 Currency: 'HUF',
@@ -183,6 +208,12 @@ module.exports = {
         successRequestBody: {
             UserName,
             Password,
+            Year: StatementYear,
+            Month: StatementMonth,
+            Currency: 'HUF'
+        },
+        successRequestBodyWithApiKey: {
+            ApiKey,
             Year: StatementYear,
             Month: StatementMonth,
             Currency: 'HUF'
