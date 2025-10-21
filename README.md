@@ -470,10 +470,16 @@ barion.refundPayment({
 ### Send money to a bank account - barion.bankTransfer(options, \[callback\])
 To send money to a bank account internationally, call the ``bankTransfer`` function. [[Barion Docs](https://docs.barion.com/Withdraw-BankTransfer-v2)]
 
-**Parameters**:
-  - ``UserName``: Email address of the shop in the Barion system (string). (required)
+**Authentication**: This endpoint supports two authentication methods (you must use one):
+  - **Username/Password**: Provide both ``UserName`` and ``Password``
+  - **Api Key**: Provide ``ApiKey`` (sent via ``x-api-key`` header)
 
-  - ``Password``: Password of the shop in the Barion system (string). (required)
+**Parameters**:
+  - ``UserName``: Email address of the shop in the Barion system (string). (required if not using Api Key)
+
+  - ``Password``: Password of the shop in the Barion system (string). (required if not using Api Key)
+
+  - ``ApiKey``: Api Key for authentication (string). (required if not using username/password)
 
   - ``Currency``: The currency to use (string). (optional, because it is assigned in the constructor)<br>
     Allowed values are:
@@ -493,7 +499,7 @@ To send money to a bank account internationally, call the ``bankTransfer`` funct
 **Output**: [Read at Barion Docs](https://docs.barion.com/Withdraw-BankTransfer-v2#Output_properties)
 
 #### Usage example
-##### With callback
+##### With callback (using username/password)
 ```js
 barion.bankTransfer({
     UserName: 'info@example.com',
@@ -511,11 +517,10 @@ barion.bankTransfer({
     //handle error / process data
 });
 ```
-##### With promise
+##### With promise (using Api Key)
 ```js
 barion.bankTransfer({
-    UserName: 'info@example.com',
-    Password: 'someRlyStrongP4ss#!',
+    ApiKey: 'your-api-key-here',
     Currency: 'HUF',
     Amount: 1,
     RecipientName: 'Example Company',
@@ -535,15 +540,21 @@ barion.bankTransfer({
 ### Get existing accounts of the user - barion.getAccounts(options, \[callback\])
 To query the existing accounts of a user, call the ``getAccounts`` function. [[Barion Docs](https://docs.barion.com/Accounts-Get-v2)]
 
-**Parameters**:
-  - ``UserName``: Email address of the user in the Barion system (string). (required)
+**Authentication**: This endpoint supports two authentication methods (you must use one):
+  - **Username/Password**: Provide both ``UserName`` and ``Password``
+  - **Api Key**: Provide ``ApiKey`` (sent via ``x-api-key`` header)
 
-  - ``Password``: Password of the user in the Barion system (string). (required)
+**Parameters**:
+  - ``UserName``: Email address of the user in the Barion system (string). (required if not using Api Key)
+
+  - ``Password``: Password of the user in the Barion system (string). (required if not using Api Key)
+
+  - ``ApiKey``: Api Key for authentication (string). (required if not using username/password)
 
 **Output**: [Read at Barion Docs](https://docs.barion.com/Accounts-Get-v2#Output_properties)
 
 #### Usage example
-##### With callback
+##### With callback (using username/password)
 ```js
 barion.getAccounts({
     UserName: 'info@example.com',
@@ -552,11 +563,10 @@ barion.getAccounts({
     //handle error / process data
 });
 ```
-##### With promise
+##### With promise (using Api Key)
 ```js
 barion.getAccounts({
-    UserName: 'info@example.com',
-    Password: 'someRlyStrongP4ss#!'
+    ApiKey: 'your-api-key-here'
 }).then(data => {
     //process data
 }).catch(err => {
@@ -567,10 +577,16 @@ barion.getAccounts({
 ### Send e-money to an email address - barion.emailTransfer(options, \[callback\])
 To send money to a Barion user or to an email address, call the ``emailTransfer`` function. [[Barion Docs](https://docs.barion.com/Transfer-Email-v2)]
 
-**Parameters**:
-  - ``UserName``: Email address of the user in the Barion system (string). (required)
+**Authentication**: This endpoint supports two authentication methods (you must use one):
+  - **Username/Password**: Provide both ``UserName`` and ``Password``
+  - **Api Key**: Provide ``ApiKey`` (sent via ``x-api-key`` header)
 
-  - ``Password``: Password of the user in the Barion system (string). (required)
+**Parameters**:
+  - ``UserName``: Email address of the user in the Barion system (string). (required if not using Api Key)
+
+  - ``Password``: Password of the user in the Barion system (string). (required if not using Api Key)
+
+  - ``ApiKey``: Api Key for authentication (string). (required if not using username/password)
 
   - ``SourceAccountId``: The identifier of the Barion wallet. Must be an account of the authenticating user. It can be determined using the [getAccounts](#get-existing-accounts-of-the-user---bariongetaccountsoptions-callback) function (string). (required)
 
@@ -583,7 +599,7 @@ To send money to a Barion user or to an email address, call the ``emailTransfer`
 **Output**: [Read at Barion Docs](https://docs.barion.com/Transfer-Email-v2#Output_properties)
 
 #### Usage example
-##### With callback
+##### With callback (using username/password)
 ```js
 barion.emailTransfer({
     UserName: 'info@example.com',
@@ -599,11 +615,10 @@ barion.emailTransfer({
     //handle error / process data
 });
 ```
-##### With promise
+##### With promise (using Api Key)
 ```js
 barion.emailTransfer({
-    UserName: 'info@example.com',
-    Password: 'someRlyStrongP4ss#!',
+    ApiKey: 'your-api-key-here',
     SourceAccountId: 'bdf45c1d-bb98-4fee-bbf1-62411fb26b86',
     Amount: {
         Currency: 'HUF',
@@ -621,10 +636,16 @@ barion.emailTransfer({
 ### Download statement files - barion.downloadStatement(options, \[callback\])
 To download monthly or daily statement files generated by the Barion system, call the ``downloadStatement`` function. [[Barion Docs](https://docs.barion.com/Statement-Download-v2)]
 
-**Parameters**:
-  - ``UserName``: Email address of the user in the Barion system (string). (required)
+**Authentication**: This endpoint supports two authentication methods (you must use one):
+  - **Username/Password**: Provide both ``UserName`` and ``Password``
+  - **Api Key**: Provide ``ApiKey`` (sent via ``x-api-key`` header)
 
-  - ``Password``: Password of the user in the Barion system (string). (required)
+**Parameters**:
+  - ``UserName``: Email address of the user in the Barion system (string). (required if not using Api Key)
+
+  - ``Password``: Password of the user in the Barion system (string). (required if not using Api Key)
+
+  - ``ApiKey``: Api Key for authentication (string). (required if not using username/password)
 
   - ``Year``: Year of statement (number). (required)
   
@@ -645,7 +666,7 @@ To download monthly or daily statement files generated by the Barion system, cal
   - ``Buffer``: A `Buffer` object with the file data (Buffer).
 
 #### Usage example
-##### With callback
+##### With callback (using username/password)
 ```js
 barion.downloadStatement({
     UserName: 'info@example.com',
@@ -656,11 +677,10 @@ barion.downloadStatement({
     //handle error / process data
 });
 ```
-##### With promise
+##### With promise (using Api Key)
 ```js
 barion.downloadStatement({
-    UserName: 'info@example.com',
-    Password: 'someRlyStrongP4ss#!',
+    ApiKey: 'your-api-key-here',
     Year: 2020,
     Month: 1
 }).then(data => {
@@ -735,7 +755,7 @@ barion.startPayment(someObj)
 ### Secure vs. insecure mode
 The `node-barion` module can work in 2 different modes that can be set with the `Secure` (boolean) field when instantiating a new Barion object. The field's default value is `true` (Secure Mode).
 
-When the `Secure` field's value is `true`, the module works in "Secure Mode". In this mode, the module does some checks and transformations (if necessary and possible) on the given object before sends it to the Barion API. If it finds any error, that cannot be fixed automatically, it throws `BarionModelError`.
+When the `Secure` field's value is `true`, the module works in "Secure Mode". In this mode, the module does some checks and transformations (if necessary and possible) on the given object before sending it to the Barion API. If it finds any error, that cannot be fixed automatically, it throws `BarionModelError`.
 
 In Secure Mode, the following steps are applied to all input objects:
 
@@ -747,13 +767,19 @@ In Secure Mode, the following steps are applied to all input objects:
 
   - If there are ambiguous field names (e.g. paymentid and PaymentId too), the module throws an error.
 
-  1) **Validating the object**: The module runs syntactic and semantic checks on the given values (e.g. checks if PaymentId is a string and a valid GUID). If something is wrong, it throws `BarionModelError`.
+  1) **Validating the object**: The module runs syntactic and semantic checks on the given values (e.g. checks if PaymentId is a string and a valid GUID). For wallet endpoints (``bankTransfer``, ``getAccounts``, ``emailTransfer``, ``downloadStatement``), it validates that either username/password credentials OR an Api Key is provided. If something is wrong, it throws `BarionModelError`.
 
   2) **Building the request object**: The module produces the object that will be transmitted to the Barion API. It merges the Barion instance's default values with values in the input object. Fields in the given object are override default values (except the `POSKey` field).
 
-  3) **Sending the request to the Barion API**: If building the request object was successful, the module sends the request to the Barion API, and returns its response. If there are username and password in the input object, the module uses [Basic Authentication](https://docs.barion.com/Basic_authentication), and does not transmit credentials as query parameters. 
+  3) **Sending the request to the Barion API**: If building the request object was successful, the module sends the request to the Barion API, and returns its response. The module handles authentication credentials securely:
 
-When the `Secure` field's value is `false`, the module works in "Insecure Mode". This means that the module does not run any checks and transformations on the input object. In this mode, the module merges the Barion instance's default values with values in the input object and sends it to the Barion API "as is". As in this mode, `node-barion` does not know any semantic meaning of the input object's fields, it can send credentials (e.g. username and password) as query parameters to the Barion API. **This is not secure**, because these parameters can be logged by servers (e.g. proxies and firewalls) in plain text, even if HTTPS connection is used.
+     - **For username/password authentication**: The module uses [Basic Authentication](https://docs.barion.com/Basic_authentication), sending credentials in the `Authorization` HTTP header (not as query parameters).
+
+     - **For Api Key authentication**: The module sends the Api Key via the `x-api-key` HTTP header (not as query parameters).
+
+     Both authentication methods ensure that sensitive credentials are never transmitted as URL parameters, protecting them from being logged by proxies, firewalls, or web servers.
+
+When the `Secure` field's value is `false`, the module works in "Insecure Mode". This means that the module does not run any checks and transformations on the input object. In this mode, the module merges the Barion instance's default values with values in the input object and sends it to the Barion API "as is". As in this mode, `node-barion` does not know any semantic meaning of the input object's fields, it can send credentials (e.g. username, password) as query parameters to the Barion API. **This is not secure**, because these parameters can be logged by servers (e.g. proxies and firewalls) in plain text, even if HTTPS connection is used.
 
 ## Future improvements
   - Make available to set optional fields as defaults (e.g. ``callbackUrl``).
