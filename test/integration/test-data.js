@@ -4,7 +4,7 @@
  */
 const POSKey = process.env.BARION_POS_KEY || require('./credentials.json').POSKey;
 const UserName = process.env.BARION_USER_NAME || require('./credentials.json').UserName;
-const Password = process.env.BARION_PASSWORD || require('./credentials').Password;
+const Password = process.env.BARION_PASSWORD || require('./credentials.json').Password;
 const ApiKey = process.env.BARION_API_KEY || require('./credentials.json').ApiKey;
 const AccountId = process.env.BARION_ACCOUNT_ID || require('./credentials.json').AccountId;
 const CallbackUrl = process.env.BARION_CALLBACK_URL || require('./credentials.json').CallbackUrl;
