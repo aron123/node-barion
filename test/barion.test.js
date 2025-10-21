@@ -691,8 +691,7 @@ describe('lib/barion.js', function () {
 
     describe('#bankTransfer(options, [callback])', function () {
         const request = {
-            UserName: 'info@example.com',
-            Password: 'admin1234',
+            ApiKey: '277a6ae112b041928e6cbc7d0612afa1',
             Currency: 'HUF',
             Amount: 1500,
             RecipientName: 'Jacob Gypsum',
@@ -771,8 +770,7 @@ describe('lib/barion.js', function () {
 
     describe('#getAccounts(options, [callback])', function () {
         const request = {
-            UserName: 'info@example.com',
-            Password: 'admin1234'
+            ApiKey: '277a6ae112b041928e6cbc7d0612afa1'
         };
 
         it('should answer with callback on success', function (done) {
@@ -843,8 +841,7 @@ describe('lib/barion.js', function () {
 
     describe('#emailTransfer(options, [callback])', function () {
         const request = {
-            UserName: 'info@example.com',
-            Password: 'admin1234',
+            ApiKey: '277a6ae112b041928e6cbc7d0612afa1',
             SourceAccountId: 'b57f2259-c36c-4a24-a571-c16ec36cbde0',
             Amount: {
                 Currency: 'HUF',
@@ -922,10 +919,10 @@ describe('lib/barion.js', function () {
 
     describe('#downloadStatement(options, [callback])', function () {
         const request = {
-            UserName: 'info@example.com',
-            Password: 'admin1234',
+            ApiKey: '277a6ae112b041928e6cbc7d0612afa1',
             Year: 2020,
-            Month: 12
+            Month: 12,
+            Currency: 'HUF'
         };
 
         it('should answer with callback on success', function (done) {

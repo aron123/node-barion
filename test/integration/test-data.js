@@ -4,7 +4,6 @@
  */
 const POSKey = process.env.BARION_POS_KEY || require('./credentials.json').POSKey;
 const UserName = process.env.BARION_USER_NAME || require('./credentials.json').UserName;
-const Password = process.env.BARION_PASSWORD || require('./credentials.json').Password;
 const ApiKey = process.env.BARION_API_KEY || require('./credentials.json').ApiKey;
 const AccountId = process.env.BARION_ACCOUNT_ID || require('./credentials.json').AccountId;
 const CallbackUrl = process.env.BARION_CALLBACK_URL || require('./credentials.json').CallbackUrl;
@@ -62,7 +61,7 @@ module.exports = {
         },
         expectedError: {
             ErrorCode: 'ModelValidationError',
-            AuthData: POSKey
+            AuthData: POSKey.replace(/-/g, '')
         }
     },
     getPaymentState: {
@@ -84,24 +83,12 @@ module.exports = {
         expectedErrors: [
             {
                 ErrorCode: 'ModelValidationError',
-                AuthData: POSKey,
+                AuthData: POSKey.replace(/-/g, '')
             }
         ]
     },
     bankTransfer: {
         successRequestBody: {
-            UserName,
-            Password,
-            Currency: 'HUF',
-            Amount: 1,
-            RecipientName: 'xxxxx',
-            BankAccount: {
-                Country: 'HUN',
-                Format: 'Giro',
-                AccountNumber: '10032000-01076019'
-            }
-        },
-        successRequestBodyWithApiKey: {
             ApiKey,
             Currency: 'HUF',
             Amount: 1,
@@ -129,8 +116,7 @@ module.exports = {
             Errors: []
         },
         errorRequestBody: {
-            UserName,
-            Password,
+            ApiKey,
             Currency: 'HUF',
             RecipientName: 'xxxxx',
             BankAccount: {
@@ -147,17 +133,13 @@ module.exports = {
     },
     getAccounts: {
         successRequestBody: {
-            UserName,
-            Password
-        },
-        successRequestBodyWithApiKey: {
             ApiKey
         },
         successResponseBody: {
             Errors: []
         },
         errorRequestBody: {
-            Password: 'appletree'
+            ApiKey: 'invalid-api-key'
         },
         expectedError: {
             ErrorCode: 'AuthenticationFailed'
@@ -165,17 +147,6 @@ module.exports = {
     },
     emailTransfer: {
         successRequestBody: {
-            UserName,
-            Password,
-            SourceAccountId: AccountId,
-            Amount: {
-                Currency: 'HUF',
-                Value: 10
-            },
-            TargetEmail: 'info@example.com',
-            Comment: 'Some really cool example comment.'
-        },
-        successRequestBodyWithApiKey: {
             ApiKey,
             SourceAccountId: AccountId,
             Amount: {
@@ -190,8 +161,7 @@ module.exports = {
             Errors: []
         },
         errorRequestBody: {
-            UserName,
-            Password,
+            ApiKey,
             SourceAccountId: 'appletree',
             Amount: {
                 Currency: 'HUF',
@@ -206,13 +176,6 @@ module.exports = {
     },
     downloadStatement: {
         successRequestBody: {
-            UserName,
-            Password,
-            Year: StatementYear,
-            Month: StatementMonth,
-            Currency: 'HUF'
-        },
-        successRequestBodyWithApiKey: {
             ApiKey,
             Year: StatementYear,
             Month: StatementMonth,
@@ -220,8 +183,7 @@ module.exports = {
         },
         // successResponseBody: buffer with length larger than 0
         errorRequestBody: {
-            UserName,
-            Password,
+            ApiKey,
             Year: -2020,
             Month: 1,
             Currency: 'HUF'
