@@ -102,6 +102,11 @@ describe('lib/fetch-api.js', function () {
             await getFromBarion('http://example.com/success', { ApiKey: 'test-api-key-123', Extra: true });
             expect(barionMock.default.lastUrl()).to.equal('http://example.com/success?Extra=true');
         });
+
+        it('should work without API key', async function () {
+            const result = await getFromBarion('http://example.com/success', { Extra: true });
+            expect(result).to.deep.include(fetchTest.successResponse);
+        });
     });
 
     describe('#getBinaryFromBarion()', function () {
@@ -164,6 +169,11 @@ describe('lib/fetch-api.js', function () {
             await getBinaryFromBarion('http://example.com/success', { ApiKey: 'test-api-key-123', Extra: true });
             expect(barionMock.default.lastUrl()).to.equal('http://example.com/success?Extra=true');
         });
+
+        it('should work without API key', async function () {
+            const result = await getBinaryFromBarion('http://example.com/binary-success', { Extra: true });
+            expect(Buffer.compare(fetchTest.binarySuccessResponse.body, result.Buffer)).to.equal(0);
+        });
     });
 
     describe('#postToBarion()', function () {
@@ -224,6 +234,11 @@ describe('lib/fetch-api.js', function () {
         it('should not use API key in request body', async function () {
             await postToBarion('http://example.com/success', { ApiKey: 'test-api-key-123', Extra: true });
             expect(barionMock.default.lastOptions()).to.deep.include({ body: '{"Extra":true}' });
+        });
+
+        it('should work without API key', async function () {
+            const result = await postToBarion('http://example.com/success', { Extra: true });
+            expect(result).to.deep.include(fetchTest.successResponse);
         });
     });
 });
