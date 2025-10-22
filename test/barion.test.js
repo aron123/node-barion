@@ -53,7 +53,8 @@ const Barions = {
             getAccounts: returnSuccess,
             emailTransfer: returnSuccess,
             downloadStatement: returnSuccess,
-            startPaymentWithAppleToken: returnSuccess
+            startPaymentWithAppleToken: returnSuccess,
+            validateApplePaySession: returnSuccess
         }
     }),
     ServiceErrorBarion: proxyquire('../lib/barion', {
@@ -69,7 +70,8 @@ const Barions = {
             getAccounts: returnError,
             emailTransfer: returnError,
             downloadStatement: returnError,
-            startPaymentWithAppleToken: returnError
+            startPaymentWithAppleToken: returnError,
+            validateApplePaySession: returnError
         }
     }),
     ValidationErrorBarion: proxyquire('../lib/barion', {
@@ -85,7 +87,8 @@ const Barions = {
             getAccounts: returnSuccess,
             emailTransfer: returnSuccess,
             downloadStatement: returnSuccess,
-            startPaymentWithAppleToken: returnSuccess
+            startPaymentWithAppleToken: returnSuccess,
+            validateApplePaySession: returnSuccess
         },
         './build': {
             buildRequest: throwValidationError
@@ -104,7 +107,8 @@ const Barions = {
             getAccounts: returnSuccess,
             emailTransfer: returnSuccess,
             downloadStatement: returnSuccess,
-            startPaymentWithAppleToken: returnSuccess
+            startPaymentWithAppleToken: returnSuccess,
+            validateApplePaySession: returnSuccess
         },
         './build': {
             buildRequestWithoutValidation: throwSanitizationError
@@ -1113,6 +1117,78 @@ describe('lib/barion.js', function () {
 
         it('should answer with Promise on sanitization error when validation is turned off', function (done) {
             const promise = sanitizationErrorBarion.startPaymentWithAppleToken(request);
+            expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
+        });
+    });
+
+    describe('#validateApplePaySession(options, [callback])', function () {
+        const request = {
+            SessionRequestUrl: 'https://apple-pay-gateway.apple.com/paymentservices/startSession',
+            ShopUrl: 'https://shop.example.com'
+        };
+
+        it('should answer with callback on success', function (done) {
+            okBarion.validateApplePaySession(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on success when validation is turned off', function (done) {
+            okBarionWithoutValidation.validateApplePaySession(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on error', function (done) {
+            serviceErrorBarion.validateApplePaySession(request, (err, res) => {
+                expect(err).to.deep.equal(errorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on validation error', function (done) {
+            validationErrorBarion.validateApplePaySession(request, (err, res) => {
+                expect(err).to.deep.equal(validationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on sanitization error when validation is turned off', function (done) {
+            sanitizationErrorBarion.validateApplePaySession(request, (err, res) => {
+                expect(err).to.deep.equal(sanitizationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with Promise on success', function (done) {
+            const promise = okBarion.validateApplePaySession(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on success when validation is turned off', function (done) {
+            const promise = okBarionWithoutValidation.validateApplePaySession(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on error', function (done) {
+            const promise = serviceErrorBarion.validateApplePaySession(request);
+            expect(promise).to.eventually.rejectedWith(errorObject).notify(done);
+        });
+
+        it('should answer with Promise on validation error', function (done) {
+            const promise = validationErrorBarion.validateApplePaySession(request);
+            expect(promise).to.eventually.rejectedWith(validationErrorObject).notify(done);
+        });
+
+        it('should answer with Promise on sanitization error when validation is turned off', function (done) {
+            const promise = sanitizationErrorBarion.validateApplePaySession(request);
             expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
         });
     });
