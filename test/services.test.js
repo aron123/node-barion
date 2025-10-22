@@ -208,6 +208,20 @@ describe('lib/services.js', function () {
         });
     });
 
+    describe('#startPaymentWithAppleToken(environment, options)', function () {
+        it('should return a Promise on success', function (done) {
+            const services = serviceMocks.okService;
+            services.startPaymentWithAppleToken('test', {})
+                .then(() => done());
+        });
+
+        it('should return a Promise on failure', function (done) {
+            const services = serviceMocks.errorService;
+            services.startPaymentWithAppleToken('test', {})
+                .catch(() => done());
+        });
+    });
+
     describe('#getBaseUrl', function () {
         it('should return test environment\'s URL to pointless input', function () {
             const services = serviceMocks.okService;
