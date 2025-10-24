@@ -53,7 +53,9 @@ const Barions = {
             getAccounts: returnSuccess,
             emailTransfer: returnSuccess,
             downloadStatement: returnSuccess,
-            startPaymentWithGoogleToken: returnSuccess
+            startPaymentWithGoogleToken: returnSuccess,
+            startPaymentWithAppleToken: returnSuccess,
+            validateApplePaySession: returnSuccess
         }
     }),
     ServiceErrorBarion: proxyquire('../lib/barion', {
@@ -69,7 +71,9 @@ const Barions = {
             getAccounts: returnError,
             emailTransfer: returnError,
             downloadStatement: returnError,
-            startPaymentWithGoogleToken: returnError
+            startPaymentWithGoogleToken: returnError,
+            startPaymentWithAppleToken: returnError,
+            validateApplePaySession: returnError
         }
     }),
     ValidationErrorBarion: proxyquire('../lib/barion', {
@@ -85,7 +89,9 @@ const Barions = {
             getAccounts: returnSuccess,
             emailTransfer: returnSuccess,
             downloadStatement: returnSuccess,
-            startPaymentWithGoogleToken: returnSuccess
+            startPaymentWithGoogleToken: returnSuccess,
+            startPaymentWithAppleToken: returnSuccess,
+            validateApplePaySession: returnSuccess
         },
         './build': {
             buildRequest: throwValidationError
@@ -104,7 +110,9 @@ const Barions = {
             getAccounts: returnSuccess,
             emailTransfer: returnSuccess,
             downloadStatement: returnSuccess,
-            startPaymentWithGoogleToken: returnSuccess
+            startPaymentWithGoogleToken: returnSuccess,
+            startPaymentWithAppleToken: returnSuccess,
+            validateApplePaySession: returnSuccess
         },
         './build': {
             buildRequestWithoutValidation: throwSanitizationError
@@ -695,8 +703,7 @@ describe('lib/barion.js', function () {
 
     describe('#bankTransfer(options, [callback])', function () {
         const request = {
-            UserName: 'info@example.com',
-            Password: 'admin1234',
+            ApiKey: '277a6ae112b041928e6cbc7d0612afa1',
             Currency: 'HUF',
             Amount: 1500,
             RecipientName: 'Jacob Gypsum',
@@ -775,8 +782,7 @@ describe('lib/barion.js', function () {
 
     describe('#getAccounts(options, [callback])', function () {
         const request = {
-            UserName: 'info@example.com',
-            Password: 'admin1234'
+            ApiKey: '277a6ae112b041928e6cbc7d0612afa1'
         };
 
         it('should answer with callback on success', function (done) {
@@ -847,8 +853,7 @@ describe('lib/barion.js', function () {
 
     describe('#emailTransfer(options, [callback])', function () {
         const request = {
-            UserName: 'info@example.com',
-            Password: 'admin1234',
+            ApiKey: '277a6ae112b041928e6cbc7d0612afa1',
             SourceAccountId: 'b57f2259-c36c-4a24-a571-c16ec36cbde0',
             Amount: {
                 Currency: 'HUF',
@@ -926,10 +931,10 @@ describe('lib/barion.js', function () {
 
     describe('#downloadStatement(options, [callback])', function () {
         const request = {
-            UserName: 'info@example.com',
-            Password: 'admin1234',
+            ApiKey: '277a6ae112b041928e6cbc7d0612afa1',
             Year: 2020,
-            Month: 12
+            Month: 12,
+            Currency: 'HUF'
         };
 
         it('should answer with callback on success', function (done) {
@@ -1077,6 +1082,199 @@ describe('lib/barion.js', function () {
 
         it('should answer with Promise on sanitization error when validation is turned off', function (done) {
             const promise = sanitizationErrorBarion.startPaymentWithGoogleToken(request);
+            expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
+        });
+    });
+
+    describe('#startPaymentWithAppleToken(options, [callback])', function () {
+        const request = {
+            ShippingContact: {
+                FamilyName: 'Doe',
+                PhoneNumber: '+36301234567',
+                GivenName: 'John',
+                EmailAddress: 'john.doe@example.com',
+                PostalAddress: {
+                    Country: 'Hungary',
+                    State: 'Budapest',
+                    IsoCountryCode: 'HU',
+                    Street: 'Example Street 1',
+                    City: 'Budapest',
+                    PostalCode: '1234'
+                }
+            },
+            BillingContact: {
+                FamilyName: 'Doe',
+                PhoneNumber: '+36301234567',
+                GivenName: 'John',
+                EmailAddress: 'john.doe@example.com',
+                PostalAddress: {
+                    Country: 'Hungary',
+                    State: 'Budapest',
+                    IsoCountryCode: 'HU',
+                    Street: 'Example Street 1',
+                    City: 'Budapest',
+                    PostalCode: '1234'
+                }
+            },
+            ApplePayToken: {
+                TransactionIdentifier: 'APPLEPAY12345678',
+                PaymentData: {
+                    Data: 'encrypted-payment-data',
+                    Signature: 'payment-signature',
+                    Header: {
+                        EphemeralPublicKey: 'ephemeral-public-key',
+                        PublicKeyHash: 'public-key-hash',
+                        TransactionId: 'transaction-id'
+                    }
+                }
+            },
+            PaymentType: 'Immediate',
+            PaymentRequestId: 'APPLEPAY-ORDER#6409-1',
+            CallbackUrl: 'https://shop.example.com/api/barion-callback',
+            Transactions: [
+                {
+                    POSTransactionId: 'APPLEPAY-ORDER#6409',
+                    Payee: 'info@example.com',
+                    Total: 256
+                }
+            ],
+            Currency: 'HUF'
+        };
+
+        it('should answer with callback on success', function (done) {
+            okBarion.startPaymentWithAppleToken(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on success when validation is turned off', function (done) {
+            okBarionWithoutValidation.startPaymentWithAppleToken(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on error', function (done) {
+            serviceErrorBarion.startPaymentWithAppleToken(request, (err, res) => {
+                expect(err).to.deep.equal(errorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on validation error', function (done) {
+            validationErrorBarion.startPaymentWithAppleToken(request, (err, res) => {
+                expect(err).to.deep.equal(validationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on sanitization error when validation is turned off', function (done) {
+            sanitizationErrorBarion.startPaymentWithAppleToken(request, (err, res) => {
+                expect(err).to.deep.equal(sanitizationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with Promise on success', function (done) {
+            const promise = okBarion.startPaymentWithAppleToken(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on success when validation is turned off', function (done) {
+            const promise = okBarionWithoutValidation.startPaymentWithAppleToken(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on error', function (done) {
+            const promise = serviceErrorBarion.startPaymentWithAppleToken(request);
+            expect(promise).to.eventually.rejectedWith(errorObject).notify(done);
+        });
+
+        it('should answer with Promise on validation error', function (done) {
+            const promise = validationErrorBarion.startPaymentWithAppleToken(request);
+            expect(promise).to.eventually.rejectedWith(validationErrorObject).notify(done);
+        });
+
+        it('should answer with Promise on sanitization error when validation is turned off', function (done) {
+            const promise = sanitizationErrorBarion.startPaymentWithAppleToken(request);
+            expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
+        });
+    });
+
+    describe('#validateApplePaySession(options, [callback])', function () {
+        const request = {
+            SessionRequestUrl: 'https://apple-pay-gateway.apple.com/paymentservices/startSession',
+            ShopUrl: 'https://shop.example.com'
+        };
+
+        it('should answer with callback on success', function (done) {
+            okBarion.validateApplePaySession(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on success when validation is turned off', function (done) {
+            okBarionWithoutValidation.validateApplePaySession(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on error', function (done) {
+            serviceErrorBarion.validateApplePaySession(request, (err, res) => {
+                expect(err).to.deep.equal(errorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on validation error', function (done) {
+            validationErrorBarion.validateApplePaySession(request, (err, res) => {
+                expect(err).to.deep.equal(validationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on sanitization error when validation is turned off', function (done) {
+            sanitizationErrorBarion.validateApplePaySession(request, (err, res) => {
+                expect(err).to.deep.equal(sanitizationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with Promise on success', function (done) {
+            const promise = okBarion.validateApplePaySession(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on success when validation is turned off', function (done) {
+            const promise = okBarionWithoutValidation.validateApplePaySession(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on error', function (done) {
+            const promise = serviceErrorBarion.validateApplePaySession(request);
+            expect(promise).to.eventually.rejectedWith(errorObject).notify(done);
+        });
+
+        it('should answer with Promise on validation error', function (done) {
+            const promise = validationErrorBarion.validateApplePaySession(request);
+            expect(promise).to.eventually.rejectedWith(validationErrorObject).notify(done);
+        });
+
+        it('should answer with Promise on sanitization error when validation is turned off', function (done) {
+            const promise = sanitizationErrorBarion.validateApplePaySession(request);
             expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
         });
     });
