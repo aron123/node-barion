@@ -53,6 +53,7 @@ const Barions = {
             getAccounts: returnSuccess,
             emailTransfer: returnSuccess,
             downloadStatement: returnSuccess,
+            startPaymentWithGoogleToken: returnSuccess,
             startPaymentWithAppleToken: returnSuccess,
             validateApplePaySession: returnSuccess
         }
@@ -70,6 +71,7 @@ const Barions = {
             getAccounts: returnError,
             emailTransfer: returnError,
             downloadStatement: returnError,
+            startPaymentWithGoogleToken: returnError,
             startPaymentWithAppleToken: returnError,
             validateApplePaySession: returnError
         }
@@ -87,6 +89,7 @@ const Barions = {
             getAccounts: returnSuccess,
             emailTransfer: returnSuccess,
             downloadStatement: returnSuccess,
+            startPaymentWithGoogleToken: returnSuccess,
             startPaymentWithAppleToken: returnSuccess,
             validateApplePaySession: returnSuccess
         },
@@ -107,6 +110,7 @@ const Barions = {
             getAccounts: returnSuccess,
             emailTransfer: returnSuccess,
             downloadStatement: returnSuccess,
+            startPaymentWithGoogleToken: returnSuccess,
             startPaymentWithAppleToken: returnSuccess,
             validateApplePaySession: returnSuccess
         },
@@ -993,6 +997,91 @@ describe('lib/barion.js', function () {
 
         it('should answer with Promise on sanitization error when validation is turned off', function (done) {
             const promise = sanitizationErrorBarion.downloadStatement(request);
+            expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
+        });
+    });
+
+    describe('#startPaymentWithGoogleToken(options, [callback])', function () {
+        const request = {
+            PaymentType: 'Immediate',
+            FundingSources: [ 'All' ],
+            PaymentRequestId: 'GPAY-ORDER#6409-1',
+            RedirectUrl: 'https://shop.example.com/redirect',
+            CallbackUrl: 'https://shop.example.com/api/barion-callback',
+            Transactions: [
+                {
+                    POSTransactionId: 'GPAY-ORDER#6409',
+                    Payee: 'info@example.com',
+                    Total: 256
+                }
+            ],
+            Currency: 'HUF',
+            PayerEmailAddress: 'payer@example.com',
+            GooglePayToken: 'eyJwcm90b2NvbFZlcnNpb24iOiJFQ192MiIsInNpZ25lZE1lc3NhZ2UiOiJ7XCJlbmNyeXB0ZWRNZXNzYWdlXCI6XCJleGFtcGxlLXRva2VuXCJ9In0='
+        };
+
+        it('should answer with callback on success', function (done) {
+            okBarion.startPaymentWithGoogleToken(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on success when validation is turned off', function (done) {
+            okBarionWithoutValidation.startPaymentWithGoogleToken(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on error', function (done) {
+            serviceErrorBarion.startPaymentWithGoogleToken(request, (err, res) => {
+                expect(err).to.deep.equal(errorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on validation error', function (done) {
+            validationErrorBarion.startPaymentWithGoogleToken(request, (err, res) => {
+                expect(err).to.deep.equal(validationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on sanitization error when validation is turned off', function (done) {
+            sanitizationErrorBarion.startPaymentWithGoogleToken(request, (err, res) => {
+                expect(err).to.deep.equal(sanitizationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with Promise on success', function (done) {
+            const promise = okBarion.startPaymentWithGoogleToken(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on success when validation is turned off', function (done) {
+            const promise = okBarionWithoutValidation.startPaymentWithGoogleToken(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on error', function (done) {
+            const promise = serviceErrorBarion.startPaymentWithGoogleToken(request);
+            expect(promise).to.eventually.rejectedWith(errorObject).notify(done);
+        });
+
+        it('should answer with Promise on validation error', function (done) {
+            const promise = validationErrorBarion.startPaymentWithGoogleToken(request);
+            expect(promise).to.eventually.rejectedWith(validationErrorObject).notify(done);
+        });
+
+        it('should answer with Promise on sanitization error when validation is turned off', function (done) {
+            const promise = sanitizationErrorBarion.startPaymentWithGoogleToken(request);
             expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
         });
     });
