@@ -31,8 +31,8 @@ jobs:
         run: npm run integration-test
         env:
           BARION_POS_KEY: ${{ secrets.BARION_POS_KEY }}
+          BARION_API_KEY: ${{ secrets.BARION_API_KEY }}
           BARION_USER_NAME: ${{ secrets.BARION_USER_NAME }}
-          BARION_PASSWORD: ${{ secrets.BARION_PASSWORD }}
           BARION_ACCOUNT_ID: ${{ secrets.BARION_ACCOUNT_ID }}
           BARION_CALLBACK_URL: ${{ secrets.BARION_CALLBACK_URL }}
           BARION_REDIRECT_URL: ${{ secrets.BARION_REDIRECT_URL }}

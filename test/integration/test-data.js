@@ -4,7 +4,7 @@
  */
 const POSKey = process.env.BARION_POS_KEY || require('./credentials.json').POSKey;
 const UserName = process.env.BARION_USER_NAME || require('./credentials.json').UserName;
-const Password = process.env.BARION_PASSWORD || require('./credentials').Password;
+const ApiKey = process.env.BARION_API_KEY || require('./credentials.json').ApiKey;
 const AccountId = process.env.BARION_ACCOUNT_ID || require('./credentials.json').AccountId;
 const CallbackUrl = process.env.BARION_CALLBACK_URL || require('./credentials.json').CallbackUrl;
 const RedirectUrl = process.env.BARION_REDIRECT_URL || require('./credentials.json').RedirectUrl;
@@ -61,7 +61,7 @@ module.exports = {
         },
         expectedError: {
             ErrorCode: 'ModelValidationError',
-            AuthData: POSKey
+            AuthData: POSKey.replace(/-/g, '')
         }
     },
     getPaymentState: {
@@ -83,14 +83,13 @@ module.exports = {
         expectedErrors: [
             {
                 ErrorCode: 'ModelValidationError',
-                AuthData: POSKey,
+                AuthData: POSKey.replace(/-/g, '')
             }
         ]
     },
     bankTransfer: {
         successRequestBody: {
-            UserName,
-            Password,
+            ApiKey,
             Currency: 'HUF',
             Amount: 1,
             RecipientName: 'xxxxx',
@@ -117,8 +116,7 @@ module.exports = {
             Errors: []
         },
         errorRequestBody: {
-            UserName,
-            Password,
+            ApiKey,
             Currency: 'HUF',
             RecipientName: 'xxxxx',
             BankAccount: {
@@ -135,14 +133,13 @@ module.exports = {
     },
     getAccounts: {
         successRequestBody: {
-            UserName,
-            Password
+            ApiKey
         },
         successResponseBody: {
             Errors: []
         },
         errorRequestBody: {
-            Password: 'appletree'
+            ApiKey: 'invalid-api-key'
         },
         expectedError: {
             ErrorCode: 'AuthenticationFailed'
@@ -150,8 +147,7 @@ module.exports = {
     },
     emailTransfer: {
         successRequestBody: {
-            UserName,
-            Password,
+            ApiKey,
             SourceAccountId: AccountId,
             Amount: {
                 Currency: 'HUF',
@@ -165,8 +161,7 @@ module.exports = {
             Errors: []
         },
         errorRequestBody: {
-            UserName,
-            Password,
+            ApiKey,
             SourceAccountId: 'appletree',
             Amount: {
                 Currency: 'HUF',
@@ -181,16 +176,14 @@ module.exports = {
     },
     downloadStatement: {
         successRequestBody: {
-            UserName,
-            Password,
+            ApiKey,
             Year: StatementYear,
             Month: StatementMonth,
             Currency: 'HUF'
         },
         // successResponseBody: buffer with length larger than 0
         errorRequestBody: {
-            UserName,
-            Password,
+            ApiKey,
             Year: -2020,
             Month: 1,
             Currency: 'HUF'

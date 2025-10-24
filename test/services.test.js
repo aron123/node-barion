@@ -261,9 +261,15 @@ describe('lib/services.js', function () {
 
         const sandbox = chai.spy.sandbox();
         const fetchAPI = require('../lib/fetch-api');
-        const getFromBarion = sandbox.on(fetchAPI, 'getFromBarion', () => Promise.resolve({ success: true }));
-        const getBinaryFromBarion = sandbox.on(fetchAPI, 'getBinaryFromBarion', () => Promise.resolve(Buffer.from('ABC')));
-        const postToBarion = sandbox.on(fetchAPI, 'postToBarion', () => Promise.resolve({ success: true }));
+        const getFromBarion = sandbox.on(
+            fetchAPI, 'getFromBarion', () => Promise.resolve({ success: true })
+        );
+        const getBinaryFromBarion = sandbox.on(
+            fetchAPI, 'getBinaryFromBarion', () => Promise.resolve(Buffer.from('ABC'))
+        );
+        const postToBarion = sandbox.on(
+            fetchAPI, 'postToBarion', () => Promise.resolve({ success: true })
+        );
         const services = require('../lib/services');
 
         it('should create proper URL', function () {
@@ -273,12 +279,17 @@ describe('lib/services.js', function () {
 
         it('should call fetch-api modules functions based on the given HTTP method and binary option', function () {
             services._private.doRequest('test', { method: 'GET', path: '/api/get' }, { key: 'val1' });
-            services._private.doRequest('test', { method: 'GET', path: '/api/get-binary', binary: true }, { key: 'val2' });
+            services._private.doRequest(
+                'test', { method: 'GET', path: '/api/get-binary', binary: true }, { key: 'val2' }
+            );
             services._private.doRequest('test', { method: 'POST', path: '/api/post' }, { key: 'val3' });
 
-            expect(getFromBarion).to.have.been.called.with(new URL(`${baseUrls.test}/api/get`), { key: 'val1' });
-            expect(getBinaryFromBarion).to.have.been.called.with(new URL(`${baseUrls.test}/api/get-binary`), { key: 'val2' });
-            expect(postToBarion).to.have.been.called.with(new URL(`${baseUrls.test}/api/post`), { key: 'val3' });
+            expect(getFromBarion).to.have.been.called
+                .with(new URL(`${baseUrls.test}/api/get`), { key: 'val1' });
+            expect(getBinaryFromBarion).to.have.been.called
+                .with(new URL(`${baseUrls.test}/api/get-binary`), { key: 'val2' });
+            expect(postToBarion).to.have.been.called
+                .with(new URL(`${baseUrls.test}/api/post`), { key: 'val3' });
         });
 
         it('should throw error on not supported HTTP method', function () {

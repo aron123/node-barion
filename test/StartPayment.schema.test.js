@@ -165,5 +165,5 @@ describe('lib/domain/StartPayment.js', function () {
 
         expect(error.details).to.be.an('array').and.have.lengthOf(1);
         expect(error.details[0]).to.deep.include({ message: '"TraceId" is not allowed' });
-    })
+    });
 });

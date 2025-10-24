@@ -89,18 +89,23 @@ describe('lib/fetch-api.js', function () {
                 .to.eventually.deep.include(fetchTest.successResponse);
         });
 
-        it('should use credentials for Basic Authentication', async function () {
-            await getFromBarion('http://example.com/success', { UserName: 'a', Password: 'b', Extra: true });
+        it('should use API key for x-api-key header authentication', async function () {
+            await getFromBarion('http://example.com/success', { ApiKey: 'test-api-key-123', Extra: true });
             expect(barionMock.default.lastOptions()).to.deep.include({
                 headers: {
-                    Authorization: 'Basic YTpi' // base64-encoded a:b
+                    'x-api-key': 'test-api-key-123'
                 }
             });
         });
 
-        it('should not use credentials in query parameters', async function () {
-            await getFromBarion('http://example.com/success', { UserName: 'a', Password: 'b', Extra: true });
+        it('should not use API key in query parameters', async function () {
+            await getFromBarion('http://example.com/success', { ApiKey: 'test-api-key-123', Extra: true });
             expect(barionMock.default.lastUrl()).to.equal('http://example.com/success?Extra=true');
+        });
+
+        it('should work without API key', async function () {
+            const result = await getFromBarion('http://example.com/success', { Extra: true });
+            expect(result).to.deep.include(fetchTest.successResponse);
         });
     });
 
@@ -137,7 +142,8 @@ describe('lib/fetch-api.js', function () {
         });
 
         it('should reject on network error', function () {
-            return expect(getBinaryFromBarion('http://example.com/network-error')).to.be.rejectedWith('Failed to fetch data');
+            return expect(getBinaryFromBarion('http://example.com/network-error'))
+                .to.be.rejectedWith('Failed to fetch data');
         });
 
         it('should resolve binary data after successful response', async function () {
@@ -150,18 +156,23 @@ describe('lib/fetch-api.js', function () {
             expect(fetchTest.binarySuccessResponse.headers['Content-Type']).to.equal(res.Type);
         });
 
-        it('should use credentials for Basic Authentication', async function () {
-            await getBinaryFromBarion('http://example.com/success', { UserName: 'a', Password: 'b', Extra: true });
+        it('should use API key for x-api-key header authentication', async function () {
+            await getBinaryFromBarion('http://example.com/success', { ApiKey: 'test-api-key-123', Extra: true });
             expect(barionMock.default.lastOptions()).to.deep.include({
                 headers: {
-                    Authorization: 'Basic YTpi' // base64-encoded a:b
+                    'x-api-key': 'test-api-key-123'
                 }
             });
         });
 
-        it('should not use credentials in query parameters', async function () {
-            await getBinaryFromBarion('http://example.com/success', { UserName: 'a', Password: 'b', Extra: true });
+        it('should not use API key in query parameters', async function () {
+            await getBinaryFromBarion('http://example.com/success', { ApiKey: 'test-api-key-123', Extra: true });
             expect(barionMock.default.lastUrl()).to.equal('http://example.com/success?Extra=true');
+        });
+
+        it('should work without API key', async function () {
+            const result = await getBinaryFromBarion('http://example.com/binary-success', { Extra: true });
+            expect(Buffer.compare(fetchTest.binarySuccessResponse.body, result.Buffer)).to.equal(0);
         });
     });
 
@@ -210,19 +221,24 @@ describe('lib/fetch-api.js', function () {
                 .to.eventually.deep.include(fetchTest.successResponse);
         });
 
-        it('should use credentials for Basic Authentication', async function () {
-            await postToBarion('http://example.com/success', { UserName: 'a', Password: 'b', Extra: true });
+        it('should use API key for x-api-key header authentication', async function () {
+            await postToBarion('http://example.com/success', { ApiKey: 'test-api-key-123', Extra: true });
             expect(barionMock.default.lastOptions()).to.deep.include({
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Basic YTpi' // base64-encoded a:b
+                    'x-api-key': 'test-api-key-123'
                 }
             });
         });
 
-        it('should not use credentials in request body', async function () {
-            await postToBarion('http://example.com/success', { UserName: 'a', Password: 'b', Extra: true });
+        it('should not use API key in request body', async function () {
+            await postToBarion('http://example.com/success', { ApiKey: 'test-api-key-123', Extra: true });
             expect(barionMock.default.lastOptions()).to.deep.include({ body: '{"Extra":true}' });
+        });
+
+        it('should work without API key', async function () {
+            const result = await postToBarion('http://example.com/success', { Extra: true });
+            expect(result).to.deep.include(fetchTest.successResponse);
         });
     });
 });
