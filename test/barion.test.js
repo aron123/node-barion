@@ -55,7 +55,8 @@ const Barions = {
             downloadStatement: returnSuccess,
             startPaymentWithGoogleToken: returnSuccess,
             startPaymentWithAppleToken: returnSuccess,
-            validateApplePaySession: returnSuccess
+            validateApplePaySession: returnSuccess,
+            getHistory: returnSuccess
         }
     }),
     ServiceErrorBarion: proxyquire('../lib/barion', {
@@ -73,7 +74,8 @@ const Barions = {
             downloadStatement: returnError,
             startPaymentWithGoogleToken: returnError,
             startPaymentWithAppleToken: returnError,
-            validateApplePaySession: returnError
+            validateApplePaySession: returnError,
+            getHistory: returnError
         }
     }),
     ValidationErrorBarion: proxyquire('../lib/barion', {
@@ -91,7 +93,8 @@ const Barions = {
             downloadStatement: returnSuccess,
             startPaymentWithGoogleToken: returnSuccess,
             startPaymentWithAppleToken: returnSuccess,
-            validateApplePaySession: returnSuccess
+            validateApplePaySession: returnSuccess,
+            getHistory: returnSuccess
         },
         './build': {
             buildRequest: throwValidationError
@@ -112,7 +115,8 @@ const Barions = {
             downloadStatement: returnSuccess,
             startPaymentWithGoogleToken: returnSuccess,
             startPaymentWithAppleToken: returnSuccess,
-            validateApplePaySession: returnSuccess
+            validateApplePaySession: returnSuccess,
+            getHistory: returnSuccess
         },
         './build': {
             buildRequestWithoutValidation: throwSanitizationError
