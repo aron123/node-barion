@@ -191,5 +191,59 @@ module.exports = {
         expectedError: {
             ErrorCode: 'StatementNotFound'
         }
+    },
+    createPos: {
+        successRequestBody: {
+            ApiKey,
+            Name: `Test Shop ${Date.now()}`,
+            Url: 'https://example.com',
+            Description: 'Integration test shop for automated testing purposes.',
+            Logo: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+            Category: [ 'Other' ],
+            BusinessContact: {
+                Name: 'Test Business Contact',
+                PhoneNumber: '36301234567',
+                Email: 'business@example.com'
+            },
+            TechnicalContact: {
+                Name: 'Test Technical Contact',
+                PhoneNumber: '36301234568',
+                Email: 'tech@example.com'
+            },
+            CustomerServiceContact: {
+                Name: 'Test Support Team',
+                PhoneNumber: '36301234569',
+                Email: 'support@example.com'
+            },
+            PrimaryCurrency: 'HUF',
+            ExpectedTurnover: { Amount: 100000 },
+            FullPixelImplemented: false,
+            UseForEInvoicing: false
+        },
+        successResponseBody: {
+            Errors: []
+        },
+        errorRequestBody: {
+            ApiKey,
+            Name: 'Test Shop',
+            Url: 'https://example.com',
+            Description: 'Too short'
+        },
+        expectedError: {
+            ErrorCode: 'ModelValidationError'
+        }
+    },
+    getPosDetails: {
+        // successRequestBody: to be defined runtime, after creating a POS
+        successResponseBody: {
+            Errors: []
+        },
+        errorRequestBody: {
+            ApiKey,
+            PublicKey: '00000000-0000-0000-0000-000000000000'
+        },
+        expectedError: {
+            ErrorCode: 'ShopNotFound'
+        }
     }
 };

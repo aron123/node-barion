@@ -580,4 +580,260 @@ describe('Integration tests', function () {
             }
         );
     });
+
+    describe('Create POS (callback)', function () {
+        it('should create a POS when validation is turned on', function (done) {
+            const requestBody = {
+                ...testData.createPos.successRequestBody,
+                Name: `Test Shop ${Date.now()}`
+            };
+            validatedBarion.createPos(requestBody, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.include(testData.createPos.successResponseBody);
+                expect(res.PublicKey).to.be.a('string');
+                expect(res.SecretKey).to.be.a('string');
+                expect(res.Name).to.equal(requestBody.Name);
+                done();
+            });
+        });
+
+        it('should answer with BarionModelError when request object is not proper and validation is turned on',
+            function (done) {
+                validatedBarion.createPos(testData.createPos.errorRequestBody, (err, res) => {
+                    expect(res).to.be.null;
+                    expect(err.name).to.equal('BarionModelError');
+                    expect(err.errors).to.be.an('array').and.have.length.greaterThan(0);
+                    done();
+                });
+            }
+        );
+
+        it('should create a POS when validation is turned off', function (done) {
+            const requestBody = {
+                ...testData.createPos.successRequestBody,
+                Name: `Test Shop ${Date.now()}`
+            };
+            notValidatedBarion.createPos(requestBody, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.include(testData.createPos.successResponseBody);
+                expect(res.PublicKey).to.be.a('string');
+                expect(res.SecretKey).to.be.a('string');
+                expect(res.Name).to.equal(requestBody.Name);
+                done();
+            });
+        });
+
+        it('should answer with BarionError when request object is not proper and validation is turned off',
+            function (done) {
+                notValidatedBarion.createPos(testData.createPos.errorRequestBody, (err, res) => {
+                    expect(res).to.be.null;
+                    expect(err.name).to.equal('BarionError');
+                    expect(err.errors).to.be.an('array');
+                    expect(err.errors[0]).to.deep.include(testData.createPos.expectedError);
+                    done();
+                });
+            }
+        );
+    });
+
+    describe('Create POS (Promise)', function () {
+        it('should create a POS when validation is turned on', function (done) {
+            const requestBody = {
+                ...testData.createPos.successRequestBody,
+                Name: `Test Shop ${Date.now()}`
+            };
+            validatedBarion.createPos(requestBody)
+                .then(res => {
+                    expect(res).to.deep.include(testData.createPos.successResponseBody);
+                    expect(res.PublicKey).to.be.a('string');
+                    expect(res.SecretKey).to.be.a('string');
+                    expect(res.Name).to.equal(requestBody.Name);
+                    done();
+                });
+        });
+
+        it('should answer with BarionModelError when request object is not proper and validation is turned on',
+            function (done) {
+                validatedBarion.createPos(testData.createPos.errorRequestBody)
+                    .catch(err => {
+                        expect(err.name).to.equal('BarionModelError');
+                        expect(err.errors).to.be.an('array').and.have.length.greaterThan(0);
+                        done();
+                    });
+            }
+        );
+
+        it('should create a POS when validation is turned off', function (done) {
+            const requestBody = {
+                ...testData.createPos.successRequestBody,
+                Name: `Test Shop ${Date.now()}`
+            };
+            notValidatedBarion.createPos(requestBody)
+                .then(res => {
+                    expect(res).to.deep.include(testData.createPos.successResponseBody);
+                    expect(res.PublicKey).to.be.a('string');
+                    expect(res.SecretKey).to.be.a('string');
+                    expect(res.Name).to.equal(requestBody.Name);
+                    done();
+                });
+        });
+
+        it('should answer with BarionError when request object is not proper and validation is turned off',
+            function (done) {
+                notValidatedBarion.createPos(testData.createPos.errorRequestBody)
+                    .catch(err => {
+                        expect(err.name).to.equal('BarionError');
+                        expect(err.errors).to.be.an('array');
+                        expect(err.errors[0]).to.deep.include(testData.createPos.expectedError);
+                        done();
+                    });
+            }
+        );
+    });
+
+    describe('Get POS details (callback)', function () {
+
+        let successRequestBody = {};
+
+        beforeEach(function (done) {
+            const createPosRequest = {
+                ...testData.createPos.successRequestBody,
+                Name: `Test Shop ${Date.now()}`
+            };
+            notValidatedBarion.createPos(createPosRequest, function (err, data) {
+                if (err) {
+                    return done(err);
+                }
+
+                successRequestBody = {
+                    ApiKey: testData.createPos.successRequestBody.ApiKey,
+                    PublicKey: data.PublicKey
+                };
+                done();
+            });
+        });
+
+        afterEach(function () {
+            successRequestBody = null;
+        });
+
+        it('should get POS details when validation is turned on', function (done) {
+            validatedBarion.getPosDetails(successRequestBody, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.include(testData.getPosDetails.successResponseBody);
+                expect(res.PublicKey).to.equal(successRequestBody.PublicKey);
+                expect(res.Name).to.be.a('string');
+                expect(res.Status).to.be.a('string');
+                done();
+            });
+        });
+
+        it('should answer with BarionModelError when request object is not proper and validation is turned on',
+            function (done) {
+                validatedBarion.getPosDetails(testData.getPosDetails.errorRequestBody, (err, res) => {
+                    expect(res).to.be.null;
+                    expect(err.name).to.equal('BarionError');
+                    expect(err.errors).to.be.an('array');
+                    expect(err.errors[0]).to.deep.include(testData.getPosDetails.expectedError);
+                    done();
+                });
+            }
+        );
+
+        it('should get POS details when validation is turned off', function (done) {
+            notValidatedBarion.getPosDetails(successRequestBody, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.include(testData.getPosDetails.successResponseBody);
+                expect(res.PublicKey).to.equal(successRequestBody.PublicKey);
+                expect(res.Name).to.be.a('string');
+                expect(res.Status).to.be.a('string');
+                done();
+            });
+        });
+
+        it('should answer with BarionError when request object is not proper and validation is turned off',
+            function (done) {
+                notValidatedBarion.getPosDetails(testData.getPosDetails.errorRequestBody, (err, res) => {
+                    expect(res).to.be.null;
+                    expect(err.name).to.equal('BarionError');
+                    expect(err.errors).to.be.an('array');
+                    expect(err.errors[0]).to.deep.include(testData.getPosDetails.expectedError);
+                    done();
+                });
+            }
+        );
+    });
+
+    describe('Get POS details (Promise)', function () {
+
+        let successRequestBody = {};
+
+        beforeEach(function (done) {
+            const createPosRequest = {
+                ...testData.createPos.successRequestBody,
+                Name: `Test Shop ${Date.now()}`
+            };
+            notValidatedBarion.createPos(createPosRequest, function (err, data) {
+                if (err) {
+                    return done(err);
+                }
+
+                successRequestBody = {
+                    ApiKey: testData.createPos.successRequestBody.ApiKey,
+                    PublicKey: data.PublicKey
+                };
+                done();
+            });
+        });
+
+        afterEach(function () {
+            successRequestBody = null;
+        });
+
+        it('should get POS details when validation is turned on', function (done) {
+            validatedBarion.getPosDetails(successRequestBody)
+                .then(res => {
+                    expect(res).to.deep.include(testData.getPosDetails.successResponseBody);
+                    expect(res.PublicKey).to.equal(successRequestBody.PublicKey);
+                    expect(res.Name).to.be.a('string');
+                    expect(res.Status).to.be.a('string');
+                    done();
+                });
+        });
+
+        it('should answer with BarionError when request object is not proper and validation is turned on',
+            function (done) {
+                validatedBarion.getPosDetails(testData.getPosDetails.errorRequestBody)
+                    .catch(err => {
+                        expect(err.name).to.equal('BarionError');
+                        expect(err.errors).to.be.an('array');
+                        expect(err.errors[0]).to.deep.include(testData.getPosDetails.expectedError);
+                        done();
+                    });
+            }
+        );
+
+        it('should get POS details when validation is turned off', function (done) {
+            notValidatedBarion.getPosDetails(successRequestBody)
+                .then(res => {
+                    expect(res).to.deep.include(testData.getPosDetails.successResponseBody);
+                    expect(res.PublicKey).to.equal(successRequestBody.PublicKey);
+                    expect(res.Name).to.be.a('string');
+                    expect(res.Status).to.be.a('string');
+                    done();
+                });
+        });
+
+        it('should answer with BarionError when request object is not proper and validation is turned off',
+            function (done) {
+                notValidatedBarion.getPosDetails(testData.getPosDetails.errorRequestBody)
+                    .catch(err => {
+                        expect(err.name).to.equal('BarionError');
+                        expect(err.errors).to.be.an('array');
+                        expect(err.errors[0]).to.deep.include(testData.getPosDetails.expectedError);
+                        done();
+                    });
+            }
+        );
+    });
 });
