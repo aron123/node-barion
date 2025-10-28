@@ -1384,7 +1384,7 @@ describe('lib/barion.js', function () {
                 Email: 'support@example.com'
             },
             PrimaryCurrency: 'EUR',
-            ExpectedTurnover: { Amount: 10000 },
+            ExpectedTurnover: { ExpectedTurnover: 3 },
             FullPixelImplemented: true,
             UseForEInvoicing: false
         };

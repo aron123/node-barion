@@ -216,7 +216,7 @@ module.exports = {
                 Email: 'support@example.com'
             },
             PrimaryCurrency: 'HUF',
-            ExpectedTurnover: { Amount: 100000 },
+            ExpectedTurnover: { ExpectedTurnover: 3 },
             FullPixelImplemented: false,
             UseForEInvoicing: false
         },
