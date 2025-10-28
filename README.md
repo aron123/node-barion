@@ -725,20 +725,32 @@ To create a new POS (shop) in the Barion system, call the ``createPos`` function
   - ``Logo``: Base64 encoded logo image of the shop (string). (required)
 
   - ``Category``: Array of shop categories (string[]). (required)<br>
-    Allowed values include:
-    - ``'FashionAndAccessories'``
-    - ``'ChildProducts'``
-    - ``'HomeAndGarden'``
-    - ``'HealthAndBeauty'``
-    - ``'Books'``
-    - ``'ToysAndGames'``
-    - ``'ElectronicsAndComputers'``
-    - ``'FoodAndDrinks'``
-    - ``'SportsAndLeisure'``
-    - ``'Services'``
-    - ``'TravelAndEntertainment'``
-    - ``'DigitalContent'``
+    Allowed values are:
+    - ``'Agriculture'``
+    - ``'BookNewsPaper'``
+    - ``'Ad'``
+    - ``'BonusCoupon'``
+    - ``'Dating'``
+    - ``'Electronics'``
+    - ``'FashionClothes'``
+    - ``'FoodDrink'``
+    - ``'FurnitureAntiquity'``
+    - ``'GiftToyFlower'``
+    - ``'BeautyHealth'``
+    - ``'HomeDesignGarden'``
+    - ``'JobEducation'``
+    - ``'BuildingMaterialMachine'``
+    - ``'Baby'``
+    - ``'FilmMusic'``
     - ``'Other'``
+    - ``'Pet'``
+    - ``'Property'``
+    - ``'Service'``
+    - ``'SportLeisureTravel'``
+    - ``'BettingGambling'``
+    - ``'Tobacco'``
+    - ``'Vehicle'``
+    - ``'WatchJewelry'``
 
   - ``BusinessContact``: Contact information for business matters (object). (required)
     - ``Name``: Contact person name (string). (required)
@@ -801,7 +813,7 @@ barion.createPos({
     Url: 'https://example.com',
     Description: 'This is a shop that sells awesome products and provides great service.',
     Logo: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
-    Category: [ 'ElectronicsAndComputers' ],
+    Category: [ 'Electronics' ],
     BusinessContact: {
         Name: 'John Doe',
         PhoneNumber: '36301234567',
@@ -833,7 +845,7 @@ barion.createPos({
     Url: 'https://example.com',
     Description: 'This is a shop that sells awesome products and provides great service.',
     Logo: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
-    Category: [ 'ElectronicsAndComputers' ],
+    Category: [ 'Electronics' ],
     BusinessContact: {
         Name: 'John Doe',
         PhoneNumber: '36301234567',
