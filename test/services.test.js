@@ -250,6 +250,34 @@ describe('lib/services.js', function () {
         });
     });
 
+    describe('#getPosDetails(environment, options)', function () {
+        it('should return a Promise on success', function (done) {
+            const services = serviceMocks.okService;
+            services.getPosDetails('test', {})
+                .then(() => done());
+        });
+
+        it('should return a Promise on failure', function (done) {
+            const services = serviceMocks.errorService;
+            services.getPosDetails('test', {})
+                .catch(() => done());
+        });
+    });
+
+    describe('#createPos(environment, options)', function () {
+        it('should return a Promise on success', function (done) {
+            const services = serviceMocks.okService;
+            services.createPos('test', {})
+                .then(() => done());
+        });
+
+        it('should return a Promise on failure', function (done) {
+            const services = serviceMocks.errorService;
+            services.createPos('test', {})
+                .catch(() => done());
+        });
+    });
+
     describe('#getBaseUrl', function () {
         it('should return test environment\'s URL to pointless input', function () {
             const services = serviceMocks.okService;
