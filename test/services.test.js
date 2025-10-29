@@ -345,4 +345,36 @@ describe('lib/services.js', function () {
             expect(doRequest).to.throw(/HTTP method/);
         });
     });
+
+    describe('#replacePathParameters', function () {
+        const services = require('../lib/services');
+
+        it('should replace path parameters with values from options', function () {
+            const path = '/api/{userId}/orders/{orderId}';
+            const options = { userId: '123', orderId: '456' };
+            const result = services._private.replacePathParameters(path, options);
+            expect(result).to.equal('/api/123/orders/456');
+        });
+
+        it('should return original path when no parameters are in path', function () {
+            const path = '/api/orders';
+            const options = { userId: '123' };
+            const result = services._private.replacePathParameters(path, options);
+            expect(result).to.equal('/api/orders');
+        });
+
+        it('should not replace parameters that are not in options', function () {
+            const path = '/api/{userId}/orders/{orderId}';
+            const options = { userId: '123' };
+            const result = services._private.replacePathParameters(path, options);
+            expect(result).to.equal('/api/123/orders/{orderId}');
+        });
+
+        it('should handle empty options object', function () {
+            const path = '/api/{userId}/orders';
+            const options = {};
+            const result = services._private.replacePathParameters(path, options);
+            expect(result).to.equal('/api/{userId}/orders');
+        });
+    });
 });
