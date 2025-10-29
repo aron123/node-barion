@@ -1384,9 +1384,10 @@ describe('lib/barion.js', function () {
                 Email: 'support@example.com'
             },
             PrimaryCurrency: 'EUR',
-            ExpectedTurnover: { ExpectedTurnover: 3 },
+            ExpectedTurnover: 3,
             FullPixelImplemented: true,
-            UseForEInvoicing: false
+            UseForEInvoicing: false,
+            CallBackUrl: 'https://example.com/callback'
         };
 
         it('should answer with callback on success', function (done) {

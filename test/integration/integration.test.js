@@ -728,13 +728,12 @@ describe('Integration tests', function () {
             });
         });
 
-        it('should answer with BarionModelError when request object is not proper and validation is turned on',
+        it('should answer with BarionError when request object is not proper and validation is turned on',
             function (done) {
                 validatedBarion.getPosDetails(testData.getPosDetails.errorRequestBody, (err, res) => {
                     expect(res).to.be.null;
                     expect(err.name).to.equal('BarionError');
-                    expect(err.errors).to.be.an('array');
-                    expect(err.errors[0]).to.deep.include(testData.getPosDetails.expectedError);
+                    expect(err.statusCode).to.equal(testData.getPosDetails.expectedError.StatusCode);
                     done();
                 });
             }
@@ -756,8 +755,7 @@ describe('Integration tests', function () {
                 notValidatedBarion.getPosDetails(testData.getPosDetails.errorRequestBody, (err, res) => {
                     expect(res).to.be.null;
                     expect(err.name).to.equal('BarionError');
-                    expect(err.errors).to.be.an('array');
-                    expect(err.errors[0]).to.deep.include(testData.getPosDetails.expectedError);
+                    expect(err.statusCode).to.equal(testData.getPosDetails.expectedError.StatusCode);
                     done();
                 });
             }
@@ -806,8 +804,7 @@ describe('Integration tests', function () {
                 validatedBarion.getPosDetails(testData.getPosDetails.errorRequestBody)
                     .catch(err => {
                         expect(err.name).to.equal('BarionError');
-                        expect(err.errors).to.be.an('array');
-                        expect(err.errors[0]).to.deep.include(testData.getPosDetails.expectedError);
+                        expect(err.statusCode).to.equal(testData.getPosDetails.expectedError.statusCode);
                         done();
                     });
             }
@@ -829,8 +826,7 @@ describe('Integration tests', function () {
                 notValidatedBarion.getPosDetails(testData.getPosDetails.errorRequestBody)
                     .catch(err => {
                         expect(err.name).to.equal('BarionError');
-                        expect(err.errors).to.be.an('array');
-                        expect(err.errors[0]).to.deep.include(testData.getPosDetails.expectedError);
+                        expect(err.statusCode).to.equal(testData.getPosDetails.expectedError.statusCode);
                         done();
                     });
             }

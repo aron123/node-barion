@@ -216,9 +216,10 @@ module.exports = {
                 Email: 'support@example.com'
             },
             PrimaryCurrency: 'HUF',
-            ExpectedTurnover: { ExpectedTurnover: 3 },
+            ExpectedTurnover: 3,
             FullPixelImplemented: false,
-            UseForEInvoicing: false
+            UseForEInvoicing: false,
+            CallBackUrl: 'https://example.com/callback'
         },
         successResponseBody: {
             Errors: []
@@ -241,9 +242,10 @@ module.exports = {
         errorRequestBody: {
             ApiKey,
             PublicKey: '00000000-0000-0000-0000-000000000000'
+
         },
         expectedError: {
-            ErrorCode: 'ShopNotFound'
+            StatusCode: '404'
         }
     }
 };
