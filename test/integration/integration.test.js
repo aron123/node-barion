@@ -804,7 +804,7 @@ describe('Integration tests', function () {
                 validatedBarion.getPosDetails(testData.getPosDetails.errorRequestBody)
                     .catch(err => {
                         expect(err.name).to.equal('BarionError');
-                        expect(err.statusCode).to.equal(testData.getPosDetails.expectedError.statusCode);
+                        expect(err.statusCode).to.equal(testData.getPosDetails.expectedError.StatusCode);
                         done();
                     });
             }
@@ -826,7 +826,7 @@ describe('Integration tests', function () {
                 notValidatedBarion.getPosDetails(testData.getPosDetails.errorRequestBody)
                     .catch(err => {
                         expect(err.name).to.equal('BarionError');
-                        expect(err.statusCode).to.equal(testData.getPosDetails.expectedError.statusCode);
+                        expect(err.statusCode).to.equal(testData.getPosDetails.expectedError.StatusCode);
                         done();
                     });
             }

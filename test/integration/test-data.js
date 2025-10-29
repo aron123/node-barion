@@ -245,7 +245,7 @@ module.exports = {
 
         },
         expectedError: {
-            StatusCode: '404'
+            StatusCode: 404
         }
     }
 };
