@@ -774,13 +774,12 @@ To create a new POS (shop) in the Barion system, call the ``createPos`` function
     - ``'EUR'`` (Euro)
     - ``'USD'`` (U.S. dollar)
 
-  - ``ExpectedTurnover``: The expected turnover tier for the shop (object). (required)
-    - ``ExpectedTurnover``: Turnover tier value (number, integer, 1-6). (required)<br>
-      The value represents predefined turnover ranges based on PrimaryCurrency:
-      - For HUF: 1 (1-100K), 2 (100K-1M), 3 (1M-10M), 4 (10M-29M), 5 (29M-99M), 6 (99M+)
-      - For EUR: 1 (1-300), 2 (301-3K), 3 (3K-30K), 4 (30K-90K), 5 (90K-300K), 6 (300K+)
-      - For CZK: 1 (1-8K), 2 (8K-80K), 3 (80K-800K), 4 (800K-2.2M), 5 (2.2M-7.7M), 6 (7.7M+)
-      - For USD: 1 (1-350), 2 (351-3.5K), 3 (3.5K-35K), 4 (35K-100K), 5 (100K-345K), 6 (345K+)
+  - ``ExpectedTurnover``: The expected turnover tier for the shop (number, integer, 1-6). (required)<br>
+    The value represents predefined turnover ranges based on PrimaryCurrency:
+    - For HUF: 1 (1-100K), 2 (100K-1M), 3 (1M-10M), 4 (10M-29M), 5 (29M-99M), 6 (99M+)
+    - For EUR: 1 (1-300), 2 (301-3K), 3 (3K-30K), 4 (30K-90K), 5 (90K-300K), 6 (300K+)
+    - For CZK: 1 (1-8K), 2 (8K-80K), 3 (80K-800K), 4 (800K-2.2M), 5 (2.2M-7.7M), 6 (7.7M+)
+    - For USD: 1 (1-350), 2 (351-3.5K), 3 (3.5K-35K), 4 (35K-100K), 5 (100K-345K), 6 (345K+)
 
   - ``FullPixelImplemented``: Indicates if full pixel tracking is implemented (boolean). (required)
 
@@ -792,7 +791,7 @@ To create a new POS (shop) in the Barion system, call the ``createPos`` function
 
   - ``PercentageOfNonEuCards``: Percentage of non-EU cards (number, 0-100). (optional)
 
-  - ``CallBackUrl``: Callback URL for the shop (string, max 2000 characters, valid URI). (optional)
+  - ``CallBackUrl``: Callback URL for the shop (string, max 2000 characters, valid URI). (required)
 
   - ``ReferenceId``: Reference identifier for the shop (string). (optional)
 
@@ -830,9 +829,10 @@ barion.createPos({
         Email: 'support@example.com'
     },
     PrimaryCurrency: 'HUF',
-    ExpectedTurnover: { ExpectedTurnover: 3 },
+    ExpectedTurnover: 3,
     FullPixelImplemented: false,
-    UseForEInvoicing: false
+    UseForEInvoicing: false,
+    CallBackUrl: 'https://example.com/callback'
 }, function (err, data) {
     //handle error / process data
 });
@@ -862,9 +862,10 @@ barion.createPos({
         Email: 'support@example.com'
     },
     PrimaryCurrency: 'HUF',
-    ExpectedTurnover: { ExpectedTurnover: 3 },
+    ExpectedTurnover: 3,
     FullPixelImplemented: false,
-    UseForEInvoicing: false
+    UseForEInvoicing: false,
+    CallBackUrl: 'https://example.com/callback'
 }).then(data => {
     //process data
 }).catch(err => {
