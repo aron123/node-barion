@@ -1366,7 +1366,7 @@ describe('lib/barion.js', function () {
             Name: 'Test Shop',
             Url: 'https://example.com',
             Description: 'This is a test shop for unit testing purposes.',
-            Logo: 'base64encodedlogo',
+            Logo: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
             Category: [ 'Electronics', 'Other' ],
             BusinessContact: {
                 Name: 'John Doe',
