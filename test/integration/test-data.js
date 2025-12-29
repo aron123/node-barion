@@ -191,5 +191,20 @@ module.exports = {
         expectedError: {
             ErrorCode: 'StatementNotFound'
         }
+    },
+    getHistory: {
+        successRequestBody: {
+            ApiKey,
+            Limit: 10
+        },
+        successResponseBody: {
+            Errors: []
+        },
+        errorRequestBody: {
+            ApiKey: 'invalid-api-key'
+        },
+        expectedError: {
+            ErrorCode: 'AuthenticationFailed'
+        }
     }
 };

@@ -55,7 +55,8 @@ const Barions = {
             downloadStatement: returnSuccess,
             startPaymentWithGoogleToken: returnSuccess,
             startPaymentWithAppleToken: returnSuccess,
-            validateApplePaySession: returnSuccess
+            validateApplePaySession: returnSuccess,
+            getHistory: returnSuccess
         }
     }),
     ServiceErrorBarion: proxyquire('../lib/barion', {
@@ -73,7 +74,8 @@ const Barions = {
             downloadStatement: returnError,
             startPaymentWithGoogleToken: returnError,
             startPaymentWithAppleToken: returnError,
-            validateApplePaySession: returnError
+            validateApplePaySession: returnError,
+            getHistory: returnError
         }
     }),
     ValidationErrorBarion: proxyquire('../lib/barion', {
@@ -91,7 +93,8 @@ const Barions = {
             downloadStatement: returnSuccess,
             startPaymentWithGoogleToken: returnSuccess,
             startPaymentWithAppleToken: returnSuccess,
-            validateApplePaySession: returnSuccess
+            validateApplePaySession: returnSuccess,
+            getHistory: returnSuccess
         },
         './build': {
             buildRequest: throwValidationError
@@ -112,7 +115,8 @@ const Barions = {
             downloadStatement: returnSuccess,
             startPaymentWithGoogleToken: returnSuccess,
             startPaymentWithAppleToken: returnSuccess,
-            validateApplePaySession: returnSuccess
+            validateApplePaySession: returnSuccess,
+            getHistory: returnSuccess
         },
         './build': {
             buildRequestWithoutValidation: throwSanitizationError
@@ -1275,6 +1279,77 @@ describe('lib/barion.js', function () {
 
         it('should answer with Promise on sanitization error when validation is turned off', function (done) {
             const promise = sanitizationErrorBarion.validateApplePaySession(request);
+            expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
+        });
+    });
+
+    describe('#getHistory(options, [callback])', function () {
+        const request = {
+            ApiKey: '277a6ae112b041928e6cbc7d0612afa1'
+        };
+
+        it('should answer with callback on success', function (done) {
+            okBarion.getHistory(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on success when validation is turned off', function (done) {
+            okBarionWithoutValidation.getHistory(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on error', function (done) {
+            serviceErrorBarion.getHistory(request, (err, res) => {
+                expect(err).to.deep.equal(errorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on validation error', function (done) {
+            validationErrorBarion.getHistory(request, (err, res) => {
+                expect(err).to.deep.equal(validationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on sanitization error when validation is turned off', function (done) {
+            sanitizationErrorBarion.getHistory(request, (err, res) => {
+                expect(err).to.deep.equal(sanitizationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with Promise on success', function (done) {
+            const promise = okBarion.getHistory(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on success when validation is turned off', function (done) {
+            const promise = okBarionWithoutValidation.getHistory(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on error', function (done) {
+            const promise = serviceErrorBarion.getHistory(request);
+            expect(promise).to.eventually.rejectedWith(errorObject).notify(done);
+        });
+
+        it('should answer with Promise on validation error', function (done) {
+            const promise = validationErrorBarion.getHistory(request);
+            expect(promise).to.eventually.rejectedWith(validationErrorObject).notify(done);
+        });
+
+        it('should answer with Promise on sanitization error when validation is turned off', function (done) {
+            const promise = sanitizationErrorBarion.getHistory(request);
             expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
         });
     });

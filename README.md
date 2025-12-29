@@ -24,6 +24,7 @@ Helps manage e-payment transactions through the [Barion Smart Gateway](https://w
     - [Get existing accounts of the user](#get-existing-accounts-of-the-user---bariongetaccountsoptions-callback)
     - [Send money to a Barion user or email address](#send-e-money-to-an-email-address---barionemailtransferoptions-callback)
     - [Download statement files](#download-statement-files---bariondownloadstatementoptions-callback)
+    - [Get transaction history](#get-transaction-history---bariongethistoryoptions-callback)
     - [Handling errors](#handling-errors)
     - [Secure vs. insecure mode](#secure-vs-insecure-mode)
 
@@ -83,7 +84,8 @@ barion.getPaymentState({
 - send money out of Barion via international bank transfer
 - get existing accounts of the user
 - send money to existing Barion account or email address
-- download monthly or daily statements of your account.
+- download monthly or daily statements of your account
+- get transaction history for wallet accounts.
 
 > **IMPORTANT**: ``node-barion`` is completely consistent with [Barion Docs](https://docs.barion.com/Main_Page), so you can use exactly the same field names, that are specified in it. **Reading the official Barion documentation is highly recommended** before starting to use ``node-barion`` module.<br>
 > **IMPORTANT**: Barion uses *PascalCased* field naming, but **node-barion is case insensitive** (this means that if Barion Docs mention a field name *PaymentId*, you can either use *PaymentId*, *paymentId*, *paymentid* or *paymentID* notation in your application, as ``node-barion`` converts these to the standard *PaymentId* name).
@@ -663,6 +665,55 @@ barion.downloadStatement({
     ApiKey: 'your-api-key-here',
     Year: 2020,
     Month: 1
+}).then(data => {
+    //process data
+}).catch(err => {
+    //handle error
+});
+```
+
+### Get transaction history - barion.getHistory(options, \[callback\])
+To query the transaction history of a wallet account, call the ``getHistory`` function. [[Barion Docs](https://docs.barion.com/UserHistory-GetHistory-v3)]
+
+**Authentication**: This endpoint requires Api Key authentication.
+
+> **NOTE**: This API should not be used for reconciliation purposes. Use the [statement API](#download-statement-files---bariondownloadstatementoptions-callback) instead.
+
+**Parameters**:
+  - ``ApiKey``: Api Key for authentication (string). (required)
+
+  - ``LastVisibleItemId``: The ID of the last visible transaction item. Use this for pagination to get the next set of transactions (string, GUID format). (optional)
+
+  - ``LastRequestTime``: The timestamp of the last request. Use this along with ``LastVisibleItemId`` for pagination (Date). (optional)
+
+  - ``Limit``: The maximum number of transactions to return. Must be between 1 and 20 (number). (optional, default: 20)
+
+  - ``Currency``: Filter transactions by currency (string). (optional)<br>
+    Allowed values are:
+      - ``'CZK'`` (Czech crown)
+      - ``'EUR'`` (Euro)
+      - ``'HUF'`` (Hungarian forint)
+      - ``'USD'`` (U.S. dollar)
+
+**Output**: [Read at Barion Docs](https://docs.barion.com/UserHistory-GetHistory-v3#Output_properties)
+
+#### Usage example
+##### With callback
+```js
+barion.getHistory({
+    ApiKey: 'your-api-key-here',
+    Limit: 10,
+    Currency: 'HUF'
+}, function (err, data) {
+    //handle error / process data
+});
+```
+##### With promise
+```js
+barion.getHistory({
+    ApiKey: 'your-api-key-here',
+    Limit: 10,
+    Currency: 'HUF'
 }).then(data => {
     //process data
 }).catch(err => {
