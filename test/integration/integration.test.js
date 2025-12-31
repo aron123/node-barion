@@ -832,4 +832,86 @@ describe('Integration tests', function () {
             }
         );
     });
+
+    describe('Get history (callback)', function () {
+        it('should get transaction history when validation is turned on', function (done) {
+            validatedBarion.getHistory(testData.getHistory.successRequestBody, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.include(testData.getHistory.successResponseBody);
+                done();
+            });
+        });
+
+        it('should answer with BarionModelError when request object is not proper and validation is turned on',
+            function (done) {
+                validatedBarion.getHistory(testData.getHistory.errorRequestBody, (err, res) => {
+                    expect(res).to.be.null;
+                    expect(err.name).to.equal('BarionModelError');
+                    expect(err.errors).to.be.an('array').and.have.length.greaterThan(0);
+                    done();
+                });
+            }
+        );
+
+        it('should get transaction history when validation is turned off', function (done) {
+            notValidatedBarion.getHistory(testData.getHistory.successRequestBody, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.include(testData.getHistory.successResponseBody);
+                done();
+            });
+        });
+
+        it('should answer with BarionError when request object is not proper and validation is turned off',
+            function (done) {
+                notValidatedBarion.getHistory(testData.getHistory.errorRequestBody, (err, res) => {
+                    expect(res).to.be.null;
+                    expect(err.name).to.equal('BarionError');
+                    expect(err.errors).to.be.an('array');
+                    expect(err.errors[0]).to.deep.include(testData.getHistory.expectedError);
+                    done();
+                });
+            }
+        );
+    });
+
+    describe('Get history (Promise)', function () {
+        it('should get transaction history when validation is turned on', function (done) {
+            validatedBarion.getHistory(testData.getHistory.successRequestBody)
+                .then(res => {
+                    expect(res).to.deep.include(testData.getHistory.successResponseBody);
+                    done();
+                });
+        });
+
+        it('should answer with BarionModelError when request object is not proper and validation is turned on',
+            function (done) {
+                validatedBarion.getHistory(testData.getHistory.errorRequestBody)
+                    .catch(err => {
+                        expect(err.name).to.equal('BarionModelError');
+                        expect(err.errors).to.be.an('array').and.have.length.greaterThan(0);
+                        done();
+                    });
+            }
+        );
+
+        it('should get transaction history when validation is turned off', function (done) {
+            notValidatedBarion.getHistory(testData.getHistory.successRequestBody)
+                .then(res => {
+                    expect(res).to.deep.include(testData.getHistory.successResponseBody);
+                    done();
+                });
+        });
+
+        it('should answer with BarionError when request object is not proper and validation is turned off',
+            function (done) {
+                notValidatedBarion.getHistory(testData.getHistory.errorRequestBody)
+                    .catch(err => {
+                        expect(err.name).to.equal('BarionError');
+                        expect(err.errors).to.be.an('array');
+                        expect(err.errors[0]).to.deep.include(testData.getHistory.expectedError);
+                        done();
+                    });
+            }
+        );
+    });
 });

@@ -247,5 +247,20 @@ module.exports = {
         expectedError: {
             StatusCode: 404
         }
+    },
+    getHistory: {
+        successRequestBody: {
+            ApiKey,
+            Limit: 10
+        },
+        successResponseBody: {
+            Errors: []
+        },
+        errorRequestBody: {
+            ApiKey: 'invalid-api-key'
+        },
+        expectedError: {
+            ErrorCode: 'AuthenticationFailed'
+        }
     }
 };
