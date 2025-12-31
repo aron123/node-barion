@@ -24,6 +24,8 @@ Helps manage e-payment transactions through the [Barion Smart Gateway](https://w
     - [Get existing accounts of the user](#get-existing-accounts-of-the-user---bariongetaccountsoptions-callback)
     - [Send money to a Barion user or email address](#send-e-money-to-an-email-address---barionemailtransferoptions-callback)
     - [Download statement files](#download-statement-files---bariondownloadstatementoptions-callback)
+    - [Get POS details](#get-pos-details---bariongetposdetailsoptions-callback)
+    - [Create a new POS](#create-a-new-pos---barioncreateposoptions-callback)
     - [Get transaction history](#get-transaction-history---bariongethistoryoptions-callback)
     - [Handling errors](#handling-errors)
     - [Secure vs. insecure mode](#secure-vs-insecure-mode)
@@ -85,6 +87,8 @@ barion.getPaymentState({
 - get existing accounts of the user
 - send money to existing Barion account or email address
 - download monthly or daily statements of your account
+- get details of a specific POS (shop)
+- create a new POS (shop) in Barion
 - get transaction history for wallet accounts.
 
 > **IMPORTANT**: ``node-barion`` is completely consistent with [Barion Docs](https://docs.barion.com/Main_Page), so you can use exactly the same field names, that are specified in it. **Reading the official Barion documentation is highly recommended** before starting to use ``node-barion`` module.<br>
@@ -671,6 +675,205 @@ barion.downloadStatement({
     ApiKey: 'your-api-key-here',
     Year: 2020,
     Month: 1
+}).then(data => {
+    //process data
+}).catch(err => {
+    //handle error
+});
+```
+
+### Get POS details - barion.getPosDetails(options, \[callback\])
+To retrieve details and the current state of a specific POS (shop), call the ``getPosDetails`` function. [[Barion Docs](https://docs.barion.com/Pos-Get-v1)]
+
+**Authentication**: This endpoint requires Api Key authentication.
+
+**Parameters**:
+  - ``ApiKey``: Api Key for authentication (string). (required)
+
+  - ``PublicKey``: The public key (identifier) of the POS to retrieve details for (string, GUID format). (required)
+
+**Output**: [Read at Barion Docs](https://docs.barion.com/Pos-Get-v1#Output_properties)
+
+#### Usage example
+##### With callback
+```js
+barion.getPosDetails({
+    ApiKey: 'your-api-key-here',
+    PublicKey: '12345678-1234-1234-1234-123456789012'
+}, function (err, data) {
+    //handle error / process data
+});
+```
+##### With promise
+```js
+barion.getPosDetails({
+    ApiKey: 'your-api-key-here',
+    PublicKey: '12345678-1234-1234-1234-123456789012'
+}).then(data => {
+    //process data
+}).catch(err => {
+    //handle error
+});
+```
+
+### Create a new POS - barion.createPos(options, \[callback\])
+To create a new POS (shop) in the Barion system, call the ``createPos`` function. [[Barion Docs](https://docs.barion.com/Pos-Create-v1)]
+
+**Authentication**: This endpoint requires Api Key authentication.
+
+**Parameters**:
+  - ``ApiKey``: Api Key for authentication (string). (required)
+
+  - ``Name``: The name of the shop (string, max 200 characters). (required)
+
+  - ``Url``: The URL of the shop (string, max 2000 characters, must be HTTPS). (required)
+
+  - ``Description``: Description of the shop (string, min 20, max 200 characters). (required)
+
+  - ``Logo``: Base64 encoded logo image of the shop (string). (required)
+
+  - ``Category``: Array of shop categories (string[]). (required)<br>
+    Allowed values are:
+    - ``'Agriculture'``
+    - ``'BookNewsPaper'``
+    - ``'Ad'``
+    - ``'BonusCoupon'``
+    - ``'Dating'``
+    - ``'Electronics'``
+    - ``'FashionClothes'``
+    - ``'FoodDrink'``
+    - ``'FurnitureAntiquity'``
+    - ``'GiftToyFlower'``
+    - ``'BeautyHealth'``
+    - ``'HomeDesignGarden'``
+    - ``'JobEducation'``
+    - ``'BuildingMaterialMachine'``
+    - ``'Baby'``
+    - ``'FilmMusic'``
+    - ``'Other'``
+    - ``'Pet'``
+    - ``'Property'``
+    - ``'Service'``
+    - ``'SportLeisureTravel'``
+    - ``'BettingGambling'``
+    - ``'Tobacco'``
+    - ``'Vehicle'``
+    - ``'WatchJewelry'``
+
+  - ``BusinessContact``: Contact information for business matters (object). (required)
+    - ``Name``: Contact person name (string). (required)
+    - ``PhoneNumber``: Contact phone number (string, max 30 characters). (required)
+    - ``Email``: Contact email address (string, valid email format). (required)
+
+  - ``TechnicalContact``: Contact information for technical matters (object). (required)
+    - ``Name``: Contact person name (string). (required)
+    - ``PhoneNumber``: Contact phone number (string, max 30 characters). (required)
+    - ``Email``: Contact email address (string, valid email format). (required)
+
+  - ``CustomerServiceContact``: Contact information for customer service (object). (required)
+    - ``Name``: Contact person name (string). (required)
+    - ``PhoneNumber``: Contact phone number (string, max 30 characters). (required)
+    - ``Email``: Contact email address (string, valid email format). (required)
+
+  - ``PrimaryCurrency``: The primary currency of the shop (string). (required)<br>
+    Allowed values are:
+    - ``'HUF'`` (Hungarian forint)
+    - ``'CZK'`` (Czech crown)
+    - ``'EUR'`` (Euro)
+    - ``'USD'`` (U.S. dollar)
+
+  - ``ExpectedTurnover``: The expected turnover tier for the shop (number, integer, 1-6). (required)<br>
+    The value represents predefined turnover ranges based on PrimaryCurrency:
+    - For HUF: 1 (1-100K), 2 (100K-1M), 3 (1M-10M), 4 (10M-29M), 5 (29M-99M), 6 (99M+)
+    - For EUR: 1 (1-300), 2 (301-3K), 3 (3K-30K), 4 (30K-90K), 5 (90K-300K), 6 (300K+)
+    - For CZK: 1 (1-8K), 2 (8K-80K), 3 (80K-800K), 4 (800K-2.2M), 5 (2.2M-7.7M), 6 (7.7M+)
+    - For USD: 1 (1-350), 2 (351-3.5K), 3 (3.5K-35K), 4 (35K-100K), 5 (100K-345K), 6 (345K+)
+
+  - ``FullPixelImplemented``: Indicates if full pixel tracking is implemented (boolean). (required)
+
+  - ``UseForEInvoicing``: Indicates if the shop will be used for e-invoicing (boolean). (required)
+
+  - ``AverageBasketValue``: Average basket value in the shop (number, integer, greater than 0). (optional)
+
+  - ``PercentageOfB2BCustomers``: Percentage of B2B customers (number, 0-100). (optional)
+
+  - ``PercentageOfNonEuCards``: Percentage of non-EU cards (number, 0-100). (optional)
+
+  - ``CallBackUrl``: Callback URL for the shop (string, max 2000 characters, valid URI). (required)
+
+  - ``ReferenceId``: Reference identifier for the shop (string). (optional)
+
+  - ``NoteForApproval``: Note for the approval process (string). (optional)
+
+  - ``CustomTemplate``: Custom template for the shop (string). (optional)
+
+  - ``CustomCss``: Custom CSS for the shop (string). (optional)
+
+**Output**: [Read at Barion Docs](https://docs.barion.com/Pos-Create-v1#Output_properties)
+
+#### Usage example
+##### With callback
+```js
+barion.createPos({
+    ApiKey: 'your-api-key-here',
+    Name: 'My Awesome Shop',
+    Url: 'https://example.com',
+    Description: 'This is a shop that sells awesome products and provides great service.',
+    Logo: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+    Category: [ 'Electronics' ],
+    BusinessContact: {
+        Name: 'John Doe',
+        PhoneNumber: '36301234567',
+        Email: 'business@example.com'
+    },
+    TechnicalContact: {
+        Name: 'Jane Smith',
+        PhoneNumber: '36301234568',
+        Email: 'tech@example.com'
+    },
+    CustomerServiceContact: {
+        Name: 'Support Team',
+        PhoneNumber: '36301234569',
+        Email: 'support@example.com'
+    },
+    PrimaryCurrency: 'HUF',
+    ExpectedTurnover: 3,
+    FullPixelImplemented: false,
+    UseForEInvoicing: false,
+    CallBackUrl: 'https://example.com/callback'
+}, function (err, data) {
+    //handle error / process data
+});
+```
+##### With promise
+```js
+barion.createPos({
+    ApiKey: 'your-api-key-here',
+    Name: 'My Awesome Shop',
+    Url: 'https://example.com',
+    Description: 'This is a shop that sells awesome products and provides great service.',
+    Logo: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+    Category: [ 'Electronics' ],
+    BusinessContact: {
+        Name: 'John Doe',
+        PhoneNumber: '36301234567',
+        Email: 'business@example.com'
+    },
+    TechnicalContact: {
+        Name: 'Jane Smith',
+        PhoneNumber: '36301234568',
+        Email: 'tech@example.com'
+    },
+    CustomerServiceContact: {
+        Name: 'Support Team',
+        PhoneNumber: '36301234569',
+        Email: 'support@example.com'
+    },
+    PrimaryCurrency: 'HUF',
+    ExpectedTurnover: 3,
+    FullPixelImplemented: false,
+    UseForEInvoicing: false,
+    CallBackUrl: 'https://example.com/callback'
 }).then(data => {
     //process data
 }).catch(err => {

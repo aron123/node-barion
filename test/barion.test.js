@@ -56,6 +56,8 @@ const Barions = {
             startPaymentWithGoogleToken: returnSuccess,
             startPaymentWithAppleToken: returnSuccess,
             validateApplePaySession: returnSuccess,
+            getPosDetails: returnSuccess,
+            createPos: returnSuccess,
             getHistory: returnSuccess
         }
     }),
@@ -75,6 +77,8 @@ const Barions = {
             startPaymentWithGoogleToken: returnError,
             startPaymentWithAppleToken: returnError,
             validateApplePaySession: returnError,
+            getPosDetails: returnError,
+            createPos: returnError,
             getHistory: returnError
         }
     }),
@@ -94,6 +98,8 @@ const Barions = {
             startPaymentWithGoogleToken: returnSuccess,
             startPaymentWithAppleToken: returnSuccess,
             validateApplePaySession: returnSuccess,
+            getPosDetails: returnSuccess,
+            createPos: returnSuccess,
             getHistory: returnSuccess
         },
         './build': {
@@ -116,6 +122,8 @@ const Barions = {
             startPaymentWithGoogleToken: returnSuccess,
             startPaymentWithAppleToken: returnSuccess,
             validateApplePaySession: returnSuccess,
+            getPosDetails: returnSuccess,
+            createPos: returnSuccess,
             getHistory: returnSuccess
         },
         './build': {
@@ -1021,7 +1029,8 @@ describe('lib/barion.js', function () {
             ],
             Currency: 'HUF',
             PayerEmailAddress: 'payer@example.com',
-            GooglePayToken: 'eyJwcm90b2NvbFZlcnNpb24iOiJFQ192MiIsInNpZ25lZE1lc3NhZ2UiOiJ7XCJlbmNyeXB0ZWRNZXNzYWdlXCI6XCJleGFtcGxlLXRva2VuXCJ9In0='
+            GooglePayToken: 'eyJwcm90b2NvbFZlcnNpb24iOiJFQ192MiIsInNpZ25lZE1lc3NhZ2UiOiJ7XCJl'
+                + 'bmNyeXB0ZWRNZXNzYWdlXCI6XCJleGFtcGxlLXRva2VuXCJ9In0='
         };
 
         it('should answer with callback on success', function (done) {
@@ -1279,6 +1288,174 @@ describe('lib/barion.js', function () {
 
         it('should answer with Promise on sanitization error when validation is turned off', function (done) {
             const promise = sanitizationErrorBarion.validateApplePaySession(request);
+            expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
+        });
+    });
+
+    describe('#getPosDetails(options, [callback])', function () {
+        const request = {
+            ApiKey: '277a6ae112b041928e6cbc7d0612afa1',
+            PublicKey: '277a6ae1-12b0-4192-8e6c-bc7d0612afa1'
+        };
+
+        it('should answer with callback on success', function (done) {
+            okBarion.getPosDetails(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on success when validation is turned off', function (done) {
+            okBarionWithoutValidation.getPosDetails(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on error', function (done) {
+            serviceErrorBarion.getPosDetails(request, (err, res) => {
+                expect(err).to.deep.equal(errorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on validation error', function (done) {
+            validationErrorBarion.getPosDetails(request, (err, res) => {
+                expect(err).to.deep.equal(validationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on sanitization error when validation is turned off', function (done) {
+            sanitizationErrorBarion.getPosDetails(request, (err, res) => {
+                expect(err).to.deep.equal(sanitizationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with Promise on success', function (done) {
+            const promise = okBarion.getPosDetails(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on success when validation is turned off', function (done) {
+            const promise = okBarionWithoutValidation.getPosDetails(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on error', function (done) {
+            const promise = serviceErrorBarion.getPosDetails(request);
+            expect(promise).to.eventually.rejectedWith(errorObject).notify(done);
+        });
+
+        it('should answer with Promise on validation error', function (done) {
+            const promise = validationErrorBarion.getPosDetails(request);
+            expect(promise).to.eventually.rejectedWith(validationErrorObject).notify(done);
+        });
+
+        it('should answer with Promise on sanitization error when validation is turned off', function (done) {
+            const promise = sanitizationErrorBarion.getPosDetails(request);
+            expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
+        });
+    });
+
+    describe('#createPos(options, [callback])', function () {
+        const request = {
+            ApiKey: '277a6ae112b041928e6cbc7d0612afa1',
+            Name: 'Test Shop',
+            Url: 'https://example.com',
+            Description: 'This is a test shop for unit testing purposes.',
+            Logo: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+            Category: [ 'Electronics', 'Other' ],
+            BusinessContact: {
+                Name: 'John Doe',
+                PhoneNumber: '36701234567',
+                Email: 'business@example.com'
+            },
+            TechnicalContact: {
+                Name: 'Jane Smith',
+                PhoneNumber: '36701234568',
+                Email: 'tech@example.com'
+            },
+            CustomerServiceContact: {
+                Name: 'Support Team',
+                PhoneNumber: '36701234569',
+                Email: 'support@example.com'
+            },
+            PrimaryCurrency: 'EUR',
+            ExpectedTurnover: 3,
+            FullPixelImplemented: true,
+            UseForEInvoicing: false,
+            CallBackUrl: 'https://example.com/callback'
+        };
+
+        it('should answer with callback on success', function (done) {
+            okBarion.createPos(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on success when validation is turned off', function (done) {
+            okBarionWithoutValidation.createPos(request, (err, res) => {
+                expect(err).to.be.null;
+                expect(res).to.deep.equal(successObject);
+                done();
+            });
+        });
+
+        it('should answer with callback on error', function (done) {
+            serviceErrorBarion.createPos(request, (err, res) => {
+                expect(err).to.deep.equal(errorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on validation error', function (done) {
+            validationErrorBarion.createPos(request, (err, res) => {
+                expect(err).to.deep.equal(validationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with callback on sanitization error when validation is turned off', function (done) {
+            sanitizationErrorBarion.createPos(request, (err, res) => {
+                expect(err).to.deep.equal(sanitizationErrorObject);
+                expect(res).to.be.null;
+                done();
+            });
+        });
+
+        it('should answer with Promise on success', function (done) {
+            const promise = okBarion.createPos(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on success when validation is turned off', function (done) {
+            const promise = okBarionWithoutValidation.createPos(request);
+            expect(promise).to.eventually.deep.equal(successObject).notify(done);
+        });
+
+        it('should answer with Promise on error', function (done) {
+            const promise = serviceErrorBarion.createPos(request);
+            expect(promise).to.eventually.rejectedWith(errorObject).notify(done);
+        });
+
+        it('should answer with Promise on validation error', function (done) {
+            const promise = validationErrorBarion.createPos(request);
+            expect(promise).to.eventually.rejectedWith(validationErrorObject).notify(done);
+        });
+
+        it('should answer with Promise on sanitization error when validation is turned off', function (done) {
+            const promise = sanitizationErrorBarion.createPos(request);
             expect(promise).to.eventually.rejectedWith(sanitizationErrorObject).notify(done);
         });
     });
